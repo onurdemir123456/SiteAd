@@ -1,0 +1,98 @@
+// DashboardPanel.jsx
+import React, { useState } from "react";
+import ScrollableListBootstrap from "../components/ScrollableListBootStrap";
+import DaireBlokYonetimi from "../components/dashboard/DaireBlokYonetimi";
+import AidatOdemeler from "../components/dashboard/AidatOdemeler";
+import TaleplerAriza from "../components/dashboard/TaleplerAriza";
+import MesajlasmaChat from "../components/dashboard/MesajlasmaChat";
+import MainPanel from "../components/dashboard/MainPanel";
+import Duyurular from "../components/dashboard/Duyurular";
+import logoNoBg from "../assets/logoNoBg.png";
+function DashboardPanel() {
+  const [activeComponent, setActiveComponent] = useState("Ana Panel");
+
+  const renderComponent = () => {
+    switch (activeComponent) {
+      case "Ana Panel": return <MainPanel />;
+      case "Duyurular": return <Duyurular />;
+      case "Daireler": return <DaireBlokYonetimi />;
+      case "Aidat": return <AidatOdemeler />;
+      case "Talepler": return <TaleplerAriza />;
+      case "Mesajlar": return <MesajlasmaChat />;
+      default: return null;
+    }
+  };
+
+  const buttons = [
+    { label: "Ana Panel", onClick: () => setActiveComponent("Ana Panel") },
+    { label: "Daireler", onClick: () => setActiveComponent("Daireler") },
+    { label: "Duyurular", onClick: () => setActiveComponent("Duyurular") },
+    { label: "Aidat", onClick: () => setActiveComponent("Aidat") },
+    { label: "Talepler", onClick: () => setActiveComponent("Talepler") },
+    { label: "Mesajlar", onClick: () => setActiveComponent("Mesajlar") },
+  ];
+
+  return (
+    <div style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
+
+      {/* NAVBAR */}
+      <div style={{
+        height: "60px",
+        minHeight: "60px",
+        maxHeight: "60px",
+        backgroundColor: "#dadadaff",
+        color: "#000000",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: "0 20px",
+        fontSize: "20px",
+        fontWeight: "bold",
+        boxSizing: "border-box",
+      }}>
+        <span>Dashboard Paneli</span>
+
+        {/* LOGO */}
+        <img
+          src={logoNoBg}
+          alt="Logo"
+          style={{ height: "40px", objectFit: "contain" }}
+        />
+      </div>
+
+      {/* ALT KISIM (sidebar + content) */}
+      <div style={{ display: "flex", flex: 1 }}>
+
+        {/* SIDEBAR */}
+        <div style={{
+          width: "150px",
+          backgroundColor: "#f0f0f0",
+          padding: "10px",
+          borderRight: "1px solid #ddd"
+        }}>
+          <ScrollableListBootstrap
+            items={buttons}
+            height="100%"
+            width="150px"
+            buttonStyle={{
+              width: 135,
+              height: 50,
+              backgroundColor: "#fff",
+              color: "#000000",
+              border: "none",
+              marginBottom: "10px",
+            }}
+          />
+        </div>
+
+        {/* CONTENT */}
+        <div style={{ flex: 1, padding: "20px" }}>
+          {renderComponent()}
+        </div>
+      </div>
+
+    </div>
+  );
+}
+
+export default DashboardPanel;
