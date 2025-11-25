@@ -1,5 +1,99 @@
-import React from "react";
+import React, { useState } from "react";
+import supabase from "../../helper/supabaseClient";
+
 function TaleplerAriza() {
+  // --------------------------
+  // STATE
+  // --------------------------
+  const [complaintTitle, setComplaintTitle] = useState("");
+  const [complaintMsg, setComplaintMsg] = useState("");
+
+  const [faultTitle, setFaultTitle] = useState("");
+  const [faultMsg, setFaultMsg] = useState("");
+
+  const [supportTitle, setSupportTitle] = useState("");
+  const [supportMsg, setSupportMsg] = useState("");
+
+  // -------------------------------
+  // ŞİKAYET SUBMIT
+  // -------------------------------
+  const submitComplaint = async () => {
+    if (!complaintTitle || !complaintMsg) return alert("Alanlar boş olamaz");
+
+    const { error } = await supabase.from("sikayetler").insert([
+      {
+        konu: complaintTitle,
+        aciklama: complaintMsg,
+        tarih: new Date().toISOString(),
+        durum: "Açık",
+      },
+    ]);
+
+    if (error) {
+      console.error(error);
+      alert("Şikayet oluşturulamadı!");
+    } else {
+      alert("Şikayet gönderildi!");
+      setComplaintTitle("");
+      setComplaintMsg("");
+    }
+  };
+
+  // -------------------------------
+  // ARIZA SUBMIT
+  // -------------------------------
+  const submitFault = async () => {
+    if (!faultTitle || !faultMsg) return alert("Alanlar boş olamaz");
+
+    const { error } = await supabase.from("arizalar").insert([
+      {
+        konu: faultTitle,
+        aciklama: faultMsg,
+        tarih: new Date().toISOString(),
+        durum: "Açık",
+        iscilik: "",
+        tamamlanma: "0%",
+      },
+    ]);
+
+    if (error) {
+      console.error(error);
+      alert("Arıza bildirilemedi!");
+    } else {
+      alert("Arıza kaydı oluşturuldu!");
+      setFaultTitle("");
+      setFaultMsg("");
+    }
+  };
+
+  // -------------------------------
+  // TEKNİK DESTEK SUBMIT
+  // -------------------------------
+  const submitSupport = async () => {
+    if (!supportTitle || !supportMsg) return alert("Alanlar boş olamaz");
+
+    const { error } = await supabase.from("talepler").insert([
+      {
+        konu: supportTitle,
+        detay: supportMsg,
+        tarih: new Date().toISOString(),
+        durum: "Açık",
+      },
+    ]);
+
+    if (error) {
+      console.error(error);
+      alert("Destek kaydı oluşturulamadı!");
+    } else {
+      alert("Teknik destek talebi oluşturuldu!");
+      setSupportTitle("");
+      setSupportMsg("");
+    }
+  };
+
+  // -------------------------------
+  // STYLES
+  // -------------------------------
   const styles = {
     container: {
       padding: "20px",
@@ -63,57 +157,82 @@ function TaleplerAriza() {
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>Talepler – Arıza Bildirimleri</h2>
+      <h2 style={styles.title}>Talepler – Arıza / Destek / Şikayet</h2>
 
-      {/* Arıza Bildirme */}
+      {/* ----------------- ARIZA BİLDİRME ----------------- */}
       <div style={styles.section}>
         <h3 style={styles.sectionTitle}>Arıza Bildirme</h3>
-        <input style={styles.input} type="text" placeholder="Arıza Konusu" />
+
+        <input
+          style={styles.input}
+          type="text"
+          placeholder="Arıza Konusu"
+          value={faultTitle}
+          onChange={(e) => setFaultTitle(e.target.value)}
+        />
+
         <textarea
           style={{ ...styles.input, height: "80px" }}
           placeholder="Açıklama"
+          value={faultMsg}
+          onChange={(e) => setFaultMsg(e.target.value)}
         ></textarea>
-        <button style={styles.btn}>Arıza Bildir</button>
+
+        <button style={styles.btn} onClick={submitFault}>
+          Arıza Bildir
+        </button>
       </div>
 
-      {/* Teknik Destek Kaydı */}
+      {/* ----------------- TEKNİK DESTEK ----------------- */}
       <div style={styles.section}>
         <h3 style={styles.sectionTitle}>Teknik Destek Kaydı</h3>
-        <input style={styles.input} type="text" placeholder="Talep Konusu" />
+
+        <input
+          style={styles.input}
+          type="text"
+          placeholder="Talep Konusu"
+          value={supportTitle}
+          onChange={(e) => setSupportTitle(e.target.value)}
+        />
+
         <textarea
           style={{ ...styles.input, height: "80px" }}
           placeholder="Detaylar"
+          value={supportMsg}
+          onChange={(e) => setSupportMsg(e.target.value)}
         ></textarea>
-        <button style={styles.btn}>Destek Kaydı Oluştur</button>
+
+        <button style={styles.btn} onClick={submitSupport}>
+          Destek Kaydı Oluştur
+        </button>
       </div>
 
-      {/* Açık / Kapalı Talepler */}
+      {/* ----------------- ŞİKAYET ----------------- */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Açık / Kapalı Talepleriniz</h3>
-        <table style={styles.table}>
-          <thead>
-            <tr>
-              <th style={styles.th}>Tarih</th>
-              <th style={styles.th}>Konu</th>
-              <th style={styles.th}>Durum</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style={styles.td}>01/11/2025</td>
-              <td style={styles.td}>Su kaçağı</td>
-              <td style={styles.td}>Açık</td>
-            </tr>
-            <tr>
-              <td style={styles.td}>28/10/2025</td>
-              <td style={styles.td}>Elektrik arızası</td>
-              <td style={styles.td}>Kapalı</td>
-            </tr>
-          </tbody>
-        </table>
+        <h3 style={styles.sectionTitle}>Şikayet Oluştur</h3>
+
+        <input
+          style={styles.input}
+          type="text"
+          placeholder="Şikayet Konusu"
+          value={complaintTitle}
+          onChange={(e) => setComplaintTitle(e.target.value)}
+        />
+
+        <textarea
+          style={{ ...styles.input, height: "80px" }}
+          placeholder="Şikayet Açıklaması"
+          value={complaintMsg}
+          onChange={(e) => setComplaintMsg(e.target.value)}
+        ></textarea>
+
+        <button style={styles.btn} onClick={submitComplaint}>
+          Şikayet Gönder
+        </button>
       </div>
     </div>
   );
 }
 
 export default TaleplerAriza;
+
