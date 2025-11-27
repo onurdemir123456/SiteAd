@@ -63,6 +63,12 @@ export default function Duyurular() {
   // 3) Yeni duyuru ekleme
   // --------------------------------------------------
   const addAnnouncement = async () => {
+    // Boş kontrolü
+    if (!newTitle.trim() || !newDescription.trim()) {
+      alert("Duyuru başlığı ve içeriği boş olamaz!");
+      return;
+    }
+
     const { error } = await supabase.from("announcements").insert([
       {
         title: newTitle,
@@ -76,6 +82,8 @@ export default function Duyurular() {
       setNewTitle("");
       setNewDescription("");
       setNewImportant(false);
+    } else {
+      alert("Duyuru eklenirken bir hata oluştu!");
     }
   };
 

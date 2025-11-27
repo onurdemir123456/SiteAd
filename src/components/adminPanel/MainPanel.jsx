@@ -5,36 +5,55 @@ import {
     ArcElement,
     Tooltip,
     Legend,
-    Title
+    Title,
 } from "chart.js";
 import supabase from "../../helper/supabaseClient";
 
-
-
-
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
+
 function MainPanel() {
-  const [activeCount, setActiveCount] = useState(0);
-    
-    
+    const [activeCount, setActiveCount] = useState(0);
+    const [announcements, setAnnouncements] = useState([]);
 
+    // Modal sistemleri
+    const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
+    const [showModal, setShowModal] = useState(false);
 
-  const fetchCounts = async () => {
-  const { data: s } = await supabase.from("sikayetler").select("*");
-  const { data: a } = await supabase.from("arizalar").select("*");
-  const { data: t } = await supabase.from("talepler").select("*");
+    const fetchAnnouncements = async () => {
+        const { data, error } = await supabase
+            .from("announcements")
+            .select("*")
+            .order("created_at", { ascending: false });
 
-  const total =
-    s.filter((x) => x.durum === "Açık").length +
-    a.filter((x) => x.durum === "Açık").length +
-    t.filter((x) => x.durum === "Açık").length;
+        if (!error) setAnnouncements(data);
+    };
 
-  setActiveCount(total);
-};
-   useEffect(() => {
-  fetchCounts();
-}, []); 
+    const fetchCounts = async () => {
+        const { data: s } = await supabase.from("sikayetler").select("*");
+        const { data: a } = await supabase.from("arizalar").select("*");
+        const { data: t } = await supabase.from("talepler").select("*");
 
+        const total =
+            s.filter((x) => x.durum === "Açık").length +
+            a.filter((x) => x.durum === "Açık").length +
+            t.filter((x) => x.durum === "Açık").length;
+
+        setActiveCount(total);
+    };
+
+    useEffect(() => {
+        fetchAnnouncements();
+        fetchCounts();
+    }, []);
+    const formatDate = (dateString) => {
+        if (!dateString) return "";
+        const date = new Date(dateString);
+        const day = date.getDate();
+        const month = date.toLocaleString("tr-TR", { month: "long" }); // Türkçe ay adı
+        const year = date.getFullYear();
+        return `${day} ${month} ${year}`;
+    };
+    // Grafikler
     const gelirGiderData = {
         labels: ["Gelir", "Gider"],
         datasets: [
@@ -54,7 +73,6 @@ function MainPanel() {
         },
     };
 
-    // Aidat Pie chart verisi
     const aidatData = {
         labels: ["Ödenen", "Ödenmeyen"],
         datasets: [
@@ -66,7 +84,6 @@ function MainPanel() {
         ],
     };
 
-    // Enerji Pie chart verisi
     const enerjiData = {
         labels: ["Elektrik", "Su", "Doğalgaz"],
         datasets: [
@@ -77,6 +94,7 @@ function MainPanel() {
             },
         ],
     };
+
     const styles = {
         dashboardContainer: {
             padding: "20px",
@@ -107,14 +125,32 @@ function MainPanel() {
             flex: "1 1 300px",
             boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
         },
-        chartPlaceholder: {
-            height: "200px",
-            background: "#e0e0e0",
-            borderRadius: "8px",
+
+        // Modal
+        modalOverlay: {
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "rgba(0,0,0,0.5)",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            color: "#555",
+            zIndex: 999,
+        },
+        modalBox: {
+            width: "400px",
+            background: "#fff",
+            padding: "20px",
+            borderRadius: "12px",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
+        },
+        closeBtn: {
+            float: "right",
+            cursor: "pointer",
+            fontSize: "20px",
+            fontWeight: "bold",
         },
     };
 
@@ -136,10 +172,46 @@ function MainPanel() {
 
                 <div style={styles.card}>
                     <h2>Son Duyurular</h2>
-                    <ul>
-                        <li>Yangın tatbikatı 25 Kasım’da yapılacak</li>
-                        <li>Su kesintisi 28 Kasım’da</li>
-                    </ul>
+                    <div
+                        style={{
+                            maxHeight: "150px",
+                            overflowY: "auto",
+                            paddingRight: "5px",
+                        }}
+                    >
+                        {announcements.length === 0 && <p>Henüz duyuru bulunmuyor.</p>}
+
+                        {announcements.map((item) => (
+                            <div
+                                key={item.id}
+                                onClick={() => {
+                                    setSelectedAnnouncement(item);
+                                    setShowModal(true);
+                                }}
+                                style={{
+                                    marginBottom: "8px",
+                                    padding: "6px 8px",
+                                    borderRadius: "6px",
+                                    cursor: "pointer",
+                                    background: "#f7f7f7",
+                                    transition: "0.2s",
+                                }}
+                                onMouseEnter={(e) =>
+                                    (e.currentTarget.style.background = "#e4e4e4")
+                                }
+                                onMouseLeave={(e) =>
+                                    (e.currentTarget.style.background = "#f7f7f7")
+                                }
+                            >
+                                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                    <span>• {item.title}</span>
+                                    <span style={{ fontSize: "12px", color: "#666" }}>
+                                        {formatDate(item.created_at)}
+                                    </span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
                 <div style={styles.card}>
@@ -148,20 +220,113 @@ function MainPanel() {
                 </div>
             </div>
 
+            {/* ---- MODAL ---- */}
+            {showModal && selectedAnnouncement && (
+                <div
+                    style={{
+                        position: "fixed",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        background: "rgba(0,0,0,0.4)",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        zIndex: 9999,
+                    }}
+                    onClick={() => setShowModal(false)}
+                >
+                    <div
+                        style={{
+                            background: "#fff",
+                            padding: "20px",
+                            borderRadius: "12px",
+                            width: "400px",
+                            maxHeight: "70vh",
+                            overflowY: "auto",
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <h2 style={{ marginBottom: "5px" }}>
+                            {selectedAnnouncement.title}
+                        </h2>
+                        <p
+                            style={{
+                                fontSize: "12px",
+                                color: "#666",
+                                marginBottom: "10px",
+                            }}
+                        >
+                            {formatDate(selectedAnnouncement.created_at)}
+                        </p>
+                        <p style={{ whiteSpace: "pre-wrap", lineHeight: "1.4" }}>
+                            {selectedAnnouncement.description ||
+                                selectedAnnouncement.content ||
+                                "İçerik bulunamadı."}
+                        </p>
+                        <button
+                            onClick={() => setShowModal(false)}
+                            style={{
+                                marginTop: "15px",
+                                padding: "10px 20px",
+                                border: "none",
+                                background: "#2196f3",
+                                color: "white",
+                                borderRadius: "8px",
+                                cursor: "pointer",
+                            }}
+                        >
+                            Kapat
+                        </button>
+                    </div>
+                </div>
+            )}
+
             <div style={styles.chartsContainer}>
                 <div style={styles.chartCard}>
                     <h2>Gelir – Gider</h2>
-                    <Pie data={gelirGiderData} options={{...pieOptions, plugins: {title: {display: true, text: "Gelir – Gider"}}}} />
+                    <Pie
+                        data={gelirGiderData}
+                        options={{
+                            ...pieOptions,
+                            plugins: {
+                                title: { display: true, text: "Gelir – Gider" },
+                            },
+                        }}
+                    />
                 </div>
 
                 <div style={styles.chartCard}>
                     <h2>Aidat Kullanımı</h2>
-                    <Pie data={aidatData} options={{...pieOptions, plugins: {title: {display: true, text: "Aidat Kullanımı"}}}} />
+                    <Pie
+                        data={aidatData}
+                        options={{
+                            ...pieOptions,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: "Aidat Kullanımı",
+                                },
+                            },
+                        }}
+                    />
                 </div>
 
                 <div style={styles.chartCard}>
                     <h2>Enerji Kullanımı</h2>
-                    <Pie data={enerjiData} options={{ ...pieOptions, plugins: { title: { display: true, text: "Enerji Kullanımı" } } }} />
+                    <Pie
+                        data={enerjiData}
+                        options={{
+                            ...pieOptions,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: "Enerji Kullanımı",
+                                },
+                            },
+                        }}
+                    />
                 </div>
             </div>
         </div>
@@ -169,3 +334,4 @@ function MainPanel() {
 }
 
 export default MainPanel;
+
