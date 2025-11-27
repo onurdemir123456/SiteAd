@@ -6,6 +6,13 @@ export default function AdminSikayetler() {
   const [arizalar, setArizalar] = useState([]);
   const [talepler, setTalepler] = useState([]);
 
+
+  const [showPopup, setShowPopup] = useState(false);
+  const [currentArizaId, setCurrentArizaId] = useState(null);
+  const [iscilikInput, setIscilikInput] = useState("");
+  const [yuzdeInput, setYuzdeInput] = useState(0);
+
+
   const styles = {
     container: {
       padding: "20px",
@@ -110,18 +117,12 @@ export default function AdminSikayetler() {
     fetchTalepler();
   };
 
-  // İşçilik ve tamamlanma güncelleme
-  const updateArizaDetails = async (id) => {
-    const iscilik = prompt("İşçilik Tutarı (örn: 500₺):");
-    const tamamlanma = prompt("Tamamlanma Yüzdesi (örn: %50):");
+  
+  const openArizaPopup = (id) => {
+  setCurrentArizaId(id);
+  setShowPopup(true);
+};
 
-    await supabase
-      .from("arizalar")
-      .update({ iscilik: iscilik, tamamlanma: tamamlanma })
-      .eq("id", id);
-
-    fetchArizalar();
-  };
 
   return (
     <div style={styles.container}>
@@ -197,7 +198,7 @@ export default function AdminSikayetler() {
                 <td style={styles.td}>{a.daire}</td>
                 <td style={styles.td}>{a.konu}</td>
                 <td style={styles.td}>{a.aciklama}</td>
-                <td style={styles.td}>{a.iscilik || "-"}</td>
+                <td style={styles.td}>{a.iscilik ? `${a.iscilik} ₺` : "-"}</td>
                 <td style={styles.td}>{a.tamamlanma || "-"}</td>
                 <td style={styles.td}>
                   {a.durum === "Açık" ? (
@@ -209,7 +210,7 @@ export default function AdminSikayetler() {
                 <td style={styles.td}>
                   {a.durum === "Açık" && (
                     <>
-                      <button style={styles.btn} onClick={() => updateArizaDetails(a.id)}>
+                      <button style={styles.btn} onClick={() => openArizaPopup(a.id)}>
                         İşçilik / Tamamlanma
                       </button>
                       <button style={styles.btnGreen} onClick={() => closeAriza(a.id)}>
@@ -265,6 +266,87 @@ export default function AdminSikayetler() {
           </tbody>
         </table>
       </div>
+      
+      
+      
+      
+      
+      
+      {showPopup && (
+  <div style={{
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    background: "rgba(0,0,0,0.5)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 999
+  }}>
+    <div style={{
+      width: "350px",
+      background: "#fff",
+      padding: "20px",
+      borderRadius: "10px",
+      display: "flex",
+      flexDirection: "column",
+      gap: "12px"
+    }}>
+
+      <h3>İşçilik ve Tamamlanma</h3>
+
+      <label>İşçilik Tutarı (₺)</label>
+      <input
+        type="number"
+        value={iscilikInput}
+        onChange={(e) => setIscilikInput(e.target.value)}
+        style={{ padding: "8px", border: "1px solid #ccc", borderRadius: "6px" }}
+      />
+
+      <label>Tamamlanma: % {yuzdeInput}</label>
+      <input
+        type="range"
+        min="0"
+        max="100"
+        value={yuzdeInput}
+        onChange={(e) => setYuzdeInput(e.target.value)}
+        style={{ width: "100%" }}
+      />
+
+      <button
+        style={{ background: "#4CAF50", color: "#fff", padding: "10px", border: "none", borderRadius: "6px" }}
+        onClick={async () => {
+          await supabase
+            .from("arizalar")
+            .update({
+              iscilik: iscilikInput,
+              tamamlanma: `%${yuzdeInput}`
+            })
+            .eq("id", currentArizaId);
+
+          fetchArizalar();
+          setShowPopup(false);
+          setIscilikInput("");
+          setYuzdeInput(0);
+        }}
+      >
+        Kaydet
+      </button>
+
+      <button
+        style={{ background: "#f44336", color: "#fff", padding: "10px", border: "none", borderRadius: "6px" }}
+        onClick={() => setShowPopup(false)}
+      >
+        Kapat
+      </button>
+
+    </div>
+  </div>
+)}
+
+
     </div>
   );
 }

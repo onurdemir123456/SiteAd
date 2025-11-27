@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Pie } from "react-chartjs-2";
 import {
     Chart as ChartJS,
@@ -7,8 +7,34 @@ import {
     Legend,
     Title
 } from "chart.js";
+import supabase from "../../helper/supabaseClient";
+
+
+
+
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 function MainPanel() {
+  const [activeCount, setActiveCount] = useState(0);
+    
+    
+
+
+  const fetchCounts = async () => {
+  const { data: s } = await supabase.from("sikayetler").select("*");
+  const { data: a } = await supabase.from("arizalar").select("*");
+  const { data: t } = await supabase.from("talepler").select("*");
+
+  const total =
+    s.filter((x) => x.durum === "Açık").length +
+    a.filter((x) => x.durum === "Açık").length +
+    t.filter((x) => x.durum === "Açık").length;
+
+  setActiveCount(total);
+};
+   useEffect(() => {
+  fetchCounts();
+}, []); 
+
     const gelirGiderData = {
         labels: ["Gelir", "Gider"],
         datasets: [
@@ -118,7 +144,7 @@ function MainPanel() {
 
                 <div style={styles.card}>
                     <h2>Aktif Talepler</h2>
-                    <p>Toplam: 8</p>
+                    <p>Toplam: {activeCount}</p>
                 </div>
             </div>
 

@@ -1,5 +1,5 @@
 // UserDashboard.jsx
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Pie } from "react-chartjs-2";
 import {
     Chart as ChartJS,
@@ -8,10 +8,32 @@ import {
     Legend,
     Title
 } from "chart.js";
+import supabase from "../../helper/supabaseClient";
+
 
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
+
 function UserDashboard() {
+    const [activeCount, setActiveCount] = useState(0);
+
+    const fetchCounts = async () => {
+        const { data: s } = await supabase.from("sikayetler").select("*");
+        const { data: a } = await supabase.from("arizalar").select("*");
+        const { data: t } = await supabase.from("talepler").select("*");
+
+        const total =
+            s.filter(x => x.durum === "Açık").length +
+            a.filter(x => x.durum === "Açık").length +
+            t.filter(x => x.durum === "Açık").length;
+
+        setActiveCount(total);
+    };
+    useEffect(() => {
+        fetchCounts();
+    }, []);
+
+
     const aidatData = {
         labels: ["Ödenen", "Ödenmeyen"],
         datasets: [
@@ -92,7 +114,7 @@ function UserDashboard() {
 
                 <div style={styles.card}>
                     <h2>Açık Talepler</h2>
-                    <p>Toplam: 2</p>
+                    <p>Toplam: {activeCount}</p>
                 </div>
 
                 <div style={styles.card}>

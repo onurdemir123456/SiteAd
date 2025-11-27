@@ -40,6 +40,13 @@ export default function Duyurular() {
     (a.title + " " + a.description).toLowerCase().includes(query.toLowerCase())
   );
 
+
+
+  // Önemli duyurular filtresi
+const importantAnnouncements = announcements.filter(
+  (a) => a.is_important === true
+);
+
   // Tarih formatlama fonksiyonu
   const formatDate = (dateStr) => {
     if (!dateStr) return "";
@@ -103,23 +110,89 @@ export default function Duyurular() {
           />
         </div>
 
-        {/* Liste */}
-        <motion.div key={activeTab} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.18 }}>
-          {filteredAnnouncements.length === 0 ? (
-            <div style={{ textAlign: "center", padding: 32, color: "#666" }}>Gösterilecek duyuru yok.</div>
-          ) : (
-            filteredAnnouncements.map((d) => (
-              <div key={d.id} style={styles.listItem}>
-                <div>
-                  <h4 style={{ margin: 0, fontWeight: 600 }}>{d.title}</h4>
-                  <p style={{ margin: "6px 0 0", fontSize: 14, color: "#555" }}>{d.description}</p>
-                  <p style={styles.dateText}>{formatDate(d.created_at)}</p>
-                </div>
-                <span style={{ fontSize: 12, color: "#999" }}>#{d.id.slice(0, 4)}</span>
+{/* LISTE */}
+<motion.div
+  key={activeTab}
+  initial={{ opacity: 0, y: 6 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.18 }}
+>
+  {activeTab === "iletisim" ? (
+    <div style={{ textAlign: "center", padding: 32 }}>
+      SMS / Mail modülü yakında
+    </div>
+  ) : (
+    <div>
+      {/* ÖNEMLİ DUYURULAR SEKMEDEYSE */}
+      {activeTab === "onemli" ? (
+        importantAnnouncements.length === 0 ? (
+          <div
+            style={{
+              textAlign: "center",
+              padding: 32,
+              color: "#666",
+            }}
+          >
+            Gösterilecek önemli duyuru yok.
+          </div>
+        ) : (
+          importantAnnouncements.map((d) => (
+            <div key={d.id} style={styles.listItem}>
+              <div>
+                <h4 style={{ margin: 0, fontWeight: 600 }}>{d.title}</h4>
+                <p
+                  style={{
+                    margin: "6px 0 0",
+                    fontSize: 14,
+                    color: "#555",
+                  }}
+                >
+                  {d.description}
+                </p>
+                <p style={styles.dateText}>{formatDate(d.created_at)}</p>
               </div>
-            ))
-          )}
-        </motion.div>
+              <span style={{ fontSize: 12, color: "#999" }}>
+                #{d.id.slice(0, 4)}
+              </span>
+            </div>
+          ))
+        )
+      ) : /* NORMAL DUYURULAR */ filteredAnnouncements.length === 0 ? (
+        <div
+          style={{
+            textAlign: "center",
+            padding: 32,
+            color: "#666",
+          }}
+        >
+          Gösterilecek duyuru yok.
+        </div>
+      ) : (
+        filteredAnnouncements.map((d) => (
+          <div key={d.id} style={styles.listItem}>
+            <div>
+              <h4 style={{ margin: 0, fontWeight: 600 }}>{d.title}</h4>
+              <p
+                style={{
+                  margin: "6px 0 0",
+                  fontSize: 14,
+                  color: "#555",
+                }}
+              >
+                {d.description}
+              </p>
+              <p style={styles.dateText}>{formatDate(d.created_at)}</p>
+            </div>
+            <span style={{ fontSize: 12, color: "#999" }}>
+              #{d.id.slice(0, 4)}
+            </span>
+          </div>
+        ))
+      )}
+    </div>
+  )}
+</motion.div>
+
       </div>
     </div>
   );
