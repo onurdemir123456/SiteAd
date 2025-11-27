@@ -111,12 +111,7 @@ function AidatOdemeler() {
         </table>
       </div>
 
-      {/* Online Ödeme */}
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Online Ödeme</h3>
-        <button style={styles.btn}>iyzico ile Öde</button>
-        <button style={styles.btn}>Stripe ile Öde</button>
-      </div>
+      
 
       {/* Ek Borç Ekleme */}
       <div style={styles.section}>
