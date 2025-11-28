@@ -1,6 +1,76 @@
 import React from "react";
+import { useEffect, useState } from "react";
+import supabase from "../../helper/supabaseClient";
+
+
+
+
+
+
+
+
 
 function DaireBlokYonetimi() {
+
+
+  const [apartments, setApartments] = useState([]);
+  const [blok, setBlok] = useState("");
+  const [kat, setKat] = useState("");
+  const [daireNo, setDaireNo] = useState("");
+  const [durum, setDurum] = useState("Boş");
+  const [kisi, setKisi] = useState("");
+
+  useEffect(() => {
+  fetchApartments();
+}, []);
+
+async function fetchApartments() {
+  const { data, error } = await supabase.from("apartments").select("*");
+  if (!error) setApartments(data);
+}
+
+
+
+
+
+async function addApartment() {
+  if (!blok || !kat || !daireNo) {
+    alert("Blok, Kat ve Daire No zorunludur.");
+    return;
+  }
+
+  // --- Kişi Zorunluluk Kontrolü ---
+  if ((durum === "Sahip" || durum === "Kiracı") && !kisi) {
+    alert("Sahip veya Kiracı seçildiğinde kişi adı zorunludur!");
+    return;
+  }
+
+  const { data, error } = await supabase.from("apartments").insert([
+    {
+      blok: blok,
+      kat: Number(kat),
+      daire_no: Number(daireNo),
+      durum: durum,
+      kisi: kisi,
+    },
+  ]);
+
+  if (error) {
+    alert("Kayıt eklenemedi: " + error.message);
+  } else {
+    alert("Daire başarıyla eklendi!");
+    fetchApartments(); // Listeyi yenile
+  }
+
+  setBlok("");
+  setKat("");
+  setDaireNo("");
+  setDurum("Boş");
+  setKisi("");
+}
+
+
+
   const styles = {
     container: {
       padding: "20px",
@@ -86,23 +156,81 @@ function DaireBlokYonetimi() {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td style={styles.td}>A</td>
-              <td style={styles.td}>3</td>
-              <td style={styles.td}>12</td>
-              <td style={styles.td}>Sahip</td>
-              <td style={styles.td}>Onur K.</td>
-            </tr>
-            <tr>
-              <td style={styles.td}>B</td>
-              <td style={styles.td}>2</td>
-              <td style={styles.td}>8</td>
-              <td style={styles.td}>Kiracı</td>
-              <td style={styles.td}>Burak T.</td>
-            </tr>
+            {apartments.map((d) => (
+              <tr key={d.id}>
+                <td style={styles.td}>{d.blok}</td>
+                <td style={styles.td}>{d.kat}</td>
+                <td style={styles.td}>{d.daire_no}</td>
+                <td style={styles.td}>{d.durum}</td>
+                <td style={styles.td}>{d.kisi || "-"}</td>
+              </tr>
+  ))}
           </tbody>
         </table>
       </div>
+
+
+      {/* Daire Ekleme Formu */}
+<div style={styles.section}>
+  <h3 style={styles.sectionTitle}>Yeni Daire Ekle</h3>
+
+  <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+    
+    <input
+      style={styles.select}
+      placeholder="Blok (A, B, C...)"
+      value={blok}
+      onChange={(e) => setBlok(e.target.value)}
+    />
+
+    <input
+      style={styles.select}
+      placeholder="Kat"
+      value={kat}
+      onChange={(e) => setKat(e.target.value)}
+      type="number"
+    />
+
+    <input
+      style={styles.select}
+      placeholder="Daire No"
+      value={daireNo}
+      onChange={(e) => setDaireNo(e.target.value)}
+      type="number"
+    />
+
+    <select
+      style={styles.select}
+      value={durum}
+      onChange={(e) => setDurum(e.target.value)}
+    >
+      <option value="Sahip">Sahip</option>
+      <option value="Kiracı">Kiracı</option>
+      <option value="Boş">Boş</option>
+    </select>
+
+    <input
+      style={styles.select}
+      placeholder={
+      durum === "Boş" ? "Kişi" : "Kişi (Zorunlu)"
+      }
+      value={kisi}
+      onChange={(e) => setKisi(e.target.value)}
+      disabled={durum === "Boş"}
+    />
+
+
+    <button style={styles.btn} onClick={addApartment}>
+      Daire Ekle
+    </button>
+  </div>
+</div>
+
+
+
+
+
+
 
       {/* Kat / Blok Bazlı Görüntüleme */}
       <div style={styles.section}>
