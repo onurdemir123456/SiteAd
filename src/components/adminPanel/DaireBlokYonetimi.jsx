@@ -19,10 +19,40 @@ function DaireBlokYonetimi() {
   const [daireNo, setDaireNo] = useState("");
   const [durum, setDurum] = useState("Boş");
   const [kisi, setKisi] = useState("");
+  const [filterBlok, setFilterBlok] = useState("");
+  const [filterKat, setFilterKat] = useState("");
+  const uniqueBloklar = [...new Set(apartments.map(a => a.blok))].sort();
+  const uniqueKatlar = [...new Set(apartments.map(a => a.kat))].sort((a, b) => a - b);
+  const [filterDurum, setFilterDurum] = useState("");
+
+  const filteredApartments = apartments.filter((a) => {
+  return (
+    (filterBlok === "" || a.blok === filterBlok) &&
+    (filterKat === "" || a.kat === Number(filterKat)) &&
+    (filterDurum === "" || a.durum === filterDurum)
+  );
+});
+
+const isActive = (d) => filterDurum === d;
+
+
+
+
+
+
+
 
   useEffect(() => {
   fetchApartments();
 }, []);
+
+
+function toggleDurum(d) {
+  setFilterDurum((prev) => (prev === d ? "" : d));
+}
+
+
+
 
 async function fetchApartments() {
   const { data, error } = await supabase.from("apartments").select("*");
@@ -68,6 +98,12 @@ async function addApartment() {
   setDurum("Boş");
   setKisi("");
 }
+
+
+
+
+
+
 
 
 
@@ -156,7 +192,7 @@ async function addApartment() {
             </tr>
           </thead>
           <tbody>
-            {apartments.map((d) => (
+            {filteredApartments.map((d) => (
               <tr key={d.id}>
                 <td style={styles.td}>{d.blok}</td>
                 <td style={styles.td}>{d.kat}</td>
@@ -235,30 +271,92 @@ async function addApartment() {
       {/* Kat / Blok Bazlı Görüntüleme */}
       <div style={styles.section}>
         <h3 style={styles.sectionTitle}>Kat / Blok Bazlı Görüntüleme</h3>
-        <div style={styles.filterRow}>
-          <select style={styles.select}>
-            <option>Blok A</option>
-            <option>Blok B</option>
-            <option>Blok C</option>
-          </select>
+        <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+          {/* BLOK ALANI */}
+        
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
 
-          <select style={styles.select}>
-            <option>Kat 1</option>
-            <option>Kat 2</option>
-            <option>Kat 3</option>
-          </select>
+            <input
+              style={styles.select}
+              list="blokListesi"
+              placeholder="Blok seç veya yaz (A-Z)"
+              value={filterBlok}
+              onChange={(e) => setFilterBlok(e.target.value.toUpperCase())}
+            />
+
+            <datalist id="blokListesi">
+              {uniqueBloklar.map((b) => (
+                <option key={b} value={b} />
+              ))}
+            </datalist>
+            <span><strong>Blok:</strong> {filterBlok || "Yok"}</span>
+          </div>
+
+          {/* KAT ALANI */}
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <input
+              style={styles.select}
+              list="katListesi"
+              placeholder="Kat seç veya yaz"
+              type="number"
+              value={filterKat}
+              onChange={(e) => setFilterKat(e.target.value)}
+            />
+
+            <datalist id="katListesi">
+              {uniqueKatlar.map((k) => (
+                <option key={k} value={k} />
+            ))}
+            </datalist>
+
+            <span><strong>Kat:</strong> {filterKat || "Yok"}</span>
+          </div>
+
         </div>
       </div>
+        
 
-      {/* Sahip / Kiracı */}
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Daire Sahibi / Kiracı Ayrımı</h3>
-        <div style={styles.filterRow}>
-          <button style={styles.btn}>Sahip</button>
-          <button style={styles.btn}>Kiracı</button>
-          <button style={styles.btn}>Hepsi</button>
-        </div>
-      </div>
+      {/* Sahip / Kiracı / Boş */}
+<div style={styles.section}>
+  <h3 style={styles.sectionTitle}>Daire Sahibi / Kiracı Ayrımı</h3>
+  <div style={styles.filterRow}>
+
+    {/* SAHİP */}
+    <button
+      onClick={() => toggleDurum("Sahip")}
+      style={{
+        ...styles.btn,
+        background: filterDurum === "Sahip" ? "#6fcf97" : "#e0e0e0",
+      }}
+    >
+      Sahip
+    </button>
+
+    {/* KİRACI */}
+    <button
+      onClick={() => toggleDurum("Kiracı")}
+      style={{
+        ...styles.btn,
+        background: filterDurum === "Kiracı" ? "#6fcf97" : "#e0e0e0",
+      }}
+    >
+      Kiracı
+    </button>
+
+    {/* BOŞ */}
+    <button
+      onClick={() => toggleDurum("Boş")}
+      style={{
+        ...styles.btn,
+        background: filterDurum === "Boş" ? "#6fcf97" : "#e0e0e0",
+      }}
+    >
+      Boş
+    </button>
+
+  </div>
+</div>
+
 
       {/* Kişi Bilgileri */}
       <div style={styles.section}>
