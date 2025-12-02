@@ -3,13 +3,6 @@ import { useEffect, useState } from "react";
 import supabase from "../../helper/supabaseClient";
 
 
-
-
-
-
-
-
-
 function DaireBlokYonetimi() {
 
 
@@ -24,6 +17,13 @@ function DaireBlokYonetimi() {
   const uniqueBloklar = [...new Set(apartments.map(a => a.blok))].sort();
   const uniqueKatlar = [...new Set(apartments.map(a => a.kat))].sort((a, b) => a - b);
   const [filterDurum, setFilterDurum] = useState("");
+  const [residents, setResidents] = useState([]);
+  const [selectedKisi, setSelectedKisi] = useState("");
+  const [rTelefon, setRTelefon] = useState("");
+  const [rEmail, setREmail] = useState("");
+
+  
+
 
   const filteredApartments = apartments.filter((a) => {
   return (
@@ -34,6 +34,13 @@ function DaireBlokYonetimi() {
 });
 
 const isActive = (d) => filterDurum === d;
+// dairelerdeki kişileri unique olarak al
+const uniqueKisiler = [...new Set(
+  apartments
+    .map(a => a.kisi)
+    .filter(k => k && k.trim() !== "")
+)];
+
 
 
 
@@ -98,6 +105,70 @@ async function addApartment() {
   setDurum("Boş");
   setKisi("");
 }
+
+
+function formatPhone(value) {
+  // Sadece rakamları al
+  let cleaned = value.replace(/\D/g, "");
+
+  // Format  (XXXX XXX XX XX)
+  if (cleaned.length > 10) cleaned = cleaned.slice(0, 11);
+
+  const formatted = cleaned
+    .replace(/(\d{4})(\d{3})(\d{2})(\d{2})/, "$1 $2 $3 $4")
+    .replace(/(\d{4})(\d{3})(\d{2})$/, "$1 $2 $3")
+    .replace(/(\d{4})(\d{3})$/, "$1 $2")
+    .replace(/(\d{4})$/, "$1");
+
+  return formatted;
+}
+
+
+useEffect(() => {
+  fetchResidents();
+}, []);
+
+async function fetchResidents() {
+  const { data, error } = await supabase
+    .from("residents")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (!error) setResidents(data);
+}
+
+
+
+async function addResident() {
+  if (!selectedKisi || !rTelefon) {
+    alert("Kişi ve Telefon zorunludur!");
+    return;
+  }
+
+  const { data, error } = await supabase.from("residents").insert([
+    {
+      kisi: selectedKisi,
+      telefon: rTelefon,
+      email: rEmail || null,
+    },
+  ]);
+
+  if (error) {
+    alert("Kişi eklenemedi: " + error.message);
+    return;
+  }
+
+  alert("Kişi başarıyla eklendi!");
+
+  // Listeyi yenile
+  fetchResidents();
+
+  setSelectedKisi("");
+  setRTelefon("");
+  setREmail("");
+}
+
+
 
 
 
@@ -358,15 +429,73 @@ async function addApartment() {
 </div>
 
 
-      {/* Kişi Bilgileri */}
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Kişi Bilgileri</h3>
-        <div style={styles.infoBox}>
-          <p><strong>Ad Soyad:</strong> Onur K.</p>
-          <p><strong>Telefon:</strong> 555 123 45 67</p>
-          <p><strong>Email:</strong> onur@example.com</p>
-        </div>
-      </div>
+{/* Kişi Bilgileri */}
+<div style={styles.section}>
+  <h3 style={styles.sectionTitle}>Kişi Bilgileri</h3>
+
+  <table style={styles.table}>
+    <thead>
+      <tr>
+        <th style={styles.th}>Kişi</th>
+        <th style={styles.th}>Telefon</th>
+        <th style={styles.th}>Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      {residents.map((k) => (
+        <tr key={k.id}>
+          <td style={styles.td}>{k.kisi}</td>
+          <td style={styles.td}>{k.telefon}</td>
+          <td style={styles.td}>{k.email || "-"}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+
+{/* Yeni Kişi Ekle */}
+<div style={styles.section}>
+  <h3 style={styles.sectionTitle}>Yeni Kişi Ekle</h3>
+
+  <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+    
+    {/* KİŞİ DROPDOWN */}
+    <select
+      style={styles.select}
+      value={selectedKisi}
+      onChange={(e) => setSelectedKisi(e.target.value)}
+    >
+      <option value="">Kişi seç (zorunlu)</option>
+      {uniqueKisiler.map((name, index) => (
+        <option key={index} value={name}>
+          {name}
+        </option>
+      ))}
+    </select>
+
+    <input
+      placeholder="Telefon (zorunlu)"
+      style={styles.select}
+      value={rTelefon}
+      onChange={(e) => setRTelefon(formatPhone(e.target.value))}
+      maxLength={13}
+    />
+
+    <input
+      placeholder="Email (opsiyonel)"
+      style={styles.select}
+      value={rEmail}
+      onChange={(e) => setREmail(e.target.value)}
+    />
+
+    <button style={styles.btn} onClick={addResident}>
+      Kişi Ekle
+    </button>
+  </div>
+</div>
+
+
 
       {/* Araç Bilgileri */}
       <div style={styles.section}>
