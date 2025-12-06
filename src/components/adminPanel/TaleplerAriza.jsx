@@ -74,6 +74,51 @@ function AdminSikayetler() {
     statusClosed: { color: "green", fontWeight: "bold" },
   };
 
+
+  const popupOverlayStyle = {
+  position: "fixed",
+  top: 0,
+  left: 0,
+  width: "100vw",
+  height: "100vh",
+  background: "rgba(0,0,0,0.5)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  zIndex: 1000,
+};
+
+const popupBoxStyle = {
+  background: "#fff",
+  padding: "20px",
+  borderRadius: "8px",
+  width: "300px",
+};
+
+const popupInputStyle = {
+  width: "100%",
+  marginBottom: "10px",
+  padding: "6px",
+};
+
+const popupSaveBtnStyle = {
+  background: "#4CAF50",
+  color: "#fff",
+  border: "none",
+  padding: "8px",
+  marginRight: "10px",
+  cursor: "pointer",
+};
+
+const popupCloseBtnStyle = {
+  background: "#f44336",
+  color: "#fff",
+  border: "none",
+  padding: "8px",
+  cursor: "pointer",
+};
+
+
   // ----------------------------
   // Supabase Data Fetch
   // ----------------------------
@@ -123,6 +168,29 @@ function AdminSikayetler() {
     setCurrentArizaId(id);
     setShowPopup(true);
   };
+
+  const handleSavePopup = async () => {
+  if (!iscilikInput) {
+    alert("İşçilik tutarı giriniz");
+    return;
+  }
+
+  await supabase
+    .from("arizalar")
+    .update({
+      iscilik: iscilikInput,
+      tamamlanma: `%${yuzdeInput}`,
+    })
+    .eq("id", currentArizaId);
+
+  setShowPopup(false);
+  setIscilikInput("");
+  setYuzdeInput(0);
+  setCurrentArizaId(null);
+
+  fetchArizalar();
+};
+
 
 
   return (
@@ -251,7 +319,7 @@ function AdminSikayetler() {
                 <td style={styles.td}>{e.konu}</td>
                 <td style={styles.td}>{e.detay}</td>
                 <td style={styles.td}>
-                  {t.durum === "Açık" ? (
+                  {e.durum === "Açık" ? (
                     <span style={styles.statusOpen}>{t("adminopen")}</span>
                   ) : (
                     <span style={styles.statusClosed}>{t("adminclosed")}</span>
