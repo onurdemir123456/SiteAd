@@ -1,6 +1,9 @@
 import React from "react";
+import { useLanguage } from "../../context/LanguageContext";
 
 function BelgelerArsiv() {
+  const { t } = useLanguage();
+
   const styles = {
     container: {
       padding: "20px",
@@ -51,45 +54,36 @@ function BelgelerArsiv() {
       marginRight: "10px",
       marginTop: "5px",
     },
-    input: {
-      padding: "8px",
-      borderRadius: "5px",
-      border: "1px solid #ccc",
-      width: "100%",
-      marginBottom: "10px",
-      fontSize: "14px",
-      boxSizing: "border-box",
-    },
   };
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>Belgeler & Arşiv</h2>
+      <h2 style={styles.title}>{t("documentsArchive")}</h2>
 
       {/* Yönetim Kurulu Kararları */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Yönetim Kurulu Kararları</h3>
+        <h3 style={styles.sectionTitle}>{t("boardDecisions")}</h3>
         <table style={styles.table}>
           <thead>
             <tr>
-              <th style={styles.th}>Tarih</th>
-              <th style={styles.th}>Dosya</th>
-              <th style={styles.th}>İndir</th>
+              <th style={styles.th}>{t("date")}</th>
+              <th style={styles.th}>{t("file")}</th>
+              <th style={styles.th}>{t("download")}</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td style={styles.td}>01/10/2025</td>
-              <td style={styles.td}>Toplantı Kararı 01</td>
+              <td style={styles.td}>{t("meetingDecision")} 01</td>
               <td style={styles.td}>
-                <button style={styles.btn}>PDF İndir</button>
+                <button style={styles.btn}>{t("downloadPdf")}</button>
               </td>
             </tr>
             <tr>
               <td style={styles.td}>15/09/2025</td>
-              <td style={styles.td}>Toplantı Kararı 02</td>
+              <td style={styles.td}>{t("meetingDecision")} 02</td>
               <td style={styles.td}>
-                <button style={styles.btn}>PDF İndir</button>
+                <button style={styles.btn}>{t("downloadPdf")}</button>
               </td>
             </tr>
           </tbody>
@@ -98,21 +92,21 @@ function BelgelerArsiv() {
 
       {/* Sözleşmeler */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Sözleşmeler</h3>
+        <h3 style={styles.sectionTitle}>{t("contracts")}</h3>
         <table style={styles.table}>
           <thead>
             <tr>
-              <th style={styles.th}>Ad</th>
-              <th style={styles.th}>Tarih</th>
-              <th style={styles.th}>İndir</th>
+              <th style={styles.th}>{t("name")}</th>
+              <th style={styles.th}>{t("date")}</th>
+              <th style={styles.th}>{t("download")}</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td style={styles.td}>Aidat Sözleşmesi 2025</td>
+              <td style={styles.td}>{t("duesContract")} 2025</td>
               <td style={styles.td}>01/01/2025</td>
               <td style={styles.td}>
-                <button style={styles.btn}>PDF İndir</button>
+                <button style={styles.btn}>{t("downloadPdf")}</button>
               </td>
             </tr>
           </tbody>
@@ -121,21 +115,21 @@ function BelgelerArsiv() {
 
       {/* Bütçe Dosyaları */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Bütçe Dosyaları</h3>
+        <h3 style={styles.sectionTitle}>{t("budgetFiles")}</h3>
         <table style={styles.table}>
           <thead>
             <tr>
-              <th style={styles.th}>Yıl</th>
-              <th style={styles.th}>Dosya</th>
-              <th style={styles.th}>İndir</th>
+              <th style={styles.th}>{t("year")}</th>
+              <th style={styles.th}>{t("file")}</th>
+              <th style={styles.th}>{t("download")}</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td style={styles.td}>2025</td>
-              <td style={styles.td}>Bütçe 2025</td>
+              <td style={styles.td}>{t("budget")} 2025</td>
               <td style={styles.td}>
-                <button style={styles.btn}>PDF İndir</button>
+                <button style={styles.btn}>{t("downloadPdf")}</button>
               </td>
             </tr>
           </tbody>
@@ -144,12 +138,13 @@ function BelgelerArsiv() {
 
       {/* PDF Arşivi */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>PDF Arşivi</h3>
-        <p>Tüm PDF dosyalarını arşivleyebilir ve indirebilirsiniz.</p>
-        <button style={styles.btn}>Tümünü İndir</button>
+        <h3 style={styles.sectionTitle}>{t("pdfArchive")}</h3>
+        <p>{t("pdfArchiveDescription")}</p>
+        <button style={styles.btn}>{t("downloadAll")}</button>
       </div>
     </div>
   );
 }
 
 export default BelgelerArsiv;
+

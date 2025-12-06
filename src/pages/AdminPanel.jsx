@@ -13,10 +13,35 @@ import BelgelerArsiv from "../components/adminPanel/BelgelerArsiv";
 import MesajlasmaChat from "../components/adminPanel/MesajlasmaChat";
 import Ayarlar from "../components/adminPanel/Ayarlar";
 import logoNoBg from "../assets/logoNoBg.png";
-
+import { useLanguage } from "../context/LanguageContext";
+import { useEffect } from "react";
+import supabase from "../helper/supabaseClient";
 function AdminPanel() {
   const [activeComponent, setActiveComponent] = useState("Ana Panel");
+  const { t } = useLanguage();
+  const { changeLanguage } = useLanguage();
+  useEffect(() => {
+    const fetchUserLanguage = async () => {
+      const { data, error } = await supabase.auth.getUser();
+      console.log(data);
+      if (error) {
+        console.error(error);
+        return;
+      }
+      const user = data.user;
+      if (!user) return; // login değilse işlem yapma
 
+      const { data: settings } = await supabase
+        .from("settings")
+        .select("language")
+        .eq("id", user.id)
+        .single();
+
+      if (settings) changeLanguage(settings.language);
+    };
+
+    fetchUserLanguage();
+  }, []);
   const renderComponent = () => {
     switch (activeComponent) {
       case "Ana Panel": return <MainPanel />;
@@ -34,20 +59,19 @@ function AdminPanel() {
       default: return null;
     }
   };
-
   const buttons = [
-    { label: "Ana Panel", onClick: () => setActiveComponent("Ana Panel") },
-    { label: "Duyurular", onClick: () => setActiveComponent("Duyurular") },
-    { label: "Daireler/Blok Yönetimi", onClick: () => setActiveComponent("Daireler/Blok Yönetimi") },
-    { label: "Aidat & Ödemeler", onClick: () => setActiveComponent("Aidat & Ödemeler") },
-    { label: "Gelir – Gider", onClick: () => setActiveComponent("Gelir – Gider") },
-    { label: "Talepler – Arıza Bildirimleri", onClick: () => setActiveComponent("Talepler – Arıza Bildirimleri") },
-    { label: "Güvenlik & Ziyaretçi Girişi", onClick: () => setActiveComponent("Güvenlik & Ziyaretçi Girişi") },
-    { label: "Personel Yönetimi", onClick: () => setActiveComponent("Personel Yönetimi") },
-    { label: "Teslimatlar & Kargo", onClick: () => setActiveComponent("Teslimatlar & Kargo") },
-    { label: "Belgeler & Arşiv", onClick: () => setActiveComponent("Belgeler & Arşiv") },
-    { label: "Mesajlaşma / Chat", onClick: () => setActiveComponent("Mesajlaşma / Chat") },
-    { label: "Ayarlar", onClick: () => setActiveComponent("Ayarlar") },
+    { label: t("menudashboard"), onClick: () => setActiveComponent("Ana Panel") },
+    { label: t("menuannouncements"), onClick: () => setActiveComponent("Duyurular") },
+    { label: t("menuapartmentBlock"), onClick: () => setActiveComponent("Daireler/Blok Yönetimi") },
+    { label: t("menuduesPayments"), onClick: () => setActiveComponent("Aidat & Ödemeler") },
+    { label: t("menuincomeExpense"), onClick: () => setActiveComponent("Gelir – Gider") },
+    { label: t("menurequestsFaults"), onClick: () => setActiveComponent("Talepler – Arıza Bildirimleri") },
+    { label: t("menusecurityVisitor"), onClick: () => setActiveComponent("Güvenlik & Ziyaretçi Girişi") },
+    { label: t("menustaffManagement"), onClick: () => setActiveComponent("Personel Yönetimi") },
+    { label: t("menudeliveriesCargo"), onClick: () => setActiveComponent("Teslimatlar & Kargo") },
+    { label: t("menudocumentsArchive"), onClick: () => setActiveComponent("Belgeler & Arşiv") },
+    { label: t("menumessagingChat"), onClick: () => setActiveComponent("Mesajlaşma / Chat") },
+    { label: t("menusettings"), onClick: () => setActiveComponent("Ayarlar") },
   ];
 
   return (
@@ -68,7 +92,7 @@ function AdminPanel() {
         fontWeight: "bold",
         boxSizing: "border-box",
       }}>
-        <span>Site Yönetim Paneli</span>
+        <span>{t("SiteYönetimPaneli")}</span>
 
         {/* LOGO */}
         <img

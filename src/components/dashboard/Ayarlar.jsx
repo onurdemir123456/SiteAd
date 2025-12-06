@@ -139,9 +139,8 @@ function Ayarlar() {
   return (
     <div style={styles.container}>
       <h2 style={styles.title}>{t("settings")}</h2>
-
       {/* SITE AYARLARI */}
-      <div style={styles.section}>
+      {/*<div style={styles.section}>
         <h3 style={styles.sectionTitle}>{t("siteSettings")}</h3>
 
         <input
@@ -165,7 +164,8 @@ function Ayarlar() {
         <button style={styles.btn} onClick={saveSiteSettings}>
           {t("save")}
         </button>
-      </div>
+      </div>*/}
+
 
       {/* BİLDİRİMLER */}
       <div style={styles.section}>

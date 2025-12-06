@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import supabase from "../../helper/supabaseClient";
-
-export default function AdminSikayetler() {
+import { useLanguage } from "../../context/LanguageContext";
+function AdminSikayetler() {
+  const { t } = useLanguage();
   const [sikayetler, setSikayetler] = useState([]);
   const [arizalar, setArizalar] = useState([]);
   const [talepler, setTalepler] = useState([]);
@@ -117,32 +118,34 @@ export default function AdminSikayetler() {
     fetchTalepler();
   };
 
-  
+
   const openArizaPopup = (id) => {
-  setCurrentArizaId(id);
-  setShowPopup(true);
-};
+    setCurrentArizaId(id);
+    setShowPopup(true);
+  };
 
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>Admin Paneli – Talepler & Arıza & Şikayet Yönetimi</h2>
+      <h2 style={styles.title}>
+        {t("admintitle")} {/* Admin Paneli – Talepler & Arıza & Şikayet Yönetimi */}
+      </h2>
 
       {/* ------------------------------------------------------------------ */}
       {/* ŞİKAYETLER */}
       {/* ------------------------------------------------------------------ */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Şikayetler</h3>
+        <h3 style={styles.sectionTitle}>{t("admincomplaints")}</h3>
 
         <table style={styles.table}>
           <thead>
             <tr>
-              <th style={styles.th}>Tarih</th>
-              <th style={styles.th}>Daire</th>
-              <th style={styles.th}>Konu</th>
-              <th style={styles.th}>Açıklama</th>
-              <th style={styles.th}>Durum</th>
-              <th style={styles.th}>İşlem</th>
+              <th style={styles.th}>{t("admindate")}</th>
+              <th style={styles.th}>{t("adminapartment")}</th>
+              <th style={styles.th}>{t("adminsubject")}</th>
+              <th style={styles.th}>{t("admindescription")}</th>
+              <th style={styles.th}>{t("adminstatus")}</th>
+              <th style={styles.th}>{t("adminaction")}</th>
             </tr>
           </thead>
           <tbody>
@@ -154,15 +157,15 @@ export default function AdminSikayetler() {
                 <td style={styles.td}>{s.aciklama}</td>
                 <td style={styles.td}>
                   {s.durum === "Açık" ? (
-                    <span style={styles.statusOpen}>Açık</span>
+                    <span style={styles.statusOpen}>{t("adminopen")}</span>
                   ) : (
-                    <span style={styles.statusClosed}>Kapalı</span>
+                    <span style={styles.statusClosed}>{t("adminclosed")}</span>
                   )}
                 </td>
                 <td style={styles.td}>
                   {s.durum === "Açık" && (
                     <button style={styles.btn} onClick={() => closeSikayet(s.id)}>
-                      Kapat
+                      {t("adminclose")}
                     </button>
                   )}
                 </td>
@@ -176,19 +179,19 @@ export default function AdminSikayetler() {
       {/* ARIZA BİLDİRİMLERİ */}
       {/* ------------------------------------------------------------------ */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Arıza Bildirimleri</h3>
+        <h3 style={styles.sectionTitle}>{t("adminfaultReports")}</h3>
 
         <table style={styles.table}>
           <thead>
             <tr>
-              <th style={styles.th}>Tarih</th>
-              <th style={styles.th}>Daire</th>
-              <th style={styles.th}>Konu</th>
-              <th style={styles.th}>Açıklama</th>
-              <th style={styles.th}>İşçilik</th>
-              <th style={styles.th}>Tamamlanma</th>
-              <th style={styles.th}>Durum</th>
-              <th style={styles.th}>İşlem</th>
+              <th style={styles.th}>{t("admindate")}</th>
+              <th style={styles.th}>{t("adminapartment")}</th>
+              <th style={styles.th}>{t("adminsubject")}</th>
+              <th style={styles.th}>{t("admindescription")}</th>
+              <th style={styles.th}>{t("adminworkCost")}</th>
+              <th style={styles.th}>{t("admincompletion")}</th>
+              <th style={styles.th}>{t("adminstatus")}</th>
+              <th style={styles.th}>{t("adminaction")}</th>
             </tr>
           </thead>
           <tbody>
@@ -202,19 +205,19 @@ export default function AdminSikayetler() {
                 <td style={styles.td}>{a.tamamlanma || "-"}</td>
                 <td style={styles.td}>
                   {a.durum === "Açık" ? (
-                    <span style={styles.statusOpen}>Açık</span>
+                    <span style={styles.statusOpen}>{t("adminopen")}</span>
                   ) : (
-                    <span style={styles.statusClosed}>Kapalı</span>
+                    <span style={styles.statusClosed}>{t("adminclosed")}</span>
                   )}
                 </td>
                 <td style={styles.td}>
                   {a.durum === "Açık" && (
                     <>
                       <button style={styles.btn} onClick={() => openArizaPopup(a.id)}>
-                        İşçilik / Tamamlanma
+                        {t("adminworkCompletion")}
                       </button>
                       <button style={styles.btnGreen} onClick={() => closeAriza(a.id)}>
-                        Kapat
+                        {t("adminclose")}
                       </button>
                     </>
                   )}
@@ -229,35 +232,35 @@ export default function AdminSikayetler() {
       {/* TEKNİK DESTEK TALEPLERİ */}
       {/* ------------------------------------------------------------------ */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Teknik Destek Talepleri</h3>
+        <h3 style={styles.sectionTitle}>{t("admintechRequests")}</h3>
 
         <table style={styles.table}>
           <thead>
             <tr>
-              <th style={styles.th}>Tarih</th>
-              <th style={styles.th}>Konu</th>
-              <th style={styles.th}>Detay</th>
-              <th style={styles.th}>Durum</th>
-              <th style={styles.th}>İşlem</th>
+              <th style={styles.th}>{t("admindate")}</th>
+              <th style={styles.th}>{t("adminsubject")}</th>
+              <th style={styles.th}>{t("admindetails")}</th>
+              <th style={styles.th}>{t("adminstatus")}</th>
+              <th style={styles.th}>{t("adminaction")}</th>
             </tr>
           </thead>
           <tbody>
-            {talepler.map((t) => (
-              <tr key={t.id}>
-                <td style={styles.td}>{new Date(t.tarih).toLocaleDateString()}</td>
-                <td style={styles.td}>{t.konu}</td>
-                <td style={styles.td}>{t.detay}</td>
+            {talepler.map((e) => (
+              <tr key={e.id}>
+                <td style={styles.td}>{new Date(e.tarih).toLocaleDateString()}</td>
+                <td style={styles.td}>{e.konu}</td>
+                <td style={styles.td}>{e.detay}</td>
                 <td style={styles.td}>
                   {t.durum === "Açık" ? (
-                    <span style={styles.statusOpen}>Açık</span>
+                    <span style={styles.statusOpen}>{t("adminopen")}</span>
                   ) : (
-                    <span style={styles.statusClosed}>Kapalı</span>
+                    <span style={styles.statusClosed}>{t("adminclosed")}</span>
                   )}
                 </td>
                 <td style={styles.td}>
-                  {t.durum === "Açık" && (
-                    <button style={styles.btnGreen} onClick={() => closeTalep(t.id)}>
-                      Kapat
+                  {e.durum === "Açık" && (
+                    <button style={styles.btnGreen} onClick={() => closeTalep(e.id)}>
+                      {t("adminclose")}
                     </button>
                   )}
                 </td>
@@ -266,88 +269,43 @@ export default function AdminSikayetler() {
           </tbody>
         </table>
       </div>
-      
-      
-      
-      
-      
-      
+
+      {/* İşçilik / Tamamlanma Popup */}
       {showPopup && (
-  <div style={{
-    position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    background: "rgba(0,0,0,0.5)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 999
-  }}>
-    <div style={{
-      width: "350px",
-      background: "#fff",
-      padding: "20px",
-      borderRadius: "10px",
-      display: "flex",
-      flexDirection: "column",
-      gap: "12px"
-    }}>
+        <div style={popupOverlayStyle}>
+          <div style={popupBoxStyle}>
+            <h3>{t("adminworkCompletion")}</h3>
 
-      <h3>İşçilik ve Tamamlanma</h3>
+            <label>{t("adminworkCost")} (₺)</label>
+            <input
+              type="number"
+              value={iscilikInput}
+              onChange={(e) => setIscilikInput(e.target.value)}
+              style={popupInputStyle}
+            />
 
-      <label>İşçilik Tutarı (₺)</label>
-      <input
-        type="number"
-        value={iscilikInput}
-        onChange={(e) => setIscilikInput(e.target.value)}
-        style={{ padding: "8px", border: "1px solid #ccc", borderRadius: "6px" }}
-      />
+            <label>
+              {t("admincompletion")}: % {yuzdeInput}
+            </label>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={yuzdeInput}
+              onChange={(e) => setYuzdeInput(e.target.value)}
+              style={{ width: "100%" }}
+            />
 
-      <label>Tamamlanma: % {yuzdeInput}</label>
-      <input
-        type="range"
-        min="0"
-        max="100"
-        value={yuzdeInput}
-        onChange={(e) => setYuzdeInput(e.target.value)}
-        style={{ width: "100%" }}
-      />
-
-      <button
-        style={{ background: "#4CAF50", color: "#fff", padding: "10px", border: "none", borderRadius: "6px" }}
-        onClick={async () => {
-          await supabase
-            .from("arizalar")
-            .update({
-              iscilik: iscilikInput,
-              tamamlanma: `%${yuzdeInput}`
-            })
-            .eq("id", currentArizaId);
-
-          fetchArizalar();
-          setShowPopup(false);
-          setIscilikInput("");
-          setYuzdeInput(0);
-        }}
-      >
-        Kaydet
-      </button>
-
-      <button
-        style={{ background: "#f44336", color: "#fff", padding: "10px", border: "none", borderRadius: "6px" }}
-        onClick={() => setShowPopup(false)}
-      >
-        Kapat
-      </button>
-
-    </div>
-  </div>
-)}
-
-
+            <button style={popupSaveBtnStyle} onClick={handleSavePopup}>
+              {t("adminsave")}
+            </button>
+            <button style={popupCloseBtnStyle} onClick={() => setShowPopup(false)}>
+              {t("adminclose")}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
-
+export default AdminSikayetler;

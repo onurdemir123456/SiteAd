@@ -1,6 +1,7 @@
 import React from "react";
-
+import { useLanguage } from "../../context/LanguageContext";
 function GuvenlikZiyaretci() {
+  const { t } = useLanguage();
   const styles = {
     container: {
       padding: "20px",
@@ -64,55 +65,55 @@ function GuvenlikZiyaretci() {
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>Güvenlik & Ziyaretçi Girişi</h2>
+      <h2 style={styles.title}>{t("securitytitle")}</h2>
 
       {/* Ziyaretçi Ekleme */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Ziyaretçi Ekleme</h3>
-        <input style={styles.input} type="text" placeholder="Ziyaretçi Adı" />
-        <input style={styles.input} type="text" placeholder="Daire / Blok" />
-        <input style={styles.input} type="text" placeholder="Telefon" />
-        <button style={styles.btn}>Ziyaretçi Kaydet</button>
+        <h3 style={styles.sectionTitle}>{t("securityvisitortitle")}</h3>
+        <input style={styles.input} type="text" placeholder={t("securityvisitorname")} />
+        <input style={styles.input} type="text" placeholder={t("securityvisitorblock")} />
+        <input style={styles.input} type="text" placeholder={t("securityvisitorphone")} />
+        <button style={styles.btn}>{t("securityvisitorsave")}</button>
       </div>
 
       {/* Plaka Kaydı */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Plaka Kaydı</h3>
-        <input style={styles.input} type="text" placeholder="Plaka" />
-        <input style={styles.input} type="text" placeholder="Araç Sahibi" />
-        <button style={styles.btn}>Plaka Kaydet</button>
+        <h3 style={styles.sectionTitle}>{t("securityplatetitle")}</h3>
+        <input style={styles.input} type="text" placeholder={t("securityplatenumber")} />
+        <input style={styles.input} type="text" placeholder={t("securityplateowner")} />
+        <button style={styles.btn}>{t("securityplatesave")}</button>
       </div>
 
       {/* Güvenlik Logları */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Güvenlik Logları</h3>
+        <h3 style={styles.sectionTitle}>{t("securitylogstitle")}</h3>
         <table style={styles.table}>
           <thead>
             <tr>
-              <th style={styles.th}>Tarih</th>
-              <th style={styles.th}>Kullanıcı</th>
-              <th style={styles.th}>Olay</th>
+              <th style={styles.th}>{t("securitylogsdate")}</th>
+              <th style={styles.th}>{t("securitylogsuser")}</th>
+              <th style={styles.th}>{t("securitylogsevent")}</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td style={styles.td}>23/11/2025</td>
               <td style={styles.td}>Güvenlik Görevlisi A</td>
-              <td style={styles.td}>Kapı Girişi</td>
+              <td style={styles.td}>{t("securitylogsdoorEntry")}</td>
             </tr>
             <tr>
               <td style={styles.td}>22/11/2025</td>
               <td style={styles.td}>Güvenlik Görevlisi B</td>
-              <td style={styles.td}>Ziyaretçi Girişi</td>
+              <td style={styles.td}>{t("securitylogsvisitorEntry")}</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      {/* Kamera İzleme (Opsiyonel) */}
+      {/* Kamera İzleme */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Kamera İzleme</h3>
-        <p>Canlı kamera bağlantıları veya iframe ekleyebilirsiniz (opsiyonel)</p>
+        <h3 style={styles.sectionTitle}>{t("securitycameratitle")}</h3>
+        <p>{t("securitycameradesc")}</p>
       </div>
     </div>
   );

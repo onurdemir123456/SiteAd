@@ -8,14 +8,16 @@ import {
     Title,
 } from "chart.js";
 import supabase from "../../helper/supabaseClient";
+import { useLanguage } from "../../context/LanguageContext";
 
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 function MainPanel() {
+    const { t } = useLanguage();
+
     const [activeCount, setActiveCount] = useState(0);
     const [announcements, setAnnouncements] = useState([]);
 
-    // Modal sistemleri
     const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
     const [showModal, setShowModal] = useState(false);
 
@@ -31,12 +33,12 @@ function MainPanel() {
     const fetchCounts = async () => {
         const { data: s } = await supabase.from("sikayetler").select("*");
         const { data: a } = await supabase.from("arizalar").select("*");
-        const { data: t } = await supabase.from("talepler").select("*");
+        const { data: t2 } = await supabase.from("talepler").select("*");
 
         const total =
             s.filter((x) => x.durum === "Açık").length +
             a.filter((x) => x.durum === "Açık").length +
-            t.filter((x) => x.durum === "Açık").length;
+            t2.filter((x) => x.durum === "Açık").length;
 
         setActiveCount(total);
     };
@@ -45,17 +47,18 @@ function MainPanel() {
         fetchAnnouncements();
         fetchCounts();
     }, []);
+
     const formatDate = (dateString) => {
         if (!dateString) return "";
         const date = new Date(dateString);
         const day = date.getDate();
-        const month = date.toLocaleString("tr-TR", { month: "long" }); // Türkçe ay adı
+        const month = date.toLocaleString("tr-TR", { month: "long" });
         const year = date.getFullYear();
         return `${day} ${month} ${year}`;
     };
-    // Grafikler
+
     const gelirGiderData = {
-        labels: ["Gelir", "Gider"],
+        labels: [t("mainincome"), t("mainexpense")],
         datasets: [
             {
                 data: [75000, 50000],
@@ -74,7 +77,7 @@ function MainPanel() {
     };
 
     const aidatData = {
-        labels: ["Ödenen", "Ödenmeyen"],
+        labels: [t("mainpaid"), t("mainunpaid")],
         datasets: [
             {
                 data: [90, 30],
@@ -85,7 +88,7 @@ function MainPanel() {
     };
 
     const enerjiData = {
-        labels: ["Elektrik", "Su", "Doğalgaz"],
+        labels: [t("mainelectricity"), t("mainwater"), t("maingas")],
         datasets: [
             {
                 data: [4000, 1500, 2000],
@@ -125,61 +128,32 @@ function MainPanel() {
             flex: "1 1 300px",
             boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
         },
-
-        // Modal
-        modalOverlay: {
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100vw",
-            height: "100vh",
-            backgroundColor: "rgba(0,0,0,0.5)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 999,
-        },
-        modalBox: {
-            width: "400px",
-            background: "#fff",
-            padding: "20px",
-            borderRadius: "12px",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
-        },
-        closeBtn: {
-            float: "right",
-            cursor: "pointer",
-            fontSize: "20px",
-            fontWeight: "bold",
-        },
     };
 
     return (
         <div style={styles.dashboardContainer}>
-            <h1>Site Yönetimi</h1>
+            <h1>{t("maintitle")}</h1>
 
             <div style={styles.cardsContainer}>
+
+                {/* Daire Sayısı */}
                 <div style={styles.card}>
-                    <h2>Daire Sayısı</h2>
+                    <h2>{t("mainapartmentCount")}</h2>
                     <p>120</p>
                 </div>
 
+                {/* Borç / Tahsilat */}
                 <div style={styles.card}>
-                    <h2>Borç / Tahsilat Özetleri</h2>
-                    <p>Borç: 50.000₺</p>
-                    <p>Tahsilat: 40.000₺</p>
+                    <h2>{t("maindebtSummary")}</h2>
+                    <p>{t("maindebt")}: 50.000₺</p>
+                    <p>{t("maincollection")}: 40.000₺</p>
                 </div>
 
+                {/* Son Duyurular */}
                 <div style={styles.card}>
-                    <h2>Son Duyurular</h2>
-                    <div
-                        style={{
-                            maxHeight: "150px",
-                            overflowY: "auto",
-                            paddingRight: "5px",
-                        }}
-                    >
-                        {announcements.length === 0 && <p>Henüz duyuru bulunmuyor.</p>}
+                    <h2>{t("mainlatestAnnouncements")}</h2>
+                    <div style={{ maxHeight: "150px", overflowY: "auto", paddingRight: "5px" }}>
+                        {announcements.length === 0 && <p>{t("mainnoAnnouncements")}</p>}
 
                         {announcements.map((item) => (
                             <div
@@ -196,12 +170,8 @@ function MainPanel() {
                                     background: "#f7f7f7",
                                     transition: "0.2s",
                                 }}
-                                onMouseEnter={(e) =>
-                                    (e.currentTarget.style.background = "#e4e4e4")
-                                }
-                                onMouseLeave={(e) =>
-                                    (e.currentTarget.style.background = "#f7f7f7")
-                                }
+                                onMouseEnter={(e) => (e.currentTarget.style.background = "#e4e4e4")}
+                                onMouseLeave={(e) => (e.currentTarget.style.background = "#f7f7f7")}
                             >
                                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                                     <span>• {item.title}</span>
@@ -214,13 +184,14 @@ function MainPanel() {
                     </div>
                 </div>
 
+                {/* Aktif Talepler */}
                 <div style={styles.card}>
-                    <h2>Aktif Talepler</h2>
-                    <p>Toplam: {activeCount}</p>
+                    <h2>{t("mainactiveRequests")}</h2>
+                    <p>{t("maintotal")}: {activeCount}</p>
                 </div>
             </div>
 
-            {/* ---- MODAL ---- */}
+            {/* -------- MODAL -------- */}
             {showModal && selectedAnnouncement && (
                 <div
                     style={{
@@ -248,23 +219,18 @@ function MainPanel() {
                         }}
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <h2 style={{ marginBottom: "5px" }}>
-                            {selectedAnnouncement.title}
-                        </h2>
-                        <p
-                            style={{
-                                fontSize: "12px",
-                                color: "#666",
-                                marginBottom: "10px",
-                            }}
-                        >
+                        <h2 style={{ marginBottom: "5px" }}>{selectedAnnouncement.title}</h2>
+
+                        <p style={{ fontSize: "12px", color: "#666", marginBottom: "10px" }}>
                             {formatDate(selectedAnnouncement.created_at)}
                         </p>
+
                         <p style={{ whiteSpace: "pre-wrap", lineHeight: "1.4" }}>
                             {selectedAnnouncement.description ||
                                 selectedAnnouncement.content ||
-                                "İçerik bulunamadı."}
+                                t("mainnoContent")}
                         </p>
+
                         <button
                             onClick={() => setShowModal(false)}
                             style={{
@@ -277,54 +243,43 @@ function MainPanel() {
                                 cursor: "pointer",
                             }}
                         >
-                            Kapat
+                            {t("mainclose")}
                         </button>
                     </div>
                 </div>
             )}
 
+            {/* ---------- GRAFİKLER ---------- */}
             <div style={styles.chartsContainer}>
                 <div style={styles.chartCard}>
-                    <h2>Gelir – Gider</h2>
+                    <h2>{t("mainincomeExpense")}</h2>
                     <Pie
                         data={gelirGiderData}
                         options={{
                             ...pieOptions,
-                            plugins: {
-                                title: { display: true, text: "Gelir – Gider" },
-                            },
+                            plugins: { title: { display: true, text: t("mainincomeExpense") } },
                         }}
                     />
                 </div>
 
                 <div style={styles.chartCard}>
-                    <h2>Aidat Kullanımı</h2>
+                    <h2>{t("mainaidatUsage")}</h2>
                     <Pie
                         data={aidatData}
                         options={{
                             ...pieOptions,
-                            plugins: {
-                                title: {
-                                    display: true,
-                                    text: "Aidat Kullanımı",
-                                },
-                            },
+                            plugins: { title: { display: true, text: t("mainaidatUsage") } },
                         }}
                     />
                 </div>
 
                 <div style={styles.chartCard}>
-                    <h2>Enerji Kullanımı</h2>
+                    <h2>{t("mainenergyUsage")}</h2>
                     <Pie
                         data={enerjiData}
                         options={{
                             ...pieOptions,
-                            plugins: {
-                                title: {
-                                    display: true,
-                                    text: "Enerji Kullanımı",
-                                },
-                            },
+                            plugins: { title: { display: true, text: t("mainenergyUsage") } },
                         }}
                     />
                 </div>
@@ -334,4 +289,3 @@ function MainPanel() {
 }
 
 export default MainPanel;
-

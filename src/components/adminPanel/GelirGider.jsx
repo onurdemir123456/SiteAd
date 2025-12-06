@@ -1,6 +1,7 @@
 import React from "react";
-
+import { useLanguage } from "../../context/LanguageContext";
 function GelirGider() {
+  const { t } = useLanguage();
   const styles = {
     container: {
       padding: "20px",
@@ -54,29 +55,29 @@ function GelirGider() {
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>Gelir – Gider</h2>
+      <h2 style={styles.title}>{t("title")}</h2>
 
       {/* Aylık Bütçe */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Aylık Bütçe</h3>
+        <h3 style={styles.sectionTitle}>{t("monthly_budget")}</h3>
         <table style={styles.table}>
           <thead>
             <tr>
-              <th style={styles.th}>Ay</th>
-              <th style={styles.th}>Gelir</th>
-              <th style={styles.th}>Gider</th>
-              <th style={styles.th}>Bakiye</th>
+              <th style={styles.th}>{t("month")}</th>
+              <th style={styles.th}>{t("income")}</th>
+              <th style={styles.th}>{t("expense")}</th>
+              <th style={styles.th}>{t("balance")}</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td style={styles.td}>Ocak</td>
+              <td style={styles.td}>{t("january")}</td>
               <td style={styles.td}>50.000₺</td>
               <td style={styles.td}>35.000₺</td>
               <td style={styles.td}>15.000₺</td>
             </tr>
             <tr>
-              <td style={styles.td}>Şubat</td>
+              <td style={styles.td}>{t("february")}</td>
               <td style={styles.td}>45.000₺</td>
               <td style={styles.td}>30.000₺</td>
               <td style={styles.td}>15.000₺</td>
@@ -87,35 +88,35 @@ function GelirGider() {
 
       {/* Makbuz & Fatura Girişleri */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Makbuz & Fatura Girişleri</h3>
-        <button style={styles.btn}>Yeni Makbuz Ekle</button>
-        <button style={styles.btn}>Yeni Fatura Ekle</button>
+        <h3 style={styles.sectionTitle}>{t("receipts_invoices")}</h3>
+        <button style={styles.btn}>{t("add_receipt")}</button>
+        <button style={styles.btn}>{t("add_invoice")}</button>
       </div>
 
       {/* Banka Hareketleri */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Banka Hareketleri</h3>
+        <h3 style={styles.sectionTitle}>{t("bank_transactions")}</h3>
         <table style={styles.table}>
           <thead>
             <tr>
-              <th style={styles.th}>Tarih</th>
-              <th style={styles.th}>Açıklama</th>
-              <th style={styles.th}>Tutar</th>
-              <th style={styles.th}>Tip</th>
+              <th style={styles.th}>{t("date")}</th>
+              <th style={styles.th}>{t("description")}</th>
+              <th style={styles.th}>{t("amount")}</th>
+              <th style={styles.th}>{t("type")}</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td style={styles.td}>01/11/2025</td>
-              <td style={styles.td}>Aidat Tahsilatı</td>
+              <td style={styles.td}>{t("dues_collection")}</td>
               <td style={styles.td}>5.000₺</td>
-              <td style={styles.td}>Gelir</td>
+              <td style={styles.td}>{t("income")}</td>
             </tr>
             <tr>
               <td style={styles.td}>05/11/2025</td>
-              <td style={styles.td}>Elektrik Faturası</td>
+              <td style={styles.td}>{t("electricity_bill")}</td>
               <td style={styles.td}>1.200₺</td>
-              <td style={styles.td}>Gider</td>
+              <td style={styles.td}>{t("expense")}</td>
             </tr>
           </tbody>
         </table>
@@ -123,9 +124,9 @@ function GelirGider() {
 
       {/* Raporlama */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Raporlama</h3>
-        <button style={styles.btn}>PDF Çıktı Al</button>
-        <button style={styles.btn}>Excel Çıktı Al</button>
+        <h3 style={styles.sectionTitle}>{t("reporting")}</h3>
+        <button style={styles.btn}>{t("export_pdf")}</button>
+        <button style={styles.btn}>{t("export_excel")}</button>
       </div>
     </div>
   );

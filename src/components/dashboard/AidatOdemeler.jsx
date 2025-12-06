@@ -1,6 +1,6 @@
 // UserAidat.jsx
 import React from "react";
-
+import { useLanguage } from "../../context/LanguageContext";
 function AidatOdemeler() {
   const styles = {
     container: {
@@ -52,20 +52,20 @@ function AidatOdemeler() {
       marginRight: "10px",
     },
   };
-
-  return (
+  const { t } = useLanguage();
+   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>Aidat & Ödemeler</h2>
+      <h2 style={styles.title}>{t("paymenttitle")}</h2>
 
       {/* Kullanıcının Borç Durumu */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Aidat Borçları</h3>
+        <h3 style={styles.sectionTitle}>{t("paymentdebts")}</h3>
         <table style={styles.table}>
           <thead>
             <tr>
-              <th style={styles.th}>Daire</th>
-              <th style={styles.th}>Borç Miktarı</th>
-              <th style={styles.th}>Son Ödeme Tarihi</th>
+              <th style={styles.th}>{t("paymentapartment")}</th>
+              <th style={styles.th}>{t("paymentamount")}</th>
+              <th style={styles.th}>{t("paymentdueDate")}</th>
             </tr>
           </thead>
           <tbody>
@@ -80,13 +80,13 @@ function AidatOdemeler() {
 
       {/* Kullanıcının Ödeme Geçmişi */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Ödeme Geçmişi</h3>
+        <h3 style={styles.sectionTitle}>{t("paymenthistory")}</h3>
         <table style={styles.table}>
           <thead>
             <tr>
-              <th style={styles.th}>Tarih</th>
-              <th style={styles.th}>Tutar</th>
-              <th style={styles.th}>Ödeme Tipi</th>
+              <th style={styles.th}>{t("paymentdate")}</th>
+              <th style={styles.th}>{t("paymentamount")}</th>
+              <th style={styles.th}>{t("paymenttype")}</th>
             </tr>
           </thead>
           <tbody>
@@ -101,9 +101,9 @@ function AidatOdemeler() {
 
       {/* Online Ödeme */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Online Ödeme</h3>
-        <button style={styles.btn}>iyzico ile Öde</button>
-        <button style={styles.btn}>Stripe ile Öde</button>
+        <h3 style={styles.sectionTitle}>{t("paymentonlinePayment")}</h3>
+        <button style={styles.btn}>{t("paymentpayIyzico")}</button>
+        <button style={styles.btn}>{t("paymentpayStripe")}</button>
       </div>
     </div>
   );

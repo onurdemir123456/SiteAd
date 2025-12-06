@@ -1,6 +1,9 @@
 import React, { useState } from "react";
+import { useLanguage } from "../../context/LanguageContext";
 
 function MesajlasmaChat() {
+  const { t } = useLanguage();
+
   const styles = {
     container: {
       padding: "20px",
@@ -92,7 +95,7 @@ function MesajlasmaChat() {
   };
 
   const [messages, setMessages] = useState([
-    { text: "Merhaba! Site ile ilgili sorularınızı buradan sorabilirsiniz.", sender: "bot" },
+    { text: t("chatbotGreeting"), sender: "bot" },
   ]);
 
   const [newMessage, setNewMessage] = useState("");
@@ -105,18 +108,20 @@ function MesajlasmaChat() {
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>Mesajlaşma / Chat</h2>
+      <h2 style={styles.title}>{t("chattitle")}</h2>
 
       {/* Sohbet Kutusu */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Sohbet</h3>
+        <h3 style={styles.sectionTitle}>{t("chatchatBox")}</h3>
         <div style={styles.chatBox}>
           {messages.map((msg, index) => (
             <div
               key={index}
               style={{
                 ...styles.message,
-                ...(msg.sender === "user" ? styles.userMessage : styles.botMessage),
+                ...(msg.sender === "user"
+                  ? styles.userMessage
+                  : styles.botMessage),
               }}
             >
               {msg.text}
@@ -128,33 +133,33 @@ function MesajlasmaChat() {
             style={styles.input}
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            placeholder="Mesaj yaz..."
+            placeholder={t("chatplaceholder")}
           />
           <button style={styles.btn} onClick={handleSend}>
-            Gönder
+            {t("chatsend")}
           </button>
         </div>
       </div>
 
       {/* Duyurular */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Duyurular</h3>
+        <h3 style={styles.sectionTitle}>{t("chatannouncements")}</h3>
         <table style={styles.table}>
           <thead>
             <tr>
-              <th style={styles.th}>Duyuru</th>
-              <th style={styles.th}>Gönderim Tarihi</th>
-              <th style={styles.th}>Okundu / Toplam</th>
+              <th style={styles.th}>{t("chatannouncement")}</th>
+              <th style={styles.th}>{t("chatsendDate")}</th>
+              <th style={styles.th}>{t("chatreadTotal")}</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td style={styles.td}>Aidat Ödemesi Hatırlatma</td>
+              <td style={styles.td}>{t("chatsample1")}</td>
               <td style={styles.td}>01/11/2025</td>
               <td style={styles.td}>12 / 15</td>
             </tr>
             <tr>
-              <td style={styles.td}>Site Kuralları Güncelleme</td>
+              <td style={styles.td}>{t("chatsample2")}</td>
               <td style={styles.td}>15/10/2025</td>
               <td style={styles.td}>15 / 15</td>
             </tr>

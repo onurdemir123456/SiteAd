@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Bell, Settings, MessageCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import supabase from "../../helper/supabaseClient";
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function Duyurular() {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState("yonetici");
   const [query, setQuery] = useState("");
   const [announcements, setAnnouncements] = useState([]);
@@ -21,33 +23,14 @@ export default function Duyurular() {
     fetchAnnouncements();
   }, []);
 
-  // Realtime dinleme
-  /*useEffect(() => {
-    const channel = supabase
-      .channel("announcements-realtime")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", table: "announcements", schema: "public" },
-        (payload) => setAnnouncements((prev) => [payload.new, ...prev])
-      )
-      .subscribe();
-
-    return () => supabase.removeChannel(channel);
-  }, []);*/
-
-  // Arama filtreleme
   const filteredAnnouncements = announcements.filter((a) =>
     (a.title + " " + a.description).toLowerCase().includes(query.toLowerCase())
   );
 
-
-
-  // Önemli duyurular filtresi
   const importantAnnouncements = announcements.filter(
     (a) => a.is_important === true
   );
 
-  // Tarih formatlama fonksiyonu
   const formatDate = (dateStr) => {
     if (!dateStr) return "";
     const d = new Date(dateStr);
@@ -60,7 +43,6 @@ export default function Duyurular() {
     });
   };
 
-  // Stil
   const styles = {
     container: { padding: 16, maxWidth: 900, margin: "0 auto", fontFamily: "Arial" },
     headerRow: { display: "flex", justifyContent: "space-between", marginBottom: 16 },
@@ -75,15 +57,15 @@ export default function Duyurular() {
   };
 
   const tabs = [
-    { key: "yonetici", label: "Yönetici duyuruları", icon: <Bell size={16} /> },
-    { key: "onemli", label: "Önemli bilgilendirmeler", icon: <Settings size={16} /> },
-    { key: "etkinlik", label: "Etkinlik duyuruları", icon: <MessageCircle size={16} /> },
+    { key: "yonetici", label: t("announcementsmanager"), icon: <Bell size={16} /> },
+    { key: "onemli", label: t("announcementsimportant"), icon: <Settings size={16} /> },
+    { key: "etkinlik", label: t("announcementsevents"), icon: <MessageCircle size={16} /> },
   ];
 
   return (
     <div style={styles.container}>
       <div style={styles.headerRow}>
-        <h1 style={{ fontSize: 22, fontWeight: 600 }}>Duyurular</h1>
+        <h1 style={{ fontSize: 22, fontWeight: 600 }}>{t("announcementstitle")}</h1>
       </div>
 
       <div style={styles.card}>
@@ -106,11 +88,11 @@ export default function Duyurular() {
             style={styles.input}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Duyurularda ara..."
+            placeholder={t("announcementssearch")}
           />
         </div>
 
-        {/* LISTE */}
+        {/* Liste */}
         <motion.div
           key={activeTab}
           initial={{ opacity: 0, y: 6 }}
@@ -119,80 +101,50 @@ export default function Duyurular() {
         >
           {activeTab === "iletisim" ? (
             <div style={{ textAlign: "center", padding: 32 }}>
-              SMS / Mail modülü yakında
+              {t("announcementssmsMailComing")}
             </div>
           ) : (
             <div>
-              {/* ÖNEMLİ DUYURULAR SEKMEDEYSE */}
               {activeTab === "onemli" ? (
                 importantAnnouncements.length === 0 ? (
-                  <div
-                    style={{
-                      textAlign: "center",
-                      padding: 32,
-                      color: "#666",
-                    }}
-                  >
-                    Gösterilecek önemli duyuru yok.
+                  <div style={{ textAlign: "center", padding: 32, color: "#666" }}>
+                    {t("announcementsnoImportant")}
                   </div>
                 ) : (
                   importantAnnouncements.map((d) => (
                     <div key={d.id} style={styles.listItem}>
                       <div>
                         <h4 style={{ margin: 0, fontWeight: 600 }}>{d.title}</h4>
-                        <p
-                          style={{
-                            margin: "6px 0 0",
-                            fontSize: 14,
-                            color: "#555",
-                          }}
-                        >
+                        <p style={{ margin: "6px 0 0", fontSize: 14, color: "#555" }}>
                           {d.description}
                         </p>
                         <p style={styles.dateText}>{formatDate(d.created_at)}</p>
                       </div>
-                      <span style={{ fontSize: 12, color: "#999" }}>
-                        #{d.id.slice(0, 4)}
-                      </span>
+                      <span style={{ fontSize: 12, color: "#999" }}>#{d.id.slice(0, 4)}</span>
                     </div>
                   ))
                 )
-              ) : /* NORMAL DUYURULAR */ filteredAnnouncements.length === 0 ? (
-                <div
-                  style={{
-                    textAlign: "center",
-                    padding: 32,
-                    color: "#666",
-                  }}
-                >
-                  Gösterilecek duyuru yok.
+              ) : filteredAnnouncements.length === 0 ? (
+                <div style={{ textAlign: "center", padding: 32, color: "#666" }}>
+                  {t("announcementsnoAnnouncement")}
                 </div>
               ) : (
                 filteredAnnouncements.map((d) => (
                   <div key={d.id} style={styles.listItem}>
                     <div>
                       <h4 style={{ margin: 0, fontWeight: 600 }}>{d.title}</h4>
-                      <p
-                        style={{
-                          margin: "6px 0 0",
-                          fontSize: 14,
-                          color: "#555",
-                        }}
-                      >
+                      <p style={{ margin: "6px 0 0", fontSize: 14, color: "#555" }}>
                         {d.description}
                       </p>
                       <p style={styles.dateText}>{formatDate(d.created_at)}</p>
                     </div>
-                    <span style={{ fontSize: 12, color: "#999" }}>
-                      #{d.id.slice(0, 4)}
-                    </span>
+                    <span style={{ fontSize: 12, color: "#999" }}>#{d.id.slice(0, 4)}</span>
                   </div>
                 ))
               )}
             </div>
           )}
         </motion.div>
-
       </div>
     </div>
   );

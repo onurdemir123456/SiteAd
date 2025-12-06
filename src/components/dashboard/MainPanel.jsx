@@ -8,12 +8,12 @@ import {
   Title,
 } from "chart.js";
 import supabase from "../../helper/supabaseClient";
-
+import { useLanguage } from "../../context/LanguageContext";
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 function UserDashboard({ setActiveTab }) {
   const [activeCount, setActiveCount] = useState(0);
-
+  const { t } = useLanguage();
   // ---------------- DUYURULAR STATE ----------------
   const [announcements, setAnnouncements] = useState([]);
   const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
@@ -122,36 +122,30 @@ function UserDashboard({ setActiveTab }) {
 
   return (
     <div style={styles.container}>
-      <h1>Kullanıcı Dashboard</h1>
+      <h1>{t("dashboardtitle")}</h1>
 
       <div style={styles.cardsContainer}>
         <div style={styles.card}>
-          <h2>Daireniz</h2>
+          <h2>{t("dashboardyourApartment")}</h2>
           <p>A3-12</p>
         </div>
 
         <div style={styles.card}>
-          <h2>Aidat Durumu</h2>
-          <p>Ödenen: 1.200₺</p>
-          <p>Toplam Borç: 1.500₺</p>
+          <h2>{t("dashboardfeeStatus")}</h2>
+          <p>{t("dashboardpaid")}: 1.200₺</p>
+          <p>{t("dashboardtotalDebt")}: 1.500₺</p>
         </div>
 
         <div style={styles.card}>
-          <h2>Açık Talepler</h2>
-          <p>Toplam: {activeCount}</p>
+          <h2>{t("dashboardopenRequests")}</h2>
+          <p>{t("dashboardtotal")}: {activeCount}</p>
         </div>
 
-        {/* ------------ SCROLLABLE DUYURULAR ------------ */}
+        {/* SCROLLABLE DUYURULAR */}
         <div style={styles.card}>
-          <h2>Son Duyurular</h2>
-          <div
-            style={{
-              maxHeight: "150px",
-              overflowY: "auto",
-              paddingRight: "5px",
-            }}
-          >
-            {announcements.length === 0 && <p>Henüz duyuru bulunmuyor.</p>}
+          <h2>{t("dashboardlatestAnnouncements")}</h2>
+          <div style={{ maxHeight: "150px", overflowY: "auto", paddingRight: "5px" }}>
+            {announcements.length === 0 && <p>{t("dashboardnoAnnouncements")}</p>}
 
             {announcements.map((item) => (
               <div
@@ -168,12 +162,8 @@ function UserDashboard({ setActiveTab }) {
                   background: "#f7f7f7",
                   transition: "0.2s",
                 }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.background = "#e4e4e4")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.background = "#f7f7f7")
-                }
+                onMouseEnter={(e) => (e.currentTarget.style.background = "#e4e4e4")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "#f7f7f7")}
               >
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <span>• {item.title}</span>
@@ -189,29 +179,29 @@ function UserDashboard({ setActiveTab }) {
 
       <div style={styles.chartsContainer}>
         <div style={styles.chartCard}>
-          <h2>Aidat Kullanımı</h2>
+          <h2>{t("dashboardfeeUsage")}</h2>
           <Pie
             data={aidatData}
             options={{
               ...pieOptions,
-              plugins: { title: { display: true, text: "Aidat Kullanımı" } },
+              plugins: { title: { display: true, text: t("dashboardfeeUsage") } },
             }}
           />
         </div>
 
         <div style={styles.chartCard}>
-          <h2>Enerji Kullanımı</h2>
+          <h2>{t("dashboardenergyUsage")}</h2>
           <Pie
             data={enerjiData}
             options={{
               ...pieOptions,
-              plugins: { title: { display: true, text: "Enerji Kullanımı" } },
+              plugins: { title: { display: true, text: t("dashboardenergyUsage") } },
             }}
           />
         </div>
       </div>
 
-      {/* ---------------- MODAL ---------------- */}
+      {/* MODAL */}
       {showModal && selectedAnnouncement && (
         <div
           style={{
@@ -239,22 +229,14 @@ function UserDashboard({ setActiveTab }) {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 style={{ marginBottom: "5px" }}>
-              {selectedAnnouncement.title}
-            </h2>
-            <p
-              style={{
-                fontSize: "12px",
-                color: "#666",
-                marginBottom: "10px",
-              }}
-            >
+            <h2 style={{ marginBottom: "5px" }}>{selectedAnnouncement.title}</h2>
+            <p style={{ fontSize: "12px", color: "#666", marginBottom: "10px" }}>
               {formatDate(selectedAnnouncement.created_at)}
             </p>
             <p style={{ whiteSpace: "pre-wrap", lineHeight: "1.4" }}>
               {selectedAnnouncement.description ||
                 selectedAnnouncement.content ||
-                "İçerik bulunamadı."}
+                t("dashboardnoContent")}
             </p>
             <button
               onClick={() => setShowModal(false)}
@@ -268,7 +250,7 @@ function UserDashboard({ setActiveTab }) {
                 cursor: "pointer",
               }}
             >
-              Kapat
+              {t("dashboardclose")}
             </button>
           </div>
         </div>

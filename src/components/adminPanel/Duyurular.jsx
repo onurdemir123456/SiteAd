@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Bell, Mail, MessageCircle, Settings } from "lucide-react";
 import { motion } from "framer-motion";
 import supabase from "../../helper/supabaseClient";
-
+import { useLanguage } from "../../context/LanguageContext";
 export default function Duyurular() {
   const [activeTab, setActiveTab] = useState("yonetici");
   const [query, setQuery] = useState("");
@@ -11,7 +11,7 @@ export default function Duyurular() {
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const [newImportant, setNewImportant] = useState(false);
-
+  const { t } = useLanguage();
   // Tarih formatlama fonksiyonu
   const formatDate = (dateStr) => {
     if (!dateStr) return "";
@@ -141,40 +141,46 @@ export default function Duyurular() {
   };
 
   const tabs = [
-    { key: "yonetici", label: "Yönetici duyuruları", icon: <Bell size={16} /> },
-    { key: "onemli", label: "Önemli bilgilendirmeler", icon: <Settings size={16} /> },
-    { key: "etkinlik", label: "Etkinlik duyuruları", icon: <MessageCircle size={16} /> },
-    { key: "iletisim", label: "SMS / Mail Gönderim", icon: <Mail size={16} /> },
+    { key: "yonetici", label: t("yonetici"), icon: <Bell size={16} /> },
+    { key: "onemli", label: t("onemli"), icon: <Settings size={16} /> },
+    { key: "etkinlik", label: t("etkinlik"), icon: <MessageCircle size={16} /> },
+    { key: "iletisim", label: t("iletisim"), icon: <Mail size={16} /> },
   ];
 
   return (
     <div style={styles.container}>
+
       {/* ÜST BAŞLIK */}
       <div style={styles.headerRow}>
-        <h1 style={{ fontSize: 22, fontWeight: 600 }}>Duyurular</h1>
+        <h1 style={{ fontSize: 22, fontWeight: 600 }}>{t("title")}</h1>
+
         <div style={styles.headerBtns}>
           <button style={styles.btn} onClick={() => setShowAddModal(true)}>
-            Yeni Duyuru
+            {t("new")}
           </button>
-          <button style={styles.primaryBtn}>Toplu Gönderim</button>
+
+          <button style={styles.primaryBtn}>
+            {t("bulkSend")}
+          </button>
         </div>
       </div>
 
       {/* ANA KART */}
       <div style={styles.card}>
+
         {/* Sekme Butonları */}
         <nav style={styles.tabsRow}>
-          {tabs.map((t) => (
+          {tabs.map((tb) => (
             <button
-              key={t.key}
-              onClick={() => setActiveTab(t.key)}
+              key={tb.key}
+              onClick={() => setActiveTab(tb.key)}
               style={{
                 ...styles.tab,
-                ...(activeTab === t.key ? styles.activeTab : {}),
+                ...(activeTab === tb.key ? styles.activeTab : {}),
               }}
             >
-              {t.icon}
-              <span style={{ fontSize: 14 }}>{t.label}</span>
+              {tb.icon}
+              <span style={{ fontSize: 14 }}>{t(tb.label)}</span>
             </button>
           ))}
         </nav>
@@ -185,10 +191,10 @@ export default function Duyurular() {
             style={styles.input}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Duyurularda ara..."
+            placeholder={t("searchPlaceholder")}
           />
-          <button style={styles.smallBtn}>Filtre</button>
-          <button style={styles.smallBtn}>Yayınlama Planı</button>
+          <button style={styles.smallBtn}>{t("filter")}</button>
+          <button style={styles.smallBtn}>{t("schedule")}</button>
         </div>
 
         {/* LISTE */}
@@ -200,20 +206,14 @@ export default function Duyurular() {
         >
           {activeTab === "iletisim" ? (
             <div style={{ textAlign: "center", padding: 32 }}>
-              SMS / Mail modülü yakında
+              {t("smsSoon")}
             </div>
           ) : (
             <div>
               {activeTab === "onemli" ? (
                 importantAnnouncements.length === 0 ? (
-                  <div
-                    style={{
-                      textAlign: "center",
-                      padding: 32,
-                      color: "#666",
-                    }}
-                  >
-                    Gösterilecek önemli duyuru yok.
+                  <div style={{ textAlign: "center", padding: 32, color: "#666" }}>
+                    {t("noImportant")}
                   </div>
                 ) : (
                   importantAnnouncements.map((d) => (
@@ -222,13 +222,7 @@ export default function Duyurular() {
                         <h4 style={{ margin: 0, fontWeight: 600 }}>
                           {d.title}
                         </h4>
-                        <p
-                          style={{
-                            margin: "6px 0 0",
-                            fontSize: 14,
-                            color: "#555",
-                          }}
-                        >
+                        <p style={{ margin: "6px 0 0", fontSize: 14, color: "#555" }}>
                           {d.description}
                         </p>
                         <p style={styles.dateText}>
@@ -242,14 +236,8 @@ export default function Duyurular() {
                   ))
                 )
               ) : filteredAnnouncements.length === 0 ? (
-                <div
-                  style={{
-                    textAlign: "center",
-                    padding: 32,
-                    color: "#666",
-                  }}
-                >
-                  Gösterilecek duyuru yok.
+                <div style={{ textAlign: "center", padding: 32, color: "#666" }}>
+                  {t("noAnnouncements")}
                 </div>
               ) : (
                 filteredAnnouncements.map((d) => (
@@ -258,13 +246,7 @@ export default function Duyurular() {
                       <h4 style={{ margin: 0, fontWeight: 600 }}>
                         {d.title}
                       </h4>
-                      <p
-                        style={{
-                          margin: "6px 0 0",
-                          fontSize: 14,
-                          color: "#555",
-                        }}
-                      >
+                      <p style={{ margin: "6px 0 0", fontSize: 14, color: "#555" }}>
                         {d.description}
                       </p>
                       <p style={styles.dateText}>
@@ -280,10 +262,9 @@ export default function Duyurular() {
             </div>
           )}
         </motion.div>
-      </div>  {/* ← BU, styles.card için eksik olan kapanış */}
+      </div>
 
-
-      {/* YENİ DUYURU MODALI */}
+      {/* YENİ DUYURU MODAL */}
       {showAddModal && (
         <div
           style={{
@@ -299,33 +280,38 @@ export default function Duyurular() {
           }}
         >
           <div style={{ background: "white", padding: 20, borderRadius: 10, width: 400 }}>
-            <h2>Yeni Duyuru</h2>
+            <h2>{t("newAnnouncementTitle")}</h2>
 
             <input
               style={{ width: "100%", padding: 8, marginBottom: 10 }}
-              placeholder="Başlık"
+              placeholder={t("titlePlaceholder")}
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
             />
 
             <textarea
               style={{ width: "100%", padding: 8, height: 100 }}
-              placeholder="Açıklama"
+              placeholder={t("descriptionPlaceholder")}
               value={newDescription}
               onChange={(e) => setNewDescription(e.target.value)}
             />
 
             <label style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 10 }}>
-              <input type="checkbox" checked={newImportant} onChange={() => setNewImportant(!newImportant)} />
-              Önemli duyuru
+              <input
+                type="checkbox"
+                checked={newImportant}
+                onChange={() => setNewImportant(!newImportant)}
+              />
+              {t("markImportant")}
             </label>
 
             <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
               <button style={styles.primaryBtn} onClick={addAnnouncement}>
-                Yayınla
+                {t("publish")}
               </button>
+
               <button style={styles.btn} onClick={() => setShowAddModal(false)}>
-                İptal
+                {t("cancel")}
               </button>
             </div>
           </div>

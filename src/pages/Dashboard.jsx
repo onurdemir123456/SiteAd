@@ -7,9 +7,15 @@ import TaleplerAriza from "../components/dashboard/TaleplerAriza";
 import MesajlasmaChat from "../components/dashboard/MesajlasmaChat";
 import MainPanel from "../components/dashboard/MainPanel";
 import Duyurular from "../components/dashboard/Duyurular";
+import Ayarlar from "../components/dashboard/Ayarlar";
 import logoNoBg from "../assets/logoNoBg.png";
+import { useLanguage } from "../context/LanguageContext";
+import supabase from "../helper/supabaseClient";
+import { useEffect } from "react";
 function DashboardPanel() {
+  const { changeLanguage } = useLanguage();
   const [activeComponent, setActiveComponent] = useState("Ana Panel");
+  const { t } = useLanguage();
 
   const renderComponent = () => {
     switch (activeComponent) {
@@ -19,17 +25,40 @@ function DashboardPanel() {
       case "Aidat": return <AidatOdemeler />;
       case "Talepler": return <TaleplerAriza />;
       case "Mesajlar": return <MesajlasmaChat />;
+      case "Ayarlar": return <Ayarlar />;
       default: return null;
     }
   };
+  useEffect(() => {
+    const fetchUserLanguage = async () => {
+      const { data, error } = await supabase.auth.getUser();
+      console.log(data);
+      if (error) {
+        console.error(error);
+        return;
+      }
+      const user = data.user;
+      if (!user) return; // login değilse işlem yapma
 
+      const { data: settings } = await supabase
+        .from("settings")
+        .select("language")
+        .eq("id", user.id)
+        .single();
+
+      if (settings) changeLanguage(settings.language);
+    };
+
+    fetchUserLanguage();
+  }, []);
   const buttons = [
-    { label: "Ana Panel", onClick: () => setActiveComponent("Ana Panel") },
-    { label: "Daireler", onClick: () => setActiveComponent("Daireler") },
-    { label: "Duyurular", onClick: () => setActiveComponent("Duyurular") },
-    { label: "Aidat", onClick: () => setActiveComponent("Aidat") },
-    { label: "Talepler", onClick: () => setActiveComponent("Talepler") },
-    { label: "Mesajlar", onClick: () => setActiveComponent("Mesajlar") },
+    { label: t("menudashboard"), onClick: () => setActiveComponent("Ana Panel") },
+    { label: t("menuapartments"), onClick: () => setActiveComponent("Daireler") },
+    { label: t("menuannouncements"), onClick: () => setActiveComponent("Duyurular") },
+    { label: t("menudues"), onClick: () => setActiveComponent("Aidat") },
+    { label: t("menurequests"), onClick: () => setActiveComponent("Talepler") },
+    { label: t("menumessages"), onClick: () => setActiveComponent("Mesajlar") },
+    { label: t("menusettings"), onClick: () => setActiveComponent("Ayarlar") },
   ];
 
   return (
@@ -50,7 +79,7 @@ function DashboardPanel() {
         fontWeight: "bold",
         boxSizing: "border-box",
       }}>
-        <span>Dashboard Paneli</span>
+        <span>{t("DashboardPaneli")}</span>
 
         {/* LOGO */}
         <img

@@ -1,11 +1,11 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import supabase from "../../helper/supabaseClient";
-
+import { useLanguage } from "../../context/LanguageContext";
 
 function DaireBlokYonetimi() {
 
-
+  const { t } = useLanguage();
   const [apartments, setApartments] = useState([]);
   const [blok, setBlok] = useState("");
   const [kat, setKat] = useState("");
@@ -22,162 +22,139 @@ function DaireBlokYonetimi() {
   const [rTelefon, setRTelefon] = useState("");
   const [rEmail, setREmail] = useState("");
 
-  
-
-
   const filteredApartments = apartments.filter((a) => {
-  return (
-    (filterBlok === "" || a.blok === filterBlok) &&
-    (filterKat === "" || a.kat === Number(filterKat)) &&
-    (filterDurum === "" || a.durum === filterDurum)
-  );
-});
+    return (
+      (filterBlok === "" || a.blok === filterBlok) &&
+      (filterKat === "" || a.kat === Number(filterKat)) &&
+      (filterDurum === "" || a.durum === filterDurum)
+    );
+  });
 
-const isActive = (d) => filterDurum === d;
-// dairelerdeki kişileri unique olarak al
-const uniqueKisiler = [...new Set(
-  apartments
-    .map(a => a.kisi)
-    .filter(k => k && k.trim() !== "")
-)];
-
-
-
-
-
+  const isActive = (d) => filterDurum === d;
+  // dairelerdeki kişileri unique olarak al
+  const uniqueKisiler = [...new Set(
+    apartments
+      .map(a => a.kisi)
+      .filter(k => k && k.trim() !== "")
+  )];
+  useEffect(() => {
+    fetchApartments();
+  }, []);
 
 
+  function toggleDurum(d) {
+    setFilterDurum((prev) => (prev === d ? "" : d));
+  }
+
+
+
+
+  async function fetchApartments() {
+    const { data, error } = await supabase.from("apartments").select("*");
+    if (!error) setApartments(data);
+  }
+
+
+
+
+
+  async function addApartment() {
+    if (!blok || !kat || !daireNo) {
+      alert("Blok, Kat ve Daire No zorunludur.");
+      return;
+    }
+
+    // --- Kişi Zorunluluk Kontrolü ---
+    if ((durum === "Sahip" || durum === "Kiracı") && !kisi) {
+      alert("Sahip veya Kiracı seçildiğinde kişi adı zorunludur!");
+      return;
+    }
+
+    const { data, error } = await supabase.from("apartments").insert([
+      {
+        blok: blok,
+        kat: Number(kat),
+        daire_no: Number(daireNo),
+        durum: durum,
+        kisi: kisi,
+      },
+    ]);
+
+    if (error) {
+      alert("Kayıt eklenemedi: " + error.message);
+    } else {
+      alert("Daire başarıyla eklendi!");
+      fetchApartments(); // Listeyi yenile
+    }
+
+    setBlok("");
+    setKat("");
+    setDaireNo("");
+    setDurum("Boş");
+    setKisi("");
+  }
+
+
+  function formatPhone(value) {
+    // Sadece rakamları al
+    let cleaned = value.replace(/\D/g, "");
+
+    // Format  (XXXX XXX XX XX)
+    if (cleaned.length > 10) cleaned = cleaned.slice(0, 11);
+
+    const formatted = cleaned
+      .replace(/(\d{4})(\d{3})(\d{2})(\d{2})/, "$1 $2 $3 $4")
+      .replace(/(\d{4})(\d{3})(\d{2})$/, "$1 $2 $3")
+      .replace(/(\d{4})(\d{3})$/, "$1 $2")
+      .replace(/(\d{4})$/, "$1");
+
+    return formatted;
+  }
 
 
   useEffect(() => {
-  fetchApartments();
-}, []);
+    fetchResidents();
+  }, []);
 
+  async function fetchResidents() {
+    const { data, error } = await supabase
+      .from("residents")
+      .select("*")
+      .order("created_at", { ascending: false });
 
-function toggleDurum(d) {
-  setFilterDurum((prev) => (prev === d ? "" : d));
-}
-
-
-
-
-async function fetchApartments() {
-  const { data, error } = await supabase.from("apartments").select("*");
-  if (!error) setApartments(data);
-}
-
-
-
-
-
-async function addApartment() {
-  if (!blok || !kat || !daireNo) {
-    alert("Blok, Kat ve Daire No zorunludur.");
-    return;
+    if (!error) setResidents(data);
   }
 
-  // --- Kişi Zorunluluk Kontrolü ---
-  if ((durum === "Sahip" || durum === "Kiracı") && !kisi) {
-    alert("Sahip veya Kiracı seçildiğinde kişi adı zorunludur!");
-    return;
+
+
+  async function addResident() {
+    if (!selectedKisi || !rTelefon) {
+      alert("Kişi ve Telefon zorunludur!");
+      return;
+    }
+
+    const { data, error } = await supabase.from("residents").insert([
+      {
+        kisi: selectedKisi,
+        telefon: rTelefon,
+        email: rEmail || null,
+      },
+    ]);
+
+    if (error) {
+      alert("Kişi eklenemedi: " + error.message);
+      return;
+    }
+
+    alert("Kişi başarıyla eklendi!");
+
+    // Listeyi yenile
+    fetchResidents();
+
+    setSelectedKisi("");
+    setRTelefon("");
+    setREmail("");
   }
-
-  const { data, error } = await supabase.from("apartments").insert([
-    {
-      blok: blok,
-      kat: Number(kat),
-      daire_no: Number(daireNo),
-      durum: durum,
-      kisi: kisi,
-    },
-  ]);
-
-  if (error) {
-    alert("Kayıt eklenemedi: " + error.message);
-  } else {
-    alert("Daire başarıyla eklendi!");
-    fetchApartments(); // Listeyi yenile
-  }
-
-  setBlok("");
-  setKat("");
-  setDaireNo("");
-  setDurum("Boş");
-  setKisi("");
-}
-
-
-function formatPhone(value) {
-  // Sadece rakamları al
-  let cleaned = value.replace(/\D/g, "");
-
-  // Format  (XXXX XXX XX XX)
-  if (cleaned.length > 10) cleaned = cleaned.slice(0, 11);
-
-  const formatted = cleaned
-    .replace(/(\d{4})(\d{3})(\d{2})(\d{2})/, "$1 $2 $3 $4")
-    .replace(/(\d{4})(\d{3})(\d{2})$/, "$1 $2 $3")
-    .replace(/(\d{4})(\d{3})$/, "$1 $2")
-    .replace(/(\d{4})$/, "$1");
-
-  return formatted;
-}
-
-
-useEffect(() => {
-  fetchResidents();
-}, []);
-
-async function fetchResidents() {
-  const { data, error } = await supabase
-    .from("residents")
-    .select("*")
-    .order("created_at", { ascending: false });
-
-  if (!error) setResidents(data);
-}
-
-
-
-async function addResident() {
-  if (!selectedKisi || !rTelefon) {
-    alert("Kişi ve Telefon zorunludur!");
-    return;
-  }
-
-  const { data, error } = await supabase.from("residents").insert([
-    {
-      kisi: selectedKisi,
-      telefon: rTelefon,
-      email: rEmail || null,
-    },
-  ]);
-
-  if (error) {
-    alert("Kişi eklenemedi: " + error.message);
-    return;
-  }
-
-  alert("Kişi başarıyla eklendi!");
-
-  // Listeyi yenile
-  fetchResidents();
-
-  setSelectedKisi("");
-  setRTelefon("");
-  setREmail("");
-}
-
-
-
-
-
-
-
-
-
-
-
   const styles = {
     container: {
       padding: "20px",
@@ -247,19 +224,19 @@ async function addResident() {
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>Daireler / Blok Yönetimi</h2>
+      <h2 style={styles.title}>{t("daireler_blok_yonetimi")}</h2>
 
       {/* Daire Listesi */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Daire Listesi</h3>
+        <h3 style={styles.sectionTitle}>{t("daire_listesi")}</h3>
         <table style={styles.table}>
           <thead>
             <tr>
-              <th style={styles.th}>Blok</th>
-              <th style={styles.th}>Kat</th>
-              <th style={styles.th}>Daire No</th>
-              <th style={styles.th}>Durum</th>
-              <th style={styles.th}>Kişi</th>
+              <th style={styles.th}>{t("blok")}</th>
+              <th style={styles.th}>{t("kat")}</th>
+              <th style={styles.th}>{t("daire_no")}</th>
+              <th style={styles.th}>{t("durum")}</th>
+              <th style={styles.th}>{t("kisi")}</th>
             </tr>
           </thead>
           <tbody>
@@ -268,89 +245,79 @@ async function addResident() {
                 <td style={styles.td}>{d.blok}</td>
                 <td style={styles.td}>{d.kat}</td>
                 <td style={styles.td}>{d.daire_no}</td>
-                <td style={styles.td}>{d.durum}</td>
+                <td style={styles.td}>{t(d.durum)}</td>
                 <td style={styles.td}>{d.kisi || "-"}</td>
               </tr>
-  ))}
+            ))}
           </tbody>
         </table>
       </div>
 
+      {/* Daire Ekleme */}
+      <div style={styles.section}>
+        <h3 style={styles.sectionTitle}>{t("yeni_daire_ekle")}</h3>
 
-      {/* Daire Ekleme Formu */}
-<div style={styles.section}>
-  <h3 style={styles.sectionTitle}>Yeni Daire Ekle</h3>
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          <input
+            style={styles.select}
+            placeholder={t("blok_placeholder")}
+            value={blok}
+            onChange={(e) => setBlok(e.target.value)}
+          />
 
-  <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-    
-    <input
-      style={styles.select}
-      placeholder="Blok (A, B, C...)"
-      value={blok}
-      onChange={(e) => setBlok(e.target.value)}
-    />
+          <input
+            style={styles.select}
+            placeholder={t("kat")}
+            value={kat}
+            onChange={(e) => setKat(e.target.value)}
+            type="number"
+          />
 
-    <input
-      style={styles.select}
-      placeholder="Kat"
-      value={kat}
-      onChange={(e) => setKat(e.target.value)}
-      type="number"
-    />
+          <input
+            style={styles.select}
+            placeholder={t("daire_no")}
+            value={daireNo}
+            onChange={(e) => setDaireNo(e.target.value)}
+            type="number"
+          />
 
-    <input
-      style={styles.select}
-      placeholder="Daire No"
-      value={daireNo}
-      onChange={(e) => setDaireNo(e.target.value)}
-      type="number"
-    />
+          <select
+            style={styles.select}
+            value={durum}
+            onChange={(e) => setDurum(e.target.value)}
+          >
+            <option value="Sahip">{t("sahip")}</option>
+            <option value="Kiracı">{t("kiraci")}</option>
+            <option value="Boş">{t("bos")}</option>
+          </select>
 
-    <select
-      style={styles.select}
-      value={durum}
-      onChange={(e) => setDurum(e.target.value)}
-    >
-      <option value="Sahip">Sahip</option>
-      <option value="Kiracı">Kiracı</option>
-      <option value="Boş">Boş</option>
-    </select>
+          <input
+            style={styles.select}
+            placeholder={
+              durum === "Boş" ? t("kisi") : t("kisi_zorunlu")
+            }
+            value={kisi}
+            onChange={(e) => setKisi(e.target.value)}
+            disabled={durum === "Boş"}
+          />
 
-    <input
-      style={styles.select}
-      placeholder={
-      durum === "Boş" ? "Kişi" : "Kişi (Zorunlu)"
-      }
-      value={kisi}
-      onChange={(e) => setKisi(e.target.value)}
-      disabled={durum === "Boş"}
-    />
-
-
-    <button style={styles.btn} onClick={addApartment}>
-      Daire Ekle
-    </button>
-  </div>
-</div>
-
-
-
-
-
-
+          <button style={styles.btn} onClick={addApartment}>
+            {t("daire_ekle")}
+          </button>
+        </div>
+      </div>
 
       {/* Kat / Blok Bazlı Görüntüleme */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Kat / Blok Bazlı Görüntüleme</h3>
-        <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-          {/* BLOK ALANI */}
-        
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <h3 style={styles.sectionTitle}>{t("kat_blok_goruntuleme")}</h3>
 
+        <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+          {/* BLOK */}
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             <input
               style={styles.select}
               list="blokListesi"
-              placeholder="Blok seç veya yaz (A-Z)"
+              placeholder={t("blok_sec_yaz")}
               value={filterBlok}
               onChange={(e) => setFilterBlok(e.target.value.toUpperCase())}
             />
@@ -360,15 +327,18 @@ async function addResident() {
                 <option key={b} value={b} />
               ))}
             </datalist>
-            <span><strong>Blok:</strong> {filterBlok || "Yok"}</span>
+
+            <span>
+              <strong>{t("blok")}:</strong> {filterBlok || t("yok")}
+            </span>
           </div>
 
-          {/* KAT ALANI */}
+          {/* KAT */}
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             <input
               style={styles.select}
               list="katListesi"
-              placeholder="Kat seç veya yaz"
+              placeholder={t("kat_sec_yaz")}
               type="number"
               value={filterKat}
               onChange={(e) => setFilterKat(e.target.value)}
@@ -377,136 +347,127 @@ async function addResident() {
             <datalist id="katListesi">
               {uniqueKatlar.map((k) => (
                 <option key={k} value={k} />
-            ))}
+              ))}
             </datalist>
 
-            <span><strong>Kat:</strong> {filterKat || "Yok"}</span>
+            <span>
+              <strong>{t("kat")}:</strong> {filterKat || t("yok")}
+            </span>
           </div>
-
         </div>
       </div>
-        
 
       {/* Sahip / Kiracı / Boş */}
-<div style={styles.section}>
-  <h3 style={styles.sectionTitle}>Daire Sahibi / Kiracı Ayrımı</h3>
-  <div style={styles.filterRow}>
-
-    {/* SAHİP */}
-    <button
-      onClick={() => toggleDurum("Sahip")}
-      style={{
-        ...styles.btn,
-        background: filterDurum === "Sahip" ? "#6fcf97" : "#e0e0e0",
-      }}
-    >
-      Sahip
-    </button>
-
-    {/* KİRACI */}
-    <button
-      onClick={() => toggleDurum("Kiracı")}
-      style={{
-        ...styles.btn,
-        background: filterDurum === "Kiracı" ? "#6fcf97" : "#e0e0e0",
-      }}
-    >
-      Kiracı
-    </button>
-
-    {/* BOŞ */}
-    <button
-      onClick={() => toggleDurum("Boş")}
-      style={{
-        ...styles.btn,
-        background: filterDurum === "Boş" ? "#6fcf97" : "#e0e0e0",
-      }}
-    >
-      Boş
-    </button>
-
-  </div>
-</div>
-
-
-{/* Kişi Bilgileri */}
-<div style={styles.section}>
-  <h3 style={styles.sectionTitle}>Kişi Bilgileri</h3>
-
-  <table style={styles.table}>
-    <thead>
-      <tr>
-        <th style={styles.th}>Kişi</th>
-        <th style={styles.th}>Telefon</th>
-        <th style={styles.th}>Email</th>
-      </tr>
-    </thead>
-    <tbody>
-      {residents.map((k) => (
-        <tr key={k.id}>
-          <td style={styles.td}>{k.kisi}</td>
-          <td style={styles.td}>{k.telefon}</td>
-          <td style={styles.td}>{k.email || "-"}</td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
-
-
-{/* Yeni Kişi Ekle */}
-<div style={styles.section}>
-  <h3 style={styles.sectionTitle}>Yeni Kişi Ekle</h3>
-
-  <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-    
-    {/* KİŞİ DROPDOWN */}
-    <select
-      style={styles.select}
-      value={selectedKisi}
-      onChange={(e) => setSelectedKisi(e.target.value)}
-    >
-      <option value="">Kişi seç (zorunlu)</option>
-      {uniqueKisiler.map((name, index) => (
-        <option key={index} value={name}>
-          {name}
-        </option>
-      ))}
-    </select>
-
-    <input
-      placeholder="Telefon (zorunlu)"
-      style={styles.select}
-      value={rTelefon}
-      onChange={(e) => setRTelefon(formatPhone(e.target.value))}
-      maxLength={13}
-    />
-
-    <input
-      placeholder="Email (opsiyonel)"
-      style={styles.select}
-      value={rEmail}
-      onChange={(e) => setREmail(e.target.value)}
-    />
-
-    <button style={styles.btn} onClick={addResident}>
-      Kişi Ekle
-    </button>
-  </div>
-</div>
-
-
-
-      {/* Araç Bilgileri */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Araç Bilgileri</h3>
+        <h3 style={styles.sectionTitle}>{t("sahip_kiraci_ayrimi")}</h3>
+
+        <div style={styles.filterRow}>
+          <button
+            onClick={() => toggleDurum("Sahip")}
+            style={{
+              ...styles.btn,
+              background: filterDurum === "Sahip" ? "#6fcf97" : "#e0e0e0",
+            }}
+          >
+            {t("sahip")}
+          </button>
+
+          <button
+            onClick={() => toggleDurum("Kiracı")}
+            style={{
+              ...styles.btn,
+              background: filterDurum === "Kiracı" ? "#6fcf97" : "#e0e0e0",
+            }}
+          >
+            {t("kiraci")}
+          </button>
+
+          <button
+            onClick={() => toggleDurum("Boş")}
+            style={{
+              ...styles.btn,
+              background: filterDurum === "Boş" ? "#6fcf97" : "#e0e0e0",
+            }}
+          >
+            {t("bos")}
+          </button>
+        </div>
+      </div>
+
+      {/* Kişi Bilgileri */}
+      <div style={styles.section}>
+        <h3 style={styles.sectionTitle}>{t("kisi_bilgileri")}</h3>
+
         <table style={styles.table}>
           <thead>
             <tr>
-              <th style={styles.th}>Plaka</th>
-              <th style={styles.th}>Marka</th>
-              <th style={styles.th}>Model</th>
-              <th style={styles.th}>Renk</th>
+              <th style={styles.th}>{t("kisi")}</th>
+              <th style={styles.th}>{t("telefon")}</th>
+              <th style={styles.th}>Email</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {residents.map((k) => (
+              <tr key={k.id}>
+                <td style={styles.td}>{k.kisi}</td>
+                <td style={styles.td}>{k.telefon}</td>
+                <td style={styles.td}>{k.email || "-"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Yeni Kişi Ekle */}
+      <div style={styles.section}>
+        <h3 style={styles.sectionTitle}>{t("yeni_kisi_ekle")}</h3>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+
+          <select
+            style={styles.select}
+            value={selectedKisi}
+            onChange={(e) => setSelectedKisi(e.target.value)}
+          >
+            <option value="">{t("kisi_sec")}</option>
+            {uniqueKisiler.map((name, index) => (
+              <option key={index} value={name}>{name}</option>
+            ))}
+          </select>
+
+          <input
+            placeholder={t("telefon_zorunlu")}
+            style={styles.select}
+            value={rTelefon}
+            onChange={(e) => setRTelefon(formatPhone(e.target.value))}
+            maxLength={13}
+          />
+
+          <input
+            placeholder={t("email_opsiyonel")}
+            style={styles.select}
+            value={rEmail}
+            onChange={(e) => setREmail(e.target.value)}
+          />
+
+          <button style={styles.btn} onClick={addResident}>
+            {t("kisi_ekle")}
+          </button>
+        </div>
+      </div>
+
+      {/* Araç Bilgileri */}
+      <div style={styles.section}>
+        <h3 style={styles.sectionTitle}>{t("arac_bilgileri")}</h3>
+
+        <table style={styles.table}>
+          <thead>
+            <tr>
+              <th style={styles.th}>{t("plaka")}</th>
+              <th style={styles.th}>{t("marka")}</th>
+              <th style={styles.th}>{t("model")}</th>
+              <th style={styles.th}>{t("renk")}</th>
             </tr>
           </thead>
           <tbody>
@@ -514,12 +475,13 @@ async function addResident() {
               <td style={styles.td}>34 ABC 123</td>
               <td style={styles.td}>BMW</td>
               <td style={styles.td}>320i</td>
-              <td style={styles.td}>Siyah</td>
+              <td style={styles.td}>{t("siyah")}</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
+
   );
 }
 
