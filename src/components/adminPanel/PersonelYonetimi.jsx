@@ -1,6 +1,9 @@
 import React from "react";
+import { useLanguage } from "../../context/LanguageContext";
 
 function PersonelYonetimi() {
+  const { t } = useLanguage();
+
   const styles = {
     container: {
       padding: "20px",
@@ -64,29 +67,29 @@ function PersonelYonetimi() {
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>Personel Yönetimi</h2>
+      <h2 style={styles.title}>{t("personneltitle")}</h2>
 
       {/* Görev Dağılımı */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Görev Dağılımı</h3>
+        <h3 style={styles.sectionTitle}>{t("personneltaskDistribution")}</h3>
         <table style={styles.table}>
           <thead>
             <tr>
-              <th style={styles.th}>Personel</th>
-              <th style={styles.th}>Görev</th>
-              <th style={styles.th}>Birim</th>
+              <th style={styles.th}>{t("personnelstaff")}</th>
+              <th style={styles.th}>{t("personneltask")}</th>
+              <th style={styles.th}>{t("personnelunit")}</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td style={styles.td}>Ali Y.</td>
-              <td style={styles.td}>Güvenlik</td>
-              <td style={styles.td}>Site Girişi</td>
+              <td style={styles.td}>{t("personnelguard")}</td>
+              <td style={styles.td}>{t("personnelsiteEntrance")}</td>
             </tr>
             <tr>
               <td style={styles.td}>Ayşe K.</td>
-              <td style={styles.td}>Temizlik</td>
-              <td style={styles.td}>Ortak Alanlar</td>
+              <td style={styles.td}>{t("personnelcleaning")}</td>
+              <td style={styles.td}>{t("personnelcommonAreas")}</td>
             </tr>
           </tbody>
         </table>
@@ -94,14 +97,14 @@ function PersonelYonetimi() {
 
       {/* Mesai Saatleri */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Mesai Saatleri</h3>
+        <h3 style={styles.sectionTitle}>{t("personnelworkHours")}</h3>
         <table style={styles.table}>
           <thead>
             <tr>
-              <th style={styles.th}>Personel</th>
-              <th style={styles.th}>Giriş</th>
-              <th style={styles.th}>Çıkış</th>
-              <th style={styles.th}>Toplam Saat</th>
+              <th style={styles.th}>{t("personnelstaff")}</th>
+              <th style={styles.th}>{t("personnelstart")}</th>
+              <th style={styles.th}>{t("personnelend")}</th>
+              <th style={styles.th}>{t("personneltotalHours")}</th>
             </tr>
           </thead>
           <tbody>
@@ -109,27 +112,27 @@ function PersonelYonetimi() {
               <td style={styles.td}>Ali Y.</td>
               <td style={styles.td}>08:00</td>
               <td style={styles.td}>16:00</td>
-              <td style={styles.td}>8 Saat</td>
+              <td style={styles.td}>8 {t("personnelhours")}</td>
             </tr>
             <tr>
               <td style={styles.td}>Ayşe K.</td>
               <td style={styles.td}>09:00</td>
               <td style={styles.td}>17:00</td>
-              <td style={styles.td}>8 Saat</td>
+              <td style={styles.td}>8 {t("personnelhours")}</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      {/* İş Takibi ve Performans */}
+      {/* Performans */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>İş Takibi ve Performans</h3>
+        <h3 style={styles.sectionTitle}>{t("personnelperformance")}</h3>
         <table style={styles.table}>
           <thead>
             <tr>
-              <th style={styles.th}>Personel</th>
-              <th style={styles.th}>Görev Tamamlanma</th>
-              <th style={styles.th}>Performans (%)</th>
+              <th style={styles.th}>{t("personnelstaff")}</th>
+              <th style={styles.th}>{t("personneltaskCompletion")}</th>
+              <th style={styles.th}>{t("personnelperformancePercent")}</th>
             </tr>
           </thead>
           <tbody>

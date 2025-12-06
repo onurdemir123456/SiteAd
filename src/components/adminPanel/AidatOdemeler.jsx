@@ -1,5 +1,5 @@
 import React from "react";
-
+import { useLanguage } from "../../context/LanguageContext";
 function AidatOdemeler() {
   const styles = {
     container: {
@@ -51,22 +51,25 @@ function AidatOdemeler() {
       marginRight: "10px",
     },
   };
+  const { t } = useLanguage();
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>Aidat & Ödemeler</h2>
+      <h2 style={styles.title}>{t("duesPayments")}</h2>
 
       {/* Aidat Borçları */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Aidat Borçları</h3>
+        <h3 style={styles.sectionTitle}>{t("duesDebts")}</h3>
+
         <table style={styles.table}>
           <thead>
             <tr>
-              <th style={styles.th}>Daire</th>
-              <th style={styles.th}>Borç Miktarı</th>
-              <th style={styles.th}>Son Ödeme Tarihi</th>
+              <th style={styles.th}>{t("apartment")}</th>
+              <th style={styles.th}>{t("debtAmount")}</th>
+              <th style={styles.th}>{t("lastPaymentDate")}</th>
             </tr>
           </thead>
+
           <tbody>
             <tr>
               <td style={styles.td}>A3-12</td>
@@ -84,16 +87,18 @@ function AidatOdemeler() {
 
       {/* Ödeme Geçmişi */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Ödeme Geçmişi</h3>
+        <h3 style={styles.sectionTitle}>{t("paymentHistory")}</h3>
+
         <table style={styles.table}>
           <thead>
             <tr>
-              <th style={styles.th}>Daire</th>
-              <th style={styles.th}>Tarih</th>
-              <th style={styles.th}>Tutar</th>
-              <th style={styles.th}>Ödeme Tipi</th>
+              <th style={styles.th}>{t("apartment")}</th>
+              <th style={styles.th}>{t("date")}</th>
+              <th style={styles.th}>{t("amount")}</th>
+              <th style={styles.th}>{t("paymentType")}</th>
             </tr>
           </thead>
+
           <tbody>
             <tr>
               <td style={styles.td}>A3-12</td>
@@ -111,18 +116,16 @@ function AidatOdemeler() {
         </table>
       </div>
 
-      
-
-      {/* Ek Borç Ekleme */}
+      {/* Ek Borç */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Ek Borç Ekleme</h3>
-        <button style={styles.btn}>Yeni Borç Ekle</button>
+        <h3 style={styles.sectionTitle}>{t("addExtraDebt")}</h3>
+        <button style={styles.btn}>{t("addNewDebt")}</button>
       </div>
 
       {/* Tahsilat Raporu */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Tahsilat Raporu</h3>
-        <button style={styles.btn}>Raporu Görüntüle</button>
+        <h3 style={styles.sectionTitle}>{t("collectionReport")}</h3>
+        <button style={styles.btn}>{t("viewReport")}</button>
       </div>
     </div>
   );
