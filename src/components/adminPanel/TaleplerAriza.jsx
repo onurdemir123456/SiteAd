@@ -20,59 +20,114 @@ function AdminSikayetler() {
       fontFamily: "Arial, sans-serif",
     },
     title: {
-      fontSize: "26px",
+      fontSize: "28px",
       fontWeight: "bold",
-      marginBottom: "25px",
+      marginBottom: "20px",
     },
     section: {
-      marginBottom: "35px",
+      marginBottom: "30px",
       padding: "15px",
-      background: "#ffffff",
+      border: "1px solid #ddd",
       borderRadius: "8px",
-      boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+      backgroundColor: "#f9f9f9",
     },
     sectionTitle: {
       fontSize: "20px",
-      fontWeight: "600",
-      marginBottom: "15px",
+      marginBottom: "10px",
+      fontWeight: "bold",
     },
     table: {
       width: "100%",
       borderCollapse: "collapse",
     },
     th: {
-      padding: "10px 12px",
-      borderBottom: "1px solid #ddd",
-      background: "#f0f0f0",
+      border: "1px solid #ddd",
+      padding: "8px",
+      backgroundColor: "#f2f2f2",
       textAlign: "left",
-      fontWeight: "600",
     },
     td: {
-      padding: "10px 12px",
-      borderBottom: "1px solid #ddd",
+      border: "1px solid #ddd",
+      padding: "8px",
+    },
+    statusOpen: {
+      color: "green",
+      fontWeight: "bold",
+    },
+    statusClosed: {
+      color: "red",
+      fontWeight: "bold",
     },
     btn: {
-      padding: "6px 10px",
-      background: "#2196F3",
-      border: "none",
-      color: "#fff",
-      borderRadius: "5px",
+      padding: "5px 10px",
+      margin: "2px",
       cursor: "pointer",
-      fontSize: "14px",
-      marginRight: "8px",
+      backgroundColor: "#2196F3",
+      color: "white",
+      border: "none",
+      borderRadius: "4px",
     },
     btnGreen: {
-      padding: "6px 10px",
-      background: "#4CAF50",
-      border: "none",
-      color: "#fff",
-      borderRadius: "5px",
+      padding: "5px 10px",
+      margin: "2px",
       cursor: "pointer",
-      fontSize: "14px",
+      backgroundColor: "green",
+      color: "white",
+      border: "none",
+      borderRadius: "4px",
     },
-    statusOpen: { color: "red", fontWeight: "bold" },
-    statusClosed: { color: "green", fontWeight: "bold" },
+
+    // Popup
+    popupOverlayStyle: {
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      backgroundColor: "rgba(0,0,0,0.5)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 1000,
+    },
+    popupBoxStyle: {
+      backgroundColor: "white",
+      padding: "20px",
+      borderRadius: "8px",
+      minWidth: "300px",
+      maxWidth: "500px",
+      boxShadow: "0 0 10px rgba(0,0,0,0.3)",
+    },
+    // Popup input/button stilleri
+    popupInputStyle: {
+      width: "100%",
+      padding: "8px",
+      margin: "10px 0",
+      borderRadius: "4px",
+      border: "1px solid #ccc",
+    },
+
+    popupSaveBtnStyle: {
+      padding: "8px 15px",
+      marginRight: "10px",
+      backgroundColor: "#2196F3",
+      color: "white",
+      border: "none",
+      borderRadius: "4px",
+      cursor: "pointer",
+    },
+
+    popupCloseBtnStyle: {
+      padding: "8px 15px",
+      backgroundColor: "red",
+      color: "white",
+      border: "none",
+      borderRadius: "4px",
+      cursor: "pointer",
+    }
   };
+
+
 
   // ----------------------------
   // Supabase Data Fetch
@@ -123,7 +178,15 @@ function AdminSikayetler() {
     setCurrentArizaId(id);
     setShowPopup(true);
   };
+  const updateArizaDetails = async (id) => {
 
+    await supabase
+      .from("arizalar")
+      .update({ iscilik: iscilikInput, tamamlanma: yuzdeInput })
+      .eq("id", id);
+
+    fetchArizalar();
+  };
 
   return (
     <div style={styles.container}>
@@ -272,8 +335,8 @@ function AdminSikayetler() {
 
       {/* İşçilik / Tamamlanma Popup */}
       {showPopup && (
-        <div style={popupOverlayStyle}>
-          <div style={popupBoxStyle}>
+        <div style={styles.popupOverlayStyle}>
+          <div style={styles.popupBoxStyle}>
             <h3>{t("adminworkCompletion")}</h3>
 
             <label>{t("adminworkCost")} (₺)</label>
@@ -281,7 +344,7 @@ function AdminSikayetler() {
               type="number"
               value={iscilikInput}
               onChange={(e) => setIscilikInput(e.target.value)}
-              style={popupInputStyle}
+              style={styles.popupInputStyle}
             />
 
             <label>
@@ -296,10 +359,13 @@ function AdminSikayetler() {
               style={{ width: "100%" }}
             />
 
-            <button style={popupSaveBtnStyle} onClick={handleSavePopup}>
+            <button style={styles.popupSaveBtnStyle} onClick={async () => {
+              updateArizaDetails(currentArizaId); setShowPopup(false); setIscilikInput("");
+              setYuzdeInput(0);
+            }}>
               {t("adminsave")}
             </button>
-            <button style={popupCloseBtnStyle} onClick={() => setShowPopup(false)}>
+            <button style={styles.popupCloseBtnStyle} onClick={() => setShowPopup(false)}>
               {t("adminclose")}
             </button>
           </div>
