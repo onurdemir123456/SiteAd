@@ -129,7 +129,6 @@ function AdminSikayetler() {
 
 
 
-
   // ----------------------------
   // Supabase Data Fetch
   // ----------------------------
@@ -181,214 +180,198 @@ function AdminSikayetler() {
   };
   const updateArizaDetails = async (id) => {
 
+    await supabase
+      .from("arizalar")
+      .update({ iscilik: iscilikInput, tamamlanma: yuzdeInput })
+      .eq("id", id);
 
-    const handleSavePopup = async () => {
-      if (!iscilikInput) {
-        alert("İşçilik tutarı giriniz");
-        return;
-      }
+    fetchArizalar();
+  };
 
-      await supabase
-        .from("arizalar")
-        .update({
-          iscilik: iscilikInput,
-          tamamlanma: `%${yuzdeInput}`,
-        })
-        .eq("id", currentArizaId);
+  return (
+    <div style={styles.container}>
+      <h2 style={styles.title}>
+        {t("admintitle")} {/* Admin Paneli – Talepler & Arıza & Şikayet Yönetimi */}
+      </h2>
 
-      setShowPopup(false);
-      setIscilikInput("");
-      setYuzdeInput(0);
-      setCurrentArizaId(null);
+      {/* ------------------------------------------------------------------ */}
+      {/* ŞİKAYETLER */}
+      {/* ------------------------------------------------------------------ */}
+      <div style={styles.section}>
+        <h3 style={styles.sectionTitle}>{t("admincomplaints")}</h3>
 
-      fetchArizalar();
-    };
-
-    return (
-      <div style={styles.container}>
-        <h2 style={styles.title}>
-          {t("admintitle")} {/* Admin Paneli – Talepler & Arıza & Şikayet Yönetimi */}
-        </h2>
-
-        {/* ------------------------------------------------------------------ */}
-        {/* ŞİKAYETLER */}
-        {/* ------------------------------------------------------------------ */}
-        <div style={styles.section}>
-          <h3 style={styles.sectionTitle}>{t("admincomplaints")}</h3>
-
-          <table style={styles.table}>
-            <thead>
-              <tr>
-                <th style={styles.th}>{t("admindate")}</th>
-                <th style={styles.th}>{t("adminapartment")}</th>
-                <th style={styles.th}>{t("adminsubject")}</th>
-                <th style={styles.th}>{t("admindescription")}</th>
-                <th style={styles.th}>{t("adminstatus")}</th>
-                <th style={styles.th}>{t("adminaction")}</th>
+        <table style={styles.table}>
+          <thead>
+            <tr>
+              <th style={styles.th}>{t("admindate")}</th>
+              <th style={styles.th}>{t("adminapartment")}</th>
+              <th style={styles.th}>{t("adminsubject")}</th>
+              <th style={styles.th}>{t("admindescription")}</th>
+              <th style={styles.th}>{t("adminstatus")}</th>
+              <th style={styles.th}>{t("adminaction")}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sikayetler.map((s) => (
+              <tr key={s.id}>
+                <td style={styles.td}>{new Date(s.tarih).toLocaleDateString()}</td>
+                <td style={styles.td}>{s.daire}</td>
+                <td style={styles.td}>{s.konu}</td>
+                <td style={styles.td}>{s.aciklama}</td>
+                <td style={styles.td}>
+                  {s.durum === "Açık" ? (
+                    <span style={styles.statusOpen}>{t("adminopen")}</span>
+                  ) : (
+                    <span style={styles.statusClosed}>{t("adminclosed")}</span>
+                  )}
+                </td>
+                <td style={styles.td}>
+                  {s.durum === "Açık" && (
+                    <button style={styles.btn} onClick={() => closeSikayet(s.id)}>
+                      {t("adminclose")}
+                    </button>
+                  )}
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {sikayetler.map((s) => (
-                <tr key={s.id}>
-                  <td style={styles.td}>{new Date(s.tarih).toLocaleDateString()}</td>
-                  <td style={styles.td}>{s.daire}</td>
-                  <td style={styles.td}>{s.konu}</td>
-                  <td style={styles.td}>{s.aciklama}</td>
-                  <td style={styles.td}>
-                    {s.durum === "Açık" ? (
-                      <span style={styles.statusOpen}>{t("adminopen")}</span>
-                    ) : (
-                      <span style={styles.statusClosed}>{t("adminclosed")}</span>
-                    )}
-                  </td>
-                  <td style={styles.td}>
-                    {s.durum === "Açık" && (
-                      <button style={styles.btn} onClick={() => closeSikayet(s.id)}>
-                        {t("adminclose")}
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* ------------------------------------------------------------------ */}
-        {/* ARIZA BİLDİRİMLERİ */}
-        {/* ------------------------------------------------------------------ */}
-        <div style={styles.section}>
-          <h3 style={styles.sectionTitle}>{t("adminfaultReports")}</h3>
-
-          <table style={styles.table}>
-            <thead>
-              <tr>
-                <th style={styles.th}>{t("admindate")}</th>
-                <th style={styles.th}>{t("adminapartment")}</th>
-                <th style={styles.th}>{t("adminsubject")}</th>
-                <th style={styles.th}>{t("admindescription")}</th>
-                <th style={styles.th}>{t("adminworkCost")}</th>
-                <th style={styles.th}>{t("admincompletion")}</th>
-                <th style={styles.th}>{t("adminstatus")}</th>
-                <th style={styles.th}>{t("adminaction")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {arizalar.map((a) => (
-                <tr key={a.id}>
-                  <td style={styles.td}>{new Date(a.tarih).toLocaleDateString()}</td>
-                  <td style={styles.td}>{a.daire}</td>
-                  <td style={styles.td}>{a.konu}</td>
-                  <td style={styles.td}>{a.aciklama}</td>
-                  <td style={styles.td}>{a.iscilik ? `${a.iscilik} ₺` : "-"}</td>
-                  <td style={styles.td}>{a.tamamlanma || "-"}</td>
-                  <td style={styles.td}>
-                    {a.durum === "Açık" ? (
-                      <span style={styles.statusOpen}>{t("adminopen")}</span>
-                    ) : (
-                      <span style={styles.statusClosed}>{t("adminclosed")}</span>
-                    )}
-                  </td>
-                  <td style={styles.td}>
-                    {a.durum === "Açık" && (
-                      <>
-                        <button style={styles.btn} onClick={() => openArizaPopup(a.id)}>
-                          {t("adminworkCompletion")}
-                        </button>
-                        <button style={styles.btnGreen} onClick={() => closeAriza(a.id)}>
-                          {t("adminclose")}
-                        </button>
-                      </>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* ------------------------------------------------------------------ */}
-        {/* TEKNİK DESTEK TALEPLERİ */}
-        {/* ------------------------------------------------------------------ */}
-        <div style={styles.section}>
-          <h3 style={styles.sectionTitle}>{t("admintechRequests")}</h3>
-
-          <table style={styles.table}>
-            <thead>
-              <tr>
-                <th style={styles.th}>{t("admindate")}</th>
-                <th style={styles.th}>{t("adminsubject")}</th>
-                <th style={styles.th}>{t("admindetails")}</th>
-                <th style={styles.th}>{t("adminstatus")}</th>
-                <th style={styles.th}>{t("adminaction")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {talepler.map((e) => (
-                <tr key={e.id}>
-                  <td style={styles.td}>{new Date(e.tarih).toLocaleDateString()}</td>
-                  <td style={styles.td}>{e.konu}</td>
-                  <td style={styles.td}>{e.detay}</td>
-                  <td style={styles.td}>
-                    {e.durum === "Açık" ? (
-                      <span style={styles.statusOpen}>{t("adminopen")}</span>
-                    ) : (
-                      <span style={styles.statusClosed}>{t("adminclosed")}</span>
-                    )}
-                  </td>
-                  <td style={styles.td}>
-                    {e.durum === "Açık" && (
-                      <button style={styles.btnGreen} onClick={() => closeTalep(e.id)}>
-                        {t("adminclose")}
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* İşçilik / Tamamlanma Popup */}
-        {showPopup && (
-          <div style={styles.popupOverlayStyle}>
-            <div style={styles.popupBoxStyle}>
-              <h3>{t("adminworkCompletion")}</h3>
-
-              <label>{t("adminworkCost")} (₺)</label>
-              <input
-                type="number"
-                value={iscilikInput}
-                onChange={(e) => setIscilikInput(e.target.value)}
-                style={styles.popupInputStyle}
-              />
-
-              <label>
-                {t("admincompletion")}: % {yuzdeInput}
-              </label>
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={yuzdeInput}
-                onChange={(e) => setYuzdeInput(e.target.value)}
-                style={{ width: "100%" }}
-              />
-
-              <button style={styles.popupSaveBtnStyle} onClick={async () => {
-                updateArizaDetails(currentArizaId); setShowPopup(false); setIscilikInput("");
-                setYuzdeInput(0);
-              }}>
-                {t("adminsave")}
-              </button>
-              <button style={styles.popupCloseBtnStyle} onClick={() => setShowPopup(false)}>
-                {t("adminclose")}
-              </button>
-            </div>
-          </div>
-        )}
+            ))}
+          </tbody>
+        </table>
       </div>
-    );
-  }
+
+      {/* ------------------------------------------------------------------ */}
+      {/* ARIZA BİLDİRİMLERİ */}
+      {/* ------------------------------------------------------------------ */}
+      <div style={styles.section}>
+        <h3 style={styles.sectionTitle}>{t("adminfaultReports")}</h3>
+
+        <table style={styles.table}>
+          <thead>
+            <tr>
+              <th style={styles.th}>{t("admindate")}</th>
+              <th style={styles.th}>{t("adminapartment")}</th>
+              <th style={styles.th}>{t("adminsubject")}</th>
+              <th style={styles.th}>{t("admindescription")}</th>
+              <th style={styles.th}>{t("adminworkCost")}</th>
+              <th style={styles.th}>{t("admincompletion")}</th>
+              <th style={styles.th}>{t("adminstatus")}</th>
+              <th style={styles.th}>{t("adminaction")}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {arizalar.map((a) => (
+              <tr key={a.id}>
+                <td style={styles.td}>{new Date(a.tarih).toLocaleDateString()}</td>
+                <td style={styles.td}>{a.daire}</td>
+                <td style={styles.td}>{a.konu}</td>
+                <td style={styles.td}>{a.aciklama}</td>
+                <td style={styles.td}>{a.iscilik ? `${a.iscilik} ₺` : "-"}</td>
+                <td style={styles.td}>{a.tamamlanma || "-"}</td>
+                <td style={styles.td}>
+                  {a.durum === "Açık" ? (
+                    <span style={styles.statusOpen}>{t("adminopen")}</span>
+                  ) : (
+                    <span style={styles.statusClosed}>{t("adminclosed")}</span>
+                  )}
+                </td>
+                <td style={styles.td}>
+                  {a.durum === "Açık" && (
+                    <>
+                      <button style={styles.btn} onClick={() => openArizaPopup(a.id)}>
+                        {t("adminworkCompletion")}
+                      </button>
+                      <button style={styles.btnGreen} onClick={() => closeAriza(a.id)}>
+                        {t("adminclose")}
+                      </button>
+                    </>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* ------------------------------------------------------------------ */}
+      {/* TEKNİK DESTEK TALEPLERİ */}
+      {/* ------------------------------------------------------------------ */}
+      <div style={styles.section}>
+        <h3 style={styles.sectionTitle}>{t("admintechRequests")}</h3>
+
+        <table style={styles.table}>
+          <thead>
+            <tr>
+              <th style={styles.th}>{t("admindate")}</th>
+              <th style={styles.th}>{t("adminsubject")}</th>
+              <th style={styles.th}>{t("admindetails")}</th>
+              <th style={styles.th}>{t("adminstatus")}</th>
+              <th style={styles.th}>{t("adminaction")}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {talepler.map((e) => (
+              <tr key={e.id}>
+                <td style={styles.td}>{new Date(e.tarih).toLocaleDateString()}</td>
+                <td style={styles.td}>{e.konu}</td>
+                <td style={styles.td}>{e.detay}</td>
+                <td style={styles.td}>
+                  {t.durum === "Açık" ? (
+                    <span style={styles.statusOpen}>{t("adminopen")}</span>
+                  ) : (
+                    <span style={styles.statusClosed}>{t("adminclosed")}</span>
+                  )}
+                </td>
+                <td style={styles.td}>
+                  {e.durum === "Açık" && (
+                    <button style={styles.btnGreen} onClick={() => closeTalep(e.id)}>
+                      {t("adminclose")}
+                    </button>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* İşçilik / Tamamlanma Popup */}
+      {showPopup && (
+        <div style={styles.popupOverlayStyle}>
+          <div style={styles.popupBoxStyle}>
+            <h3>{t("adminworkCompletion")}</h3>
+
+            <label>{t("adminworkCost")} (₺)</label>
+            <input
+              type="number"
+              value={iscilikInput}
+              onChange={(e) => setIscilikInput(e.target.value)}
+              style={styles.popupInputStyle}
+            />
+
+            <label>
+              {t("admincompletion")}: % {yuzdeInput}
+            </label>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={yuzdeInput}
+              onChange={(e) => setYuzdeInput(e.target.value)}
+              style={{ width: "100%" }}
+            />
+
+            <button style={styles.popupSaveBtnStyle} onClick={async () => {
+              updateArizaDetails(currentArizaId); setShowPopup(false); setIscilikInput("");
+              setYuzdeInput(0);
+            }}>
+              {t("adminsave")}
+            </button>
+            <button style={styles.popupCloseBtnStyle} onClick={() => setShowPopup(false)}>
+              {t("adminclose")}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 export default AdminSikayetler;
