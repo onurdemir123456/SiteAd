@@ -67,6 +67,83 @@ const tr = {
     pdfArchive: "PDF Arşivi",
     pdfArchiveDescription: "Tüm PDF dosyalarını arşivleyebilir ve indirebilirsiniz.",
     downloadAll: "Tümünü İndir",
+    // ------------------------------
+// Daireler / Blok Yönetimi
+// ------------------------------
+apartmentBlockTitle: "Daireler / Blok Yönetimi",
+
+// Daire listesi
+apartmentList: "Daire Listesi",
+block: "Blok",
+floor: "Kat",
+apartmentNo: "Daire No",
+status: "Durum",
+person: "Kişi",
+
+// Yeni daire ekleme
+addNewApartment: "Yeni Daire Ekle",
+blockPlaceholder: "Blok (A, B, C...)",
+floorPlaceholder: "Kat",
+apartmentNoPlaceholder: "Daire No",
+
+owner: "Sahip",
+tenant: "Kiracı",
+empty: "Boş",
+
+personRequired: "Kişi (Zorunlu)",
+addApartmentButton: "Daire Ekle",
+
+// Daire silme
+deleteApartmentTitle: "Daire Sil",
+deleteApartmentButton: "Daireyi Sil",
+
+// Filtreleme
+filterByFloorBlock: "Kat / Blok Bazlı Görüntüleme",
+selectOrTypeBlock: "Blok seç veya yaz (A-Z)",
+selectOrTypeFloor: "Kat seç veya yaz",
+none: "Yok",
+
+// Sahip / Kiracı / Boş filtresi
+ownerTenantFilter: "Daire Sahibi / Kiracı / Boş Ayrımı",
+ownerFilter: "Sahip",
+tenantFilter: "Kiracı",
+emptyFilter: "Boş",
+
+// Kişi bilgileri
+residentInfoTitle: "Kişi Bilgileri",
+phone: "Telefon",
+email: "Email",
+
+// Yeni kişi ekleme
+addNewResidentTitle: "Yeni Kişi Ekle",
+selectPersonRequired: "Kişi seç (zorunlu)",
+phoneRequired: "Telefon (zorunlu)",
+emailOptional: "Email (opsiyonel)",
+addResidentButton: "Kişi Ekle",
+
+// Kişi silme
+deleteResidentTitle: "Kişi Sil",
+personNamePlaceholder: "Kişi İsmi",
+deleteResidentButton: "Kişiyi Sil",
+
+// Araç bilgileri
+vehicleInfoTitle: "Araç Bilgileri",
+plate: "Plaka",
+brand: "Marka",
+model: "Model",
+color: "Renk",
+
+// Yeni araç ekleme
+addNewVehicleTitle: "Yeni Araç Ekle",
+plateRequired: "Plaka (zorunlu)",
+brandRequired: "Marka (zorunlu)",
+modelRequired: "Model (zorunlu)",
+colorRequired: "Renk (zorunlu)",
+addVehicleButton: "Araç Ekle",
+
+// Araç silme
+deleteVehicleTitle: "Araç Sil",
+deleteVehicleButton: "Aracı Sil",
 
     daireler_blok_yonetimi: "Daireler / Blok Yönetimi",
 

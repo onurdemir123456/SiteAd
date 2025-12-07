@@ -68,6 +68,83 @@ const en = {
     pdfArchiveDescription: "You can archive and download all PDF files.",
     downloadAll: "Download All",
     daireler_blok_yonetimi: "Apartments / Block Management",
+// ------------------------------
+// Apartments / Block Management
+// ------------------------------
+apartmentBlockTitle: "Apartments / Block Management",
+
+// Apartment list
+apartmentList: "Apartment List",
+block: "Block",
+floor: "Floor",
+apartmentNo: "Apartment No",
+status: "Status",
+person: "Person",
+
+// Add apartment
+addNewApartment: "Add New Apartment",
+blockPlaceholder: "Block (A, B, C...)",
+floorPlaceholder: "Floor",
+apartmentNoPlaceholder: "Apartment No",
+
+owner: "Owner",
+tenant: "Tenant",
+empty: "Empty",
+
+personRequired: "Person (Required)",
+addApartmentButton: "Add Apartment",
+
+// Delete apartment
+deleteApartmentTitle: "Delete Apartment",
+deleteApartmentButton: "Delete Apartment",
+
+// Filters
+filterByFloorBlock: "Floor / Block Filtering",
+selectOrTypeBlock: "Select or type block (A-Z)",
+selectOrTypeFloor: "Select or type floor",
+none: "None",
+
+// Owner / Tenant filter
+ownerTenantFilter: "Owner / Tenant / Empty Filter",
+ownerFilter: "Owner",
+tenantFilter: "Tenant",
+emptyFilter: "Empty",
+
+// Resident info
+residentInfoTitle: "Resident Information",
+phone: "Phone",
+email: "Email",
+
+// Add resident
+addNewResidentTitle: "Add New Resident",
+selectPersonRequired: "Select person (required)",
+phoneRequired: "Phone (required)",
+emailOptional: "Email (optional)",
+addResidentButton: "Add Resident",
+
+// Delete resident
+deleteResidentTitle: "Delete Resident",
+personNamePlaceholder: "Person Name",
+deleteResidentButton: "Delete Person",
+
+// Vehicle information
+vehicleInfoTitle: "Vehicle Information",
+plate: "Plate",
+brand: "Brand",
+model: "Model",
+color: "Color",
+
+// Add vehicle
+addNewVehicleTitle: "Add New Vehicle",
+plateRequired: "Plate (required)",
+brandRequired: "Brand (required)",
+modelRequired: "Model (required)",
+colorRequired: "Color (required)",
+addVehicleButton: "Add Vehicle",
+
+// Delete vehicle
+deleteVehicleTitle: "Delete Vehicle",
+deleteVehicleButton: "Delete Vehicle",
 
     // List
     daire_listesi: "Apartment List",
