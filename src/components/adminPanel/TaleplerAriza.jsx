@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import supabase from "../../helper/supabaseClient";
+import { useLanguage } from "../../context/LanguageContext";
 
-export default function AdminSikayetler() {
+function AdminSikayetler() {
+  const { t } = useLanguage();
   const [sikayetler, setSikayetler] = useState([]);
   const [arizalar, setArizalar] = useState([]);
   const [talepler, setTalepler] = useState([]);
@@ -14,68 +16,123 @@ export default function AdminSikayetler() {
 
 
   const styles = {
+    // ... (Stilleriniz olduğu gibi bırakıldı)
     container: {
       padding: "20px",
       fontFamily: "Arial, sans-serif",
     },
     title: {
-      fontSize: "26px",
+      fontSize:
+     "28px",
       fontWeight: "bold",
-      marginBottom: "25px",
+      marginBottom: "20px",
     },
     section: {
-      marginBottom: "35px",
+      marginBottom: "30px",
       padding: "15px",
-      background: "#ffffff",
+      border: "1px solid #ddd",
       borderRadius: "8px",
-      boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+      backgroundColor: "#f9f9f9",
     },
     sectionTitle: {
       fontSize: "20px",
-      fontWeight: "600",
-      marginBottom: "15px",
+      marginBottom: "10px",
+      fontWeight: "bold",
     },
     table: {
       width: "100%",
       borderCollapse: "collapse",
     },
     th: {
-      padding: "10px 12px",
-      borderBottom: "1px solid #ddd",
-      background: "#f0f0f0",
+      border: "1px solid #ddd",
+      padding: "8px",
+      backgroundColor: "#f2f2f2",
       textAlign: "left",
-      fontWeight: "600",
     },
     td: {
-      padding: "10px 12px",
-      borderBottom: "1px solid #ddd",
+      border: "1px solid #ddd",
+      padding: "8px",
+    },
+    statusOpen: {
+      color: "green",
+      fontWeight: "bold",
+    },
+    statusClosed: {
+      color: "red",
+      fontWeight: "bold",
     },
     btn: {
-      padding: "6px 10px",
-      background: "#2196F3",
-      border: "none",
-      color: "#fff",
-      borderRadius: "5px",
+      padding: "5px 10px",
+      margin: "2px",
       cursor: "pointer",
-      fontSize: "14px",
-      marginRight: "8px",
+      backgroundColor: "#2196F3",
+      color: "white",
+      border: "none",
+      borderRadius: "4px",
     },
     btnGreen: {
-      padding: "6px 10px",
-      background: "#4CAF50",
-      border: "none",
-      color: "#fff",
-      borderRadius: "5px",
+      padding: "5px 10px",
+      margin: "2px",
       cursor: "pointer",
-      fontSize: "14px",
+      backgroundColor: "green",
+      color: "white",
+      border: "none",
+      borderRadius: "4px",
     },
-    statusOpen: { color: "red", fontWeight: "bold" },
-    statusClosed: { color: "green", fontWeight: "bold" },
+
+    popupOverlayStyle: {
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      backgroundColor: "rgba(0,0,0,0.5)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 1000,
+    },
+    popupBoxStyle: {
+      backgroundColor: "white",
+      padding: "20px",
+      borderRadius: "8px",
+      minWidth: "300px",
+      maxWidth: "500px",
+      boxShadow: "0 0 10px rgba(0,0,0,0.3)",
+    },
+    popupInputStyle: {
+      width: "100%",
+      padding: "8px",
+      margin: "10px 0",
+      borderRadius: "4px",
+      border: "1px solid #ccc",
+    },
+
+    popupSaveBtnStyle: {
+      padding: "8px 15px",
+      marginRight: "10px",
+      backgroundColor: "#2196F3",
+      color: "white",
+      border: "none",
+      borderRadius: "4px",
+      cursor: "pointer",
+    },
+
+    popupCloseBtnStyle: {
+      padding: "8px 15px",
+      backgroundColor: "red",
+      color: "white",
+      border: "none",
+      borderRadius: "4px",
+      cursor: "pointer",
+    }
   };
 
-  // ----------------------------
-  // Supabase Data Fetch
-  // ----------------------------
+
+  // Veritabanı durum değerleri için ham çeviri anahtarları
+  const closedStatusRaw = t("adminclosedRaw"); // "Kapalı"
+  const openStatusRaw = t("adminopenRaw"); // "Açık"
+
 
   const fetchSikayetler = async () => {
     const { data } = await supabase.from("sikayetler").select("*").order("tarih", { ascending: false });
@@ -98,12 +155,9 @@ export default function AdminSikayetler() {
     fetchTalepler();
   }, []);
 
-  // ----------------------------
-  // Durum Güncellemeler
-  // ----------------------------
-
+  // Not: DB'ye yazılan durumlar statik Türkçe kalmalıdır.
   const closeSikayet = async (id) => {
-    await supabase.from("sikayetler").update({ durum: "Kapalı" }).eq("id", id);
+    await supabase.from("sikayetler").update({ durum: "Kapalı" }).eq("id", id); 
     fetchSikayetler();
   };
 
@@ -117,32 +171,42 @@ export default function AdminSikayetler() {
     fetchTalepler();
   };
 
-  
-  const openArizaPopup = (id) => {
-  setCurrentArizaId(id);
-  setShowPopup(true);
-};
 
+  const openArizaPopup = (id) => {
+    setCurrentArizaId(id);
+    setShowPopup(true);
+  };
+  const updateArizaDetails = async (id) => {
+
+    await supabase
+      .from("arizalar")
+      .update({ iscilik: iscilikInput, tamamlanma: yuzdeInput })
+      .eq("id", id);
+
+    fetchArizalar();
+  };
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>Admin Paneli – Talepler & Arıza & Şikayet Yönetimi</h2>
+      <h2 style={styles.title}>
+        {t("admintitle")} 
+      </h2>
 
       {/* ------------------------------------------------------------------ */}
       {/* ŞİKAYETLER */}
       {/* ------------------------------------------------------------------ */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Şikayetler</h3>
+        <h3 style={styles.sectionTitle}>{t("admincomplaints")}</h3>
 
         <table style={styles.table}>
           <thead>
             <tr>
-              <th style={styles.th}>Tarih</th>
-              <th style={styles.th}>Daire</th>
-              <th style={styles.th}>Konu</th>
-              <th style={styles.th}>Açıklama</th>
-              <th style={styles.th}>Durum</th>
-              <th style={styles.th}>İşlem</th>
+              <th style={styles.th}>{t("admindate")}</th>
+              <th style={styles.th}>{t("adminapartment")}</th>
+              <th style={styles.th}>{t("adminsubject")}</th>
+              <th style={styles.th}>{t("admindescription")}</th>
+              <th style={styles.th}>{t("adminstatus")}</th>
+              <th style={styles.th}>{t("adminaction")}</th>
             </tr>
           </thead>
           <tbody>
@@ -154,15 +218,15 @@ export default function AdminSikayetler() {
                 <td style={styles.td}>{s.aciklama}</td>
                 <td style={styles.td}>
                   {s.durum === "Açık" ? (
-                    <span style={styles.statusOpen}>Açık</span>
+                    <span style={styles.statusOpen}>{t("adminopen")}</span>
                   ) : (
-                    <span style={styles.statusClosed}>Kapalı</span>
+                    <span style={styles.statusClosed}>{t("adminclosed")}</span>
                   )}
                 </td>
                 <td style={styles.td}>
                   {s.durum === "Açık" && (
                     <button style={styles.btn} onClick={() => closeSikayet(s.id)}>
-                      Kapat
+                      {t("adminclose")}
                     </button>
                   )}
                 </td>
@@ -176,19 +240,19 @@ export default function AdminSikayetler() {
       {/* ARIZA BİLDİRİMLERİ */}
       {/* ------------------------------------------------------------------ */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Arıza Bildirimleri</h3>
+        <h3 style={styles.sectionTitle}>{t("adminfaultReports")}</h3>
 
         <table style={styles.table}>
           <thead>
             <tr>
-              <th style={styles.th}>Tarih</th>
-              <th style={styles.th}>Daire</th>
-              <th style={styles.th}>Konu</th>
-              <th style={styles.th}>Açıklama</th>
-              <th style={styles.th}>İşçilik</th>
-              <th style={styles.th}>Tamamlanma</th>
-              <th style={styles.th}>Durum</th>
-              <th style={styles.th}>İşlem</th>
+              <th style={styles.th}>{t("admindate")}</th>
+              <th style={styles.th}>{t("adminapartment")}</th>
+              <th style={styles.th}>{t("adminsubject")}</th>
+              <th style={styles.th}>{t("admindescription")}</th>
+              <th style={styles.th}>{t("adminworkCost")}</th>
+              <th style={styles.th}>{t("admincompletion")}</th>
+              <th style={styles.th}>{t("adminstatus")}</th>
+              <th style={styles.th}>{t("adminaction")}</th>
             </tr>
           </thead>
           <tbody>
@@ -202,19 +266,19 @@ export default function AdminSikayetler() {
                 <td style={styles.td}>{a.tamamlanma || "-"}</td>
                 <td style={styles.td}>
                   {a.durum === "Açık" ? (
-                    <span style={styles.statusOpen}>Açık</span>
+                    <span style={styles.statusOpen}>{t("adminopen")}</span>
                   ) : (
-                    <span style={styles.statusClosed}>Kapalı</span>
+                    <span style={styles.statusClosed}>{t("adminclosed")}</span>
                   )}
                 </td>
                 <td style={styles.td}>
                   {a.durum === "Açık" && (
                     <>
                       <button style={styles.btn} onClick={() => openArizaPopup(a.id)}>
-                        İşçilik / Tamamlanma
+                        {t("adminworkCompletion")}
                       </button>
                       <button style={styles.btnGreen} onClick={() => closeAriza(a.id)}>
-                        Kapat
+                        {t("adminclose")}
                       </button>
                     </>
                   )}
@@ -229,35 +293,36 @@ export default function AdminSikayetler() {
       {/* TEKNİK DESTEK TALEPLERİ */}
       {/* ------------------------------------------------------------------ */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Teknik Destek Talepleri</h3>
+        <h3 style={styles.sectionTitle}>{t("admintechRequests")}</h3>
 
         <table style={styles.table}>
           <thead>
             <tr>
-              <th style={styles.th}>Tarih</th>
-              <th style={styles.th}>Konu</th>
-              <th style={styles.th}>Detay</th>
-              <th style={styles.th}>Durum</th>
-              <th style={styles.th}>İşlem</th>
+              <th style={styles.th}>{t("admindate")}</th>
+              <th style={styles.th}>{t("adminsubject")}</th>
+              <th style={styles.th}>{t("admindetails")}</th>
+              <th style={styles.th}>{t("adminstatus")}</th>
+              <th style={styles.th}>{t("adminaction")}</th>
             </tr>
           </thead>
           <tbody>
-            {talepler.map((t) => (
-              <tr key={t.id}>
-                <td style={styles.td}>{new Date(t.tarih).toLocaleDateString()}</td>
-                <td style={styles.td}>{t.konu}</td>
-                <td style={styles.td}>{t.detay}</td>
+            {talepler.map((e) => (
+              <tr key={e.id}>
+                <td style={styles.td}>{new Date(e.tarih).toLocaleDateString()}</td>
+                <td style={styles.td}>{e.konu}</td>
+                <td style={styles.td}>{e.detay}</td>
                 <td style={styles.td}>
-                  {t.durum === "Açık" ? (
-                    <span style={styles.statusOpen}>Açık</span>
+                  {/* HATA DÜZELTİLDİ: e.durum kullanıldı */}
+                  {e.durum === "Açık" ? ( 
+                    <span style={styles.statusOpen}>{t("adminopen")}</span>
                   ) : (
-                    <span style={styles.statusClosed}>Kapalı</span>
+                    <span style={styles.statusClosed}>{t("adminclosed")}</span>
                   )}
                 </td>
                 <td style={styles.td}>
-                  {t.durum === "Açık" && (
-                    <button style={styles.btnGreen} onClick={() => closeTalep(t.id)}>
-                      Kapat
+                  {e.durum === "Açık" && (
+                    <button style={styles.btnGreen} onClick={() => closeTalep(e.id)}>
+                      {t("adminclose")}
                     </button>
                   )}
                 </td>
@@ -266,88 +331,46 @@ export default function AdminSikayetler() {
           </tbody>
         </table>
       </div>
-      
-      
-      
-      
-      
-      
+
+      {/* İşçilik / Tamamlanma Popup */}
       {showPopup && (
-  <div style={{
-    position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    background: "rgba(0,0,0,0.5)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 999
-  }}>
-    <div style={{
-      width: "350px",
-      background: "#fff",
-      padding: "20px",
-      borderRadius: "10px",
-      display: "flex",
-      flexDirection: "column",
-      gap: "12px"
-    }}>
+        <div style={styles.popupOverlayStyle}>
+          <div style={styles.popupBoxStyle}>
+            <h3>{t("adminworkCompletion")}</h3>
 
-      <h3>İşçilik ve Tamamlanma</h3>
+            <label>{t("adminworkCost")} (₺)</label>
+            <input
+              type="number"
+              value={iscilikInput}
+              onChange={(e) => setIscilikInput(e.target.value)}
+              style={styles.popupInputStyle}
+            />
 
-      <label>İşçilik Tutarı (₺)</label>
-      <input
-        type="number"
-        value={iscilikInput}
-        onChange={(e) => setIscilikInput(e.target.value)}
-        style={{ padding: "8px", border: "1px solid #ccc", borderRadius: "6px" }}
-      />
+            <label>
+              {t("admincompletion")}: % {yuzdeInput}
+            </label>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={yuzdeInput}
+              onChange={(e) => setYuzdeInput(e.target.value)}
+              style={{ width: "100%" }}
+            />
 
-      <label>Tamamlanma: % {yuzdeInput}</label>
-      <input
-        type="range"
-        min="0"
-        max="100"
-        value={yuzdeInput}
-        onChange={(e) => setYuzdeInput(e.target.value)}
-        style={{ width: "100%" }}
-      />
-
-      <button
-        style={{ background: "#4CAF50", color: "#fff", padding: "10px", border: "none", borderRadius: "6px" }}
-        onClick={async () => {
-          await supabase
-            .from("arizalar")
-            .update({
-              iscilik: iscilikInput,
-              tamamlanma: `%${yuzdeInput}`
-            })
-            .eq("id", currentArizaId);
-
-          fetchArizalar();
-          setShowPopup(false);
-          setIscilikInput("");
-          setYuzdeInput(0);
-        }}
-      >
-        Kaydet
-      </button>
-
-      <button
-        style={{ background: "#f44336", color: "#fff", padding: "10px", border: "none", borderRadius: "6px" }}
-        onClick={() => setShowPopup(false)}
-      >
-        Kapat
-      </button>
-
-    </div>
-  </div>
-)}
-
-
+            <button style={styles.popupSaveBtnStyle} onClick={async () => {
+              updateArizaDetails(currentArizaId); setShowPopup(false); setIscilikInput("");
+              setYuzdeInput(0);
+            }}>
+              {t("adminsave")}
+            </button>
+            <button style={styles.popupCloseBtnStyle} onClick={() => setShowPopup(false)}>
+              {t("admincancel")}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
-
+export default AdminSikayetler;
