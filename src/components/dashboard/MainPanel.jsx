@@ -8,13 +8,15 @@ import {
   Title,
 } from "chart.js";
 import supabase from "../../helper/supabaseClient";
+import { useLanguage } from "../../context/LanguageContext";
 
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 function UserDashboard({ setActiveTab }) {
+  const { t } = useLanguage();
   const [activeCount, setActiveCount] = useState(0);
 
-  // ---------------- DUYURULAR STATE ----------------
+  // ---------------- ANNOUNCEMENTS STATE ----------------
   const [announcements, setAnnouncements] = useState([]);
   const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -31,12 +33,12 @@ function UserDashboard({ setActiveTab }) {
   const fetchCounts = async () => {
     const { data: s } = await supabase.from("sikayetler").select("*");
     const { data: a } = await supabase.from("arizalar").select("*");
-    const { data: t } = await supabase.from("talepler").select("*");
+    const { data: tReq } = await supabase.from("talepler").select("*");
 
     const total =
       s.filter((x) => x.durum === "Açık").length +
       a.filter((x) => x.durum === "Açık").length +
-      t.filter((x) => x.durum === "Açık").length;
+      tReq.filter((x) => x.durum === "Açık").length;
 
     setActiveCount(total);
   };
@@ -48,7 +50,7 @@ function UserDashboard({ setActiveTab }) {
 
   // ---------------- CHART DATA ----------------
   const aidatData = {
-    labels: ["Ödenen", "Ödenmeyen"],
+    labels: [t("mainpaid"), t("mainunpaid")],
     datasets: [
       {
         data: [90, 30],
@@ -59,7 +61,7 @@ function UserDashboard({ setActiveTab }) {
   };
 
   const enerjiData = {
-    labels: ["Elektrik", "Su", "Doğalgaz"],
+    labels: [t("mainelectricity"), t("mainwater"), t("maingas")],
     datasets: [
       {
         data: [400, 150, 200],
@@ -89,10 +91,7 @@ function UserDashboard({ setActiveTab }) {
 
   // ---------------- STYLES ----------------
   const styles = {
-    container: {
-      padding: "20px",
-      fontFamily: "Arial, sans-serif",
-    },
+    container: { padding: "20px", fontFamily: "Arial, sans-serif" },
     cardsContainer: {
       display: "flex",
       gap: "20px",
@@ -106,11 +105,7 @@ function UserDashboard({ setActiveTab }) {
       flex: "1 1 200px",
       boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
     },
-    chartsContainer: {
-      display: "flex",
-      gap: "20px",
-      flexWrap: "wrap",
-    },
+    chartsContainer: { display: "flex", gap: "20px", flexWrap: "wrap" },
     chartCard: {
       background: "#fff",
       padding: "20px",
@@ -122,36 +117,32 @@ function UserDashboard({ setActiveTab }) {
 
   return (
     <div style={styles.container}>
-      <h1>Kullanıcı Dashboard</h1>
+      <h1>{t("dashboardtitle")}</h1>
 
       <div style={styles.cardsContainer}>
         <div style={styles.card}>
-          <h2>Daireniz</h2>
+          <h2>{t("dashboardyourApartment")}</h2>
           <p>A3-12</p>
         </div>
 
         <div style={styles.card}>
-          <h2>Aidat Durumu</h2>
-          <p>Ödenen: 1.200₺</p>
-          <p>Toplam Borç: 1.500₺</p>
+          <h2>{t("dashboardfeeStatus")}</h2>
+          <p>{t("dashboardpaid")}: 1.200₺</p>
+          <p>{t("dashboardtotalDebt")}: 1.500₺</p>
         </div>
 
         <div style={styles.card}>
-          <h2>Açık Talepler</h2>
-          <p>Toplam: {activeCount}</p>
+          <h2>{t("dashboardopenRequests")}</h2>
+          <p>{t("dashboardtotal")}: {activeCount}</p>
         </div>
 
-        {/* ------------ SCROLLABLE DUYURULAR ------------ */}
+        {/* -------- SCROLLABLE ANNOUNCEMENTS -------- */}
         <div style={styles.card}>
-          <h2>Son Duyurular</h2>
-          <div
-            style={{
-              maxHeight: "150px",
-              overflowY: "auto",
-              paddingRight: "5px",
-            }}
-          >
-            {announcements.length === 0 && <p>Henüz duyuru bulunmuyor.</p>}
+          <h2>{t("dashboardlatestAnnouncements")}</h2>
+          <div style={{ maxHeight: "150px", overflowY: "auto" }}>
+            {announcements.length === 0 && (
+              <p>{t("dashboardnoAnnouncements")}</p>
+            )}
 
             {announcements.map((item) => (
               <div
@@ -161,19 +152,12 @@ function UserDashboard({ setActiveTab }) {
                   setShowModal(true);
                 }}
                 style={{
-                  marginBottom: "8px",
                   padding: "6px 8px",
+                  marginBottom: "6px",
                   borderRadius: "6px",
                   cursor: "pointer",
                   background: "#f7f7f7",
-                  transition: "0.2s",
                 }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.background = "#e4e4e4")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.background = "#f7f7f7")
-                }
               >
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <span>• {item.title}</span>
@@ -187,44 +171,41 @@ function UserDashboard({ setActiveTab }) {
         </div>
       </div>
 
+      {/* -------- CHARTS -------- */}
       <div style={styles.chartsContainer}>
         <div style={styles.chartCard}>
-          <h2>Aidat Kullanımı</h2>
+          <h2>{t("mainaidatUsage")}</h2>
           <Pie
             data={aidatData}
             options={{
               ...pieOptions,
-              plugins: { title: { display: true, text: "Aidat Kullanımı" } },
+              plugins: { title: { display: true, text: t("mainaidatUsage") } },
             }}
           />
         </div>
 
         <div style={styles.chartCard}>
-          <h2>Enerji Kullanımı</h2>
+          <h2>{t("mainenergyUsage")}</h2>
           <Pie
             data={enerjiData}
             options={{
               ...pieOptions,
-              plugins: { title: { display: true, text: "Enerji Kullanımı" } },
+              plugins: { title: { display: true, text: t("mainenergyUsage") } },
             }}
           />
         </div>
       </div>
 
-      {/* ---------------- MODAL ---------------- */}
+      {/* -------- MODAL -------- */}
       {showModal && selectedAnnouncement && (
         <div
           style={{
             position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
+            inset: 0,
             background: "rgba(0,0,0,0.4)",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            zIndex: 9999,
           }}
           onClick={() => setShowModal(false)}
         >
@@ -234,41 +215,30 @@ function UserDashboard({ setActiveTab }) {
               padding: "20px",
               borderRadius: "12px",
               width: "400px",
-              maxHeight: "70vh",
-              overflowY: "auto",
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 style={{ marginBottom: "5px" }}>
-              {selectedAnnouncement.title}
-            </h2>
-            <p
-              style={{
-                fontSize: "12px",
-                color: "#666",
-                marginBottom: "10px",
-              }}
-            >
+            <h2>{selectedAnnouncement.title}</h2>
+            <p style={{ fontSize: "12px", color: "#666" }}>
               {formatDate(selectedAnnouncement.created_at)}
             </p>
-            <p style={{ whiteSpace: "pre-wrap", lineHeight: "1.4" }}>
+            <p>
               {selectedAnnouncement.description ||
                 selectedAnnouncement.content ||
-                "İçerik bulunamadı."}
+                t("dashboardnoContent")}
             </p>
             <button
               onClick={() => setShowModal(false)}
               style={{
                 marginTop: "15px",
                 padding: "10px 20px",
-                border: "none",
                 background: "#2196f3",
-                color: "white",
+                border: "none",
+                color: "#fff",
                 borderRadius: "8px",
-                cursor: "pointer",
               }}
             >
-              Kapat
+              {t("dashboardclose")}
             </button>
           </div>
         </div>

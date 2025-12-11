@@ -9,6 +9,12 @@ const en = {
     save: "Save",
     siteUpdated: "Site settings updated!",
 
+
+    // Dashboard panel
+    dashboardPanel : "Dashboard Panel",
+    apartments : "Apartments",
+    demands : "Demands",
+
     // Notifications
     notificationSettings: "Notification Settings",
     emailNotifications: "Email Notifications",
@@ -338,6 +344,7 @@ deleteVehicleButton: "Delete Vehicle",
     adminworkCompletion: "Work / Completion",
     admindetails: "Details",
     adminsave: "Save",
+    admincancel : "Cancel",
     adminclose: "Close",
     deliverytitle: "Deliveries & Cargo",
     deliverycargoRegistry: "Cargo Registry",
@@ -445,7 +452,6 @@ deleteVehicleButton: "Delete Vehicle",
     menudocumentsArchive: "Documents & Archive",
     menumessagingChat: "Messaging / Chat",
     menusettings: "Settings",
-    menudashboard: "Dashboard",
     menuapartments: "Apartments",
     menuannouncements: "Announcements",
     menudues: "Dues",
@@ -464,16 +470,36 @@ deleteVehicleButton: "Delete Vehicle",
     addError: "Failed to add vehicle: ",
     addSuccess: "Vehicle added successfully!",
 
-    apartmentrequiredFields: "Block, Floor, and Apartment No are required.",
-    apartmentpersonRequired: "Person name is required when Owner or Tenant is selected!",
+    apartmentRequiredFields: "Block, Floor, and Apartment No are required.",
+    apartmentPersonRequired: "Person name is required when Owner or Tenant is selected!",
     apartmentaddError: "Failed to add record: ",
     apartmentaddSuccess: "Apartment added successfully!",
     residentrequiredFields: "Person and Phone are required!",
+    residentRequiredFields: "Person and phone number are required!",
     residentaddError: "Failed to add person: ",
+    residentDeleteError: "An error occurred while deleting the resident information!",
+    residentDeleteRequired: "Person name and phone number are required!",
     residentaddSuccess: "Person added successfully!",
+    residentAddError: "Failed to add person: ",
+    residentAddSuccess: "Person added successfully!",
     email: "Email",
     addNewCar: "Add New Car",
     selectPersonMandatory: "Select Person (required)",
+    apartmentDeleteCheckError: "An error occurred during the check!",
+    apartmentNotFound: "❗ The apartment you want to delete was not found!",
+    apartmentDeleteRequiredFields: "Block, Floor, and Apartment No are required!",
+    residentDeleteCheckError: "An error occurred during the check!",
+    residentNotFound: "❗ The person you are looking for was not found!",
+    residentDeleteSuccess: "✔ Resident and vehicle information deleted successfully!",
+
+    apartmentAddError: "Failed to add apartment: ",
+    apartmentAddSuccess: "Apartment added successfully!",
+    apartmentDeleteError: "Apartment could not be deleted: ",
+    apartmentCascadeDeleteSuccess:
+  "✔ Apartment, resident, and vehicle information were deleted successfully!",
+    
+
+
 
     vehicle_plate_placeholder: "License Plate (required)",
     vehicle_brand_placeholder: "Brand (required)",
@@ -484,5 +510,19 @@ deleteVehicleButton: "Delete Vehicle",
     delete_vehicle_person_placeholder: "Person Name",
     delete_vehicle_plate_placeholder: "License Plate",
     delete_vehicle_button: "Delete Vehicle",
+    vehicleDeleteError: "An error occurred while deleting the vehicle information!",
+    vehicleAddError: "Vehicle could not be added:",
+    vehicleAddSuccess: "Vehicle added successfully!",
+    vehicleDeleteRequiredFields: "Person and license plate fields are required!",
+    checkError: "An error occurred during the verification process!",
+    vehicleNotFoundForPerson: "❗ No vehicle found for the specified person!",
+    vehicleDeleteError: "An error occurred while deleting the vehicle!",
+    vehicleDeleteSuccess: "✔ Vehicle deleted successfully!",
+
+
+
+
+    
+
 };
 export default en;

@@ -1,16 +1,22 @@
 import React, { useState } from "react";
+import { useLanguage } from "../../context/LanguageContext";
 
 function MesajlasmaChat() {
+  const { t } = useLanguage();
+
   const styles = {
-    container: {
-      padding: "20px",
-      fontFamily: "Arial, sans-serif",
+    container: { padding: "20px", fontFamily: "Arial, sans-serif" },
+    title: { fontSize: "24px", fontWeight: "bold", marginBottom: "20px" },
+
+    section: {
+      marginBottom: "30px",
+      padding: "15px",
+      background: "#ffffff",
+      borderRadius: "8px",
+      boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
     },
-    title: {
-      fontSize: "24px",
-      fontWeight: "bold",
-      marginBottom: "20px",
-    },
+    sectionTitle: { fontSize: "18px", fontWeight: "600", marginBottom: "10px" },
+
     chatBox: {
       border: "1px solid #ccc",
       borderRadius: "8px",
@@ -39,10 +45,7 @@ function MesajlasmaChat() {
       color: "#000",
       alignSelf: "flex-end",
     },
-    inputContainer: {
-      display: "flex",
-      marginTop: "10px",
-    },
+    inputContainer: { display: "flex", marginTop: "10px" },
     input: {
       flex: 1,
       padding: "8px",
@@ -59,18 +62,6 @@ function MesajlasmaChat() {
       cursor: "pointer",
       color: "#fff",
       fontSize: "14px",
-    },
-    section: {
-      marginBottom: "30px",
-      padding: "15px",
-      background: "#ffffff",
-      borderRadius: "8px",
-      boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-    },
-    sectionTitle: {
-      fontSize: "18px",
-      fontWeight: "600",
-      marginBottom: "10px",
     },
     table: {
       width: "100%",
@@ -91,70 +82,75 @@ function MesajlasmaChat() {
     },
   };
 
+  // -------- CHAT STATE --------
   const [messages, setMessages] = useState([
-    { text: "Merhaba! Site ile ilgili sorularınızı buradan sorabilirsiniz.", sender: "bot" },
+    { text: t("chatbotGreeting"), sender: "bot" },
   ]);
-
   const [newMessage, setNewMessage] = useState("");
 
   const handleSend = () => {
-    if (newMessage.trim() === "") return;
+    if (!newMessage.trim()) return;
     setMessages([...messages, { text: newMessage, sender: "user" }]);
     setNewMessage("");
   };
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>Mesajlaşma / Chat</h2>
+      <h2 style={styles.title}>{t("chattitle")}</h2>
 
-      {/* Sohbet Kutusu */}
+      {/* CHAT */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Sohbet</h3>
+        <h3 style={styles.sectionTitle}>{t("chatchatBox")}</h3>
+
         <div style={styles.chatBox}>
-          {messages.map((msg, index) => (
+          {messages.map((msg, i) => (
             <div
-              key={index}
+              key={i}
               style={{
                 ...styles.message,
-                ...(msg.sender === "user" ? styles.userMessage : styles.botMessage),
+                ...(msg.sender === "user"
+                  ? styles.userMessage
+                  : styles.botMessage),
               }}
             >
               {msg.text}
             </div>
           ))}
         </div>
+
         <div style={styles.inputContainer}>
           <input
             style={styles.input}
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            placeholder="Mesaj yaz..."
+            placeholder={t("chatplaceholder")}
           />
           <button style={styles.btn} onClick={handleSend}>
-            Gönder
+            {t("chatsend")}
           </button>
         </div>
       </div>
 
-      {/* Duyurular */}
+      {/* ANNOUNCEMENT READ STATUS */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Duyurular</h3>
+        <h3 style={styles.sectionTitle}>{t("chatannouncements")}</h3>
+
         <table style={styles.table}>
           <thead>
             <tr>
-              <th style={styles.th}>Duyuru</th>
-              <th style={styles.th}>Gönderim Tarihi</th>
-              <th style={styles.th}>Okundu / Toplam</th>
+              <th style={styles.th}>{t("chatannouncement")}</th>
+              <th style={styles.th}>{t("chatsendDate")}</th>
+              <th style={styles.th}>{t("chatreadTotal")}</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td style={styles.td}>Aidat Ödemesi Hatırlatma</td>
+              <td style={styles.td}>{t("chatsample1")}</td>
               <td style={styles.td}>01/11/2025</td>
               <td style={styles.td}>12 / 15</td>
             </tr>
             <tr>
-              <td style={styles.td}>Site Kuralları Güncelleme</td>
+              <td style={styles.td}>{t("chatsample2")}</td>
               <td style={styles.td}>15/10/2025</td>
               <td style={styles.td}>15 / 15</td>
             </tr>

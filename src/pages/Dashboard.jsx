@@ -8,8 +8,16 @@ import MesajlasmaChat from "../components/dashboard/MesajlasmaChat";
 import MainPanel from "../components/dashboard/MainPanel";
 import Duyurular from "../components/dashboard/Duyurular";
 import logoNoBg from "../assets/logoNoBg.png";
+import Ayarlar from "../components/dashboard/Ayarlar";
+import { useLanguage } from "../context/LanguageContext";
+import { useEffect } from "react";
+import supabase from "../helper/supabaseClient";
+
 function DashboardPanel() {
   const [activeComponent, setActiveComponent] = useState("Ana Panel");
+  const { t } = useLanguage();
+  const { changeLanguage } = useLanguage();
+
 
   const renderComponent = () => {
     switch (activeComponent) {
@@ -19,17 +27,20 @@ function DashboardPanel() {
       case "Aidat": return <AidatOdemeler />;
       case "Talepler": return <TaleplerAriza />;
       case "Mesajlar": return <MesajlasmaChat />;
+      case "Ayarlar": return <Ayarlar />;
+
       default: return null;
     }
   };
 
   const buttons = [
-    { label: "Ana Panel", onClick: () => setActiveComponent("Ana Panel") },
-    { label: "Daireler", onClick: () => setActiveComponent("Daireler") },
-    { label: "Duyurular", onClick: () => setActiveComponent("Duyurular") },
-    { label: "Aidat", onClick: () => setActiveComponent("Aidat") },
-    { label: "Talepler", onClick: () => setActiveComponent("Talepler") },
-    { label: "Mesajlar", onClick: () => setActiveComponent("Mesajlar") },
+    { label: t("menudashboard"), onClick: () => setActiveComponent("Ana Panel") },
+    { label: t("apartments"), onClick: () => setActiveComponent("Daireler") },
+    { label: t("menuannouncements"), onClick: () => setActiveComponent("Duyurular") },
+    { label: t("menudues"), onClick: () => setActiveComponent("Aidat") },
+    { label: t("demands"), onClick: () => setActiveComponent("Talepler") },
+    { label: t("menumessages"), onClick: () => setActiveComponent("Mesajlar") },
+    { label: t("menusettings"), onClick: () => setActiveComponent("Ayarlar") }
   ];
 
   return (
@@ -50,7 +61,7 @@ function DashboardPanel() {
         fontWeight: "bold",
         boxSizing: "border-box",
       }}>
-        <span>Dashboard Paneli</span>
+        <span>{t("dashboardPanel")}</span>
 
         {/* LOGO */}
         <img

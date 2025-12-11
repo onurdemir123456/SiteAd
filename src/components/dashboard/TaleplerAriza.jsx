@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import supabase from "../../helper/supabaseClient";
+import { useLanguage } from "../../context/LanguageContext";
 
 function TaleplerAriza() {
+  const { t } = useLanguage();
+
   // --------------------------
   // STATE
   // --------------------------
@@ -15,10 +18,21 @@ function TaleplerAriza() {
   const [supportMsg, setSupportMsg] = useState("");
 
   // -------------------------------
-  // ŞİKAYET SUBMIT
+  // COMMON VALIDATION
+  // -------------------------------
+  const validateFields = (title, message) => {
+    if (!title || !message) {
+      alert(t("requestsemptyFields"));
+      return false;
+    }
+    return true;
+  };
+
+  // -------------------------------
+  // COMPLAINT
   // -------------------------------
   const submitComplaint = async () => {
-    if (!complaintTitle || !complaintMsg) return alert("Alanlar boş olamaz");
+    if (!validateFields(complaintTitle, complaintMsg)) return;
 
     const { error } = await supabase.from("sikayetler").insert([
       {
@@ -30,20 +44,19 @@ function TaleplerAriza() {
     ]);
 
     if (error) {
-      console.error(error);
-      alert("Şikayet oluşturulamadı!");
+      alert(t("requestscomplaintFail"));
     } else {
-      alert("Şikayet gönderildi!");
+      alert(t("requestscomplaintSuccess"));
       setComplaintTitle("");
       setComplaintMsg("");
     }
   };
 
   // -------------------------------
-  // ARIZA SUBMIT
+  // FAULT
   // -------------------------------
   const submitFault = async () => {
-    if (!faultTitle || !faultMsg) return alert("Alanlar boş olamaz");
+    if (!validateFields(faultTitle, faultMsg)) return;
 
     const { error } = await supabase.from("arizalar").insert([
       {
@@ -57,20 +70,19 @@ function TaleplerAriza() {
     ]);
 
     if (error) {
-      console.error(error);
-      alert("Arıza bildirilemedi!");
+      alert(t("requestsfaultFail"));
     } else {
-      alert("Arıza kaydı oluşturuldu!");
+      alert(t("requestsfaultSuccess"));
       setFaultTitle("");
       setFaultMsg("");
     }
   };
 
   // -------------------------------
-  // TEKNİK DESTEK SUBMIT
+  // SUPPORT
   // -------------------------------
   const submitSupport = async () => {
-    if (!supportTitle || !supportMsg) return alert("Alanlar boş olamaz");
+    if (!validateFields(supportTitle, supportMsg)) return;
 
     const { error } = await supabase.from("talepler").insert([
       {
@@ -82,10 +94,9 @@ function TaleplerAriza() {
     ]);
 
     if (error) {
-      console.error(error);
-      alert("Destek kaydı oluşturulamadı!");
+      alert(t("requestssupportFail"));
     } else {
-      alert("Teknik destek talebi oluşturuldu!");
+      alert(t("requestssupportSuccess"));
       setSupportTitle("");
       setSupportMsg("");
     }
@@ -95,15 +106,8 @@ function TaleplerAriza() {
   // STYLES
   // -------------------------------
   const styles = {
-    container: {
-      padding: "20px",
-      fontFamily: "Arial, sans-serif",
-    },
-    title: {
-      fontSize: "24px",
-      fontWeight: "bold",
-      marginBottom: "20px",
-    },
+    container: { padding: "20px", fontFamily: "Arial, sans-serif" },
+    title: { fontSize: "24px", fontWeight: "bold", marginBottom: "20px" },
     section: {
       marginBottom: "30px",
       padding: "15px",
@@ -111,28 +115,7 @@ function TaleplerAriza() {
       borderRadius: "8px",
       boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
     },
-    sectionTitle: {
-      fontSize: "18px",
-      fontWeight: "600",
-      marginBottom: "10px",
-    },
-    table: {
-      width: "100%",
-      borderCollapse: "collapse",
-      marginTop: "10px",
-      textAlign: "left",
-    },
-    th: {
-      padding: "10px 12px",
-      borderBottom: "1px solid #ddd",
-      backgroundColor: "#f5f5f5",
-      fontWeight: "600",
-    },
-    td: {
-      padding: "10px 12px",
-      borderBottom: "1px solid #ddd",
-      fontSize: "15px",
-    },
+    sectionTitle: { fontSize: "18px", fontWeight: "600", marginBottom: "10px" },
     btn: {
       padding: "8px 12px",
       background: "#4caf50",
@@ -141,7 +124,6 @@ function TaleplerAriza() {
       cursor: "pointer",
       color: "#fff",
       fontSize: "14px",
-      marginRight: "10px",
       marginTop: "5px",
     },
     input: {
@@ -157,77 +139,74 @@ function TaleplerAriza() {
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>Talepler – Arıza / Destek / Şikayet</h2>
+      <h2 style={styles.title}>{t("requeststitle")}</h2>
 
-      {/* ----------------- ARIZA BİLDİRME ----------------- */}
+      {/* -------- FAULT -------- */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Arıza Bildirme</h3>
+        <h3 style={styles.sectionTitle}>{t("requestsfault")}</h3>
 
         <input
           style={styles.input}
-          type="text"
-          placeholder="Arıza Konusu"
+          placeholder={t("requestsfaultTitle")}
           value={faultTitle}
           onChange={(e) => setFaultTitle(e.target.value)}
         />
 
         <textarea
-          style={{ ...styles.input, height: "80px" }}
-          placeholder="Açıklama"
+          style={{ ...styles.input, height: 80 }}
+          placeholder={t("requestsfaultDesc")}
           value={faultMsg}
           onChange={(e) => setFaultMsg(e.target.value)}
-        ></textarea>
+        />
 
         <button style={styles.btn} onClick={submitFault}>
-          Arıza Bildir
+          {t("requestsfaultSubmit")}
         </button>
       </div>
 
-      {/* ----------------- TEKNİK DESTEK ----------------- */}
+      {/* -------- SUPPORT -------- */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Teknik Destek Kaydı</h3>
+        <h3 style={styles.sectionTitle}>{t("requestssupport")}</h3>
 
         <input
           style={styles.input}
-          type="text"
-          placeholder="Talep Konusu"
+          placeholder={t("requestssupportTitle")}
           value={supportTitle}
           onChange={(e) => setSupportTitle(e.target.value)}
         />
 
         <textarea
-          style={{ ...styles.input, height: "80px" }}
-          placeholder="Detaylar"
+          style={{ ...styles.input, height: 80 }}
+          placeholder={t("requestssupportDesc")}
           value={supportMsg}
           onChange={(e) => setSupportMsg(e.target.value)}
-        ></textarea>
+        />
 
         <button style={styles.btn} onClick={submitSupport}>
-          Destek Kaydı Oluştur
+          {t("requestssupportSubmit")}
         </button>
       </div>
 
-      {/* ----------------- ŞİKAYET ----------------- */}
+      {/* -------- COMPLAINT -------- */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Şikayet Oluştur</h3>
+        <h3 style={styles.sectionTitle}>{t("requestscomplaint")}</h3>
 
         <input
           style={styles.input}
-          type="text"
-          placeholder="Şikayet Konusu"
+          placeholder={t("requestscomplaintTitle")}
           value={complaintTitle}
           onChange={(e) => setComplaintTitle(e.target.value)}
         />
 
         <textarea
-          style={{ ...styles.input, height: "80px" }}
-          placeholder="Şikayet Açıklaması"
+          style={{ ...styles.input, height: 80 }}
+          placeholder={t("requestscomplaintDesc")}
           value={complaintMsg}
           onChange={(e) => setComplaintMsg(e.target.value)}
-        ></textarea>
+        />
 
         <button style={styles.btn} onClick={submitComplaint}>
-          Şikayet Gönder
+          {t("requestscomplaintSubmit")}
         </button>
       </div>
     </div>
@@ -235,4 +214,3 @@ function TaleplerAriza() {
 }
 
 export default TaleplerAriza;
-
