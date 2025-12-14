@@ -17,36 +17,11 @@ import { useLanguage } from "../context/LanguageContext";
 import { useEffect } from "react";
 import supabase from "../helper/supabaseClient";
 
-
-
 function AdminPanel() {
   const [activeComponent, setActiveComponent] = useState("Ana Panel");
   const { t } = useLanguage();
   const { changeLanguage } = useLanguage();
 
-  useEffect(() => {
-    const fetchUserLanguage = async () => {
-      const { data, error } = await supabase.auth.getUser();
-      console.log(data);
-      if (error) {
-        console.error(error);
-        return;
-      }
-      const user = data.user;
-      if (!user) return; // login değilse işlem yapma
-
-
-      const { data: settings } = await supabase
-        .from("settings")
-        .select("language")
-        .eq("id", user.id)
-        .single();
-
-      if (settings) changeLanguage(settings.language);
-    };
-
-    fetchUserLanguage();
-  }, []);
   const renderComponent = () => {
     switch (activeComponent) {
       case "Ana Panel": return <MainPanel />;
@@ -64,6 +39,7 @@ function AdminPanel() {
       default: return null;
     }
   };
+
   const buttons = [
     { label: t("menudashboard"), onClick: () => setActiveComponent("Ana Panel") },
     { label: t("menuannouncements"), onClick: () => setActiveComponent("Duyurular") },

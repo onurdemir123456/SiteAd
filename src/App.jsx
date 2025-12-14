@@ -22,17 +22,8 @@ function App() {
           <Route path="/adminPanel" element={<AdminPanel />} />
         </Routes>
 
-=======
-        <Routes>
-          {/* Login page */}
-          <Route path="/" element={<Login />} />
 
-          {/* Dashboard */}
-          <Route path="/dashboard" element={<Dashboard />} />
-
-          {/* Admin Panel */}
-          <Route path="/adminPanel" element={<AdminPanel />} />
-        </Routes>
+        
 
       </BrowserRouter>
     </LanguageProvider>

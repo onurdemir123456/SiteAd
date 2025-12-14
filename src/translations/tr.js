@@ -2,13 +2,10 @@ const tr = {
     loading: "Yükleniyor...",
     settings: "Ayarlar",
 
-<<<<<<< HEAD
-=======
     // Dashboard panel
     apartments : "Daireler",
     demands : "Talepler",
 
->>>>>>> restore-old
     // Site
     siteSettings: "Site Ayarları",
     siteName: "Site Adı",
@@ -74,8 +71,6 @@ const tr = {
     pdfArchive: "PDF Arşivi",
     pdfArchiveDescription: "Tüm PDF dosyalarını arşivleyebilir ve indirebilirsiniz.",
     downloadAll: "Tümünü İndir",
-<<<<<<< HEAD
-=======
     // ------------------------------
 // Daireler / Blok Yönetimi
 // ------------------------------
@@ -160,7 +155,6 @@ addVehicleButton: "Araç Ekle",
 // Araç silme
 deleteVehicleTitle: "Araç Sil",
 deleteVehicleButton: "Aracı Sil",
->>>>>>> restore-old
 
     daireler_blok_yonetimi: "Daireler / Blok Yönetimi",
 
@@ -358,10 +352,7 @@ deleteVehicleButton: "Aracı Sil",
     adminworkCompletion: "İşçilik / Tamamlanma",
     admindetails: "Detay",
     adminsave: "Kaydet",
-<<<<<<< HEAD
-=======
     admincancel : "İptal",
->>>>>>> restore-old
     adminclose: "Kapat",
 
     deliverytitle: "Teslimatlar & Kargo",
@@ -460,10 +451,7 @@ deleteVehicleButton: "Aracı Sil",
     requestscomplaintSuccess: "Şikayet gönderildi!",
     requestscomplaintFail: "Şikayet oluşturulamadı!",
 
-<<<<<<< HEAD
-=======
     dashboardPanel : "Dashboard Paneli",
->>>>>>> restore-old
     menudashboard: "Ana Panel",
     menuannouncements: "Duyurular",
     menuapartmentBlock: "Daireler/Blok Yönetimi",
@@ -477,18 +465,10 @@ deleteVehicleButton: "Aracı Sil",
     menumessagingChat: "Mesajlaşma / Chat",
     menusettings: "Ayarlar",
 
-<<<<<<< HEAD
-    menudashboard: "Ana Panel",
-    menuapartments: "Daireler",
-    menuannouncements: "Duyurular",
-    menudues: "Aidat",
-    menurequests: "Talepler",
-=======
     menuapartments: "Daireler",
     menuannouncements: "Duyurular",
     menudues: "Aidat",
     menu: "Talepler",
->>>>>>> restore-old
     menumessages: "Mesajlar",
     menusettings: "Ayarlar",
     DashboardPaneli: "Dashboard Paneli",
@@ -501,11 +481,7 @@ deleteVehicleButton: "Aracı Sil",
     durum: "Durum",
     kisi: "Kişi",
     sahip: "Sahip",
-<<<<<<< HEAD
-    kiraci: "Kiracı",
-=======
     kirequestsraci: "Kiracı",
->>>>>>> restore-old
     bos: "Boş",
     yeni_daire_ekle: "Yeni Daire Ekle",
     blok_placeholder: "Blok giriniz",
@@ -533,18 +509,6 @@ deleteVehicleButton: "Aracı Sil",
     addError: "Araç eklenemedi: ",
     addSuccess: "Araç başarıyla eklendi!",
 
-<<<<<<< HEAD
-    apartmentrequiredFields: "Blok, Kat ve Daire No zorunludur.",
-    apartmentpersonRequired: "Sahip veya Kiracı seçildiğinde kişi adı zorunludur!",
-    apartmentaddError: "Kayıt eklenemedi: ",
-    apartmentaddSuccess: "Daire başarıyla eklendi!",
-    residentrequiredFields: "Kişi ve Telefon zorunludur!",
-    residentaddError: "Kişi eklenemedi: ",
-    residentaddSuccess: "Kişi başarıyla eklendi!",
-    email: "Email",
-    addNewCar: "Yeni Araç Ekle",
-    selectPersonMandatory: "Kişi seç (zorunlu)",
-=======
     apartmentRequiredFields: "Blok, Kat ve Daire No zorunludur.",
     apartmentPersonRequired: "Sahip veya Kiracı seçildiğinde kişi adı zorunludur!",
     apartmentaddError: "Kayıt eklenemedi: ",
@@ -569,7 +533,6 @@ deleteVehicleButton: "Aracı Sil",
     addNewCar: "Yeni Araç Ekle",
     selectPersonMandatory: "Kişi seç (zorunlu)",
     
->>>>>>> restore-old
     vehicle_plate_placeholder: "Plaka (zorunlu)",
     vehicle_brand_placeholder: "Marka (zorunlu)",
     vehicle_model_placeholder: "Model (zorunlu)",
@@ -579,8 +542,6 @@ deleteVehicleButton: "Aracı Sil",
     delete_vehicle_person_placeholder: "Kişi İsmi",
     delete_vehicle_plate_placeholder: "Plaka",
     delete_vehicle_button: "Aracı Sil",
-<<<<<<< HEAD
-=======
     vehicleDeleteError: "Araç bilgileri silinirken hata oluştu!",
     vehicleRequiredFields: "Tüm alanlar zorunludur!",
     vehicleAddError: "Araç eklenemedi:",
@@ -594,6 +555,5 @@ deleteVehicleButton: "Aracı Sil",
 
 
 
->>>>>>> restore-old
 };
 export default tr;
