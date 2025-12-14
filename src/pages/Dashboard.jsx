@@ -9,26 +9,20 @@ import MainPanel from "../components/dashboard/MainPanel";
 import Duyurular from "../components/dashboard/Duyurular";
 import Ayarlar from "../components/dashboard/Ayarlar";
 import logoNoBg from "../assets/logoNoBg.png";
-<<<<<<< HEAD
-import { useLanguage } from "../context/LanguageContext";
-import supabase from "../helper/supabaseClient";
-import { useEffect } from "react";
-=======
+
 import Ayarlar from "../components/dashboard/Ayarlar";
 import { useLanguage } from "../context/LanguageContext";
 import { useEffect } from "react";
 import supabase from "../helper/supabaseClient";
 
->>>>>>> restore-old
+
 function DashboardPanel() {
   const { changeLanguage } = useLanguage();
   const [activeComponent, setActiveComponent] = useState("Ana Panel");
   const { t } = useLanguage();
-<<<<<<< HEAD
-=======
-  const { changeLanguage } = useLanguage();
 
->>>>>>> restore-old
+
+
 
   const renderComponent = () => {
     switch (activeComponent) {
@@ -39,10 +33,9 @@ function DashboardPanel() {
       case "Talepler": return <TaleplerAriza />;
       case "Mesajlar": return <MesajlasmaChat />;
       case "Ayarlar": return <Ayarlar />;
-<<<<<<< HEAD
-=======
 
->>>>>>> restore-old
+
+
       default: return null;
     }
   };
@@ -70,21 +63,14 @@ function DashboardPanel() {
   }, []);
   const buttons = [
     { label: t("menudashboard"), onClick: () => setActiveComponent("Ana Panel") },
-<<<<<<< HEAD
-    { label: t("menuapartments"), onClick: () => setActiveComponent("Daireler") },
-    { label: t("menuannouncements"), onClick: () => setActiveComponent("Duyurular") },
-    { label: t("menudues"), onClick: () => setActiveComponent("Aidat") },
-    { label: t("menurequests"), onClick: () => setActiveComponent("Talepler") },
-    { label: t("menumessages"), onClick: () => setActiveComponent("Mesajlar") },
-    { label: t("menusettings"), onClick: () => setActiveComponent("Ayarlar") },
-=======
+
     { label: t("apartments"), onClick: () => setActiveComponent("Daireler") },
     { label: t("menuannouncements"), onClick: () => setActiveComponent("Duyurular") },
     { label: t("menudues"), onClick: () => setActiveComponent("Aidat") },
     { label: t("demands"), onClick: () => setActiveComponent("Talepler") },
     { label: t("menumessages"), onClick: () => setActiveComponent("Mesajlar") },
     { label: t("menusettings"), onClick: () => setActiveComponent("Ayarlar") }
->>>>>>> restore-old
+
   ];
 
   return (
@@ -105,11 +91,10 @@ function DashboardPanel() {
         fontWeight: "bold",
         boxSizing: "border-box",
       }}>
-<<<<<<< HEAD
-        <span>{t("DashboardPaneli")}</span>
-=======
+
+
         <span>{t("dashboardPanel")}</span>
->>>>>>> restore-old
+
 
         {/* LOGO */}
         <img

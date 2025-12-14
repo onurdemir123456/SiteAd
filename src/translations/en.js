@@ -9,15 +9,12 @@ const en = {
     save: "Save",
     siteUpdated: "Site settings updated!",
 
-<<<<<<< HEAD
-=======
 
     // Dashboard panel
     dashboardPanel : "Dashboard Panel",
     apartments : "Apartments",
     demands : "Demands",
 
->>>>>>> restore-old
     // Notifications
     notificationSettings: "Notification Settings",
     emailNotifications: "Email Notifications",
@@ -77,8 +74,6 @@ const en = {
     pdfArchiveDescription: "You can archive and download all PDF files.",
     downloadAll: "Download All",
     daireler_blok_yonetimi: "Apartments / Block Management",
-<<<<<<< HEAD
-=======
 // ------------------------------
 // Apartments / Block Management
 // ------------------------------
@@ -156,7 +151,6 @@ addVehicleButton: "Add Vehicle",
 // Delete vehicle
 deleteVehicleTitle: "Delete Vehicle",
 deleteVehicleButton: "Delete Vehicle",
->>>>>>> restore-old
 
     // List
     daire_listesi: "Apartment List",
@@ -350,10 +344,7 @@ deleteVehicleButton: "Delete Vehicle",
     adminworkCompletion: "Work / Completion",
     admindetails: "Details",
     adminsave: "Save",
-<<<<<<< HEAD
-=======
     admincancel : "Cancel",
->>>>>>> restore-old
     adminclose: "Close",
     deliverytitle: "Deliveries & Cargo",
     deliverycargoRegistry: "Cargo Registry",
@@ -461,10 +452,6 @@ deleteVehicleButton: "Delete Vehicle",
     menudocumentsArchive: "Documents & Archive",
     menumessagingChat: "Messaging / Chat",
     menusettings: "Settings",
-<<<<<<< HEAD
-    menudashboard: "Dashboard",
-=======
->>>>>>> restore-old
     menuapartments: "Apartments",
     menuannouncements: "Announcements",
     menudues: "Dues",
@@ -483,18 +470,6 @@ deleteVehicleButton: "Delete Vehicle",
     addError: "Failed to add vehicle: ",
     addSuccess: "Vehicle added successfully!",
 
-<<<<<<< HEAD
-    apartmentrequiredFields: "Block, Floor, and Apartment No are required.",
-    apartmentpersonRequired: "Person name is required when Owner or Tenant is selected!",
-    apartmentaddError: "Failed to add record: ",
-    apartmentaddSuccess: "Apartment added successfully!",
-    residentrequiredFields: "Person and Phone are required!",
-    residentaddError: "Failed to add person: ",
-    residentaddSuccess: "Person added successfully!",
-    email: "Email",
-    addNewCar: "Add New Car",
-    selectPersonMandatory: "Select Person (required)",
-=======
     apartmentRequiredFields: "Block, Floor, and Apartment No are required.",
     apartmentPersonRequired: "Person name is required when Owner or Tenant is selected!",
     apartmentaddError: "Failed to add record: ",
@@ -525,7 +500,6 @@ deleteVehicleButton: "Delete Vehicle",
     
 
 
->>>>>>> restore-old
 
     vehicle_plate_placeholder: "License Plate (required)",
     vehicle_brand_placeholder: "Brand (required)",
@@ -536,10 +510,6 @@ deleteVehicleButton: "Delete Vehicle",
     delete_vehicle_person_placeholder: "Person Name",
     delete_vehicle_plate_placeholder: "License Plate",
     delete_vehicle_button: "Delete Vehicle",
-<<<<<<< HEAD
-};
-export default en;
-=======
     vehicleDeleteError: "An error occurred while deleting the vehicle information!",
     vehicleAddError: "Vehicle could not be added:",
     vehicleAddSuccess: "Vehicle added successfully!",
@@ -556,4 +526,3 @@ export default en;
 
 };
 export default en;
->>>>>>> restore-old

@@ -10,7 +10,7 @@ function App() {
     <LanguageProvider>
       <BrowserRouter>
         <RouteChangeTracker />
-<<<<<<< HEAD
+
 
         <Routes>
           {/*Login page*/}
@@ -33,7 +33,7 @@ function App() {
           {/* Admin Panel */}
           <Route path="/adminPanel" element={<AdminPanel />} />
         </Routes>
->>>>>>> restore-old
+
       </BrowserRouter>
     </LanguageProvider>
   );

@@ -16,15 +16,14 @@ import logoNoBg from "../assets/logoNoBg.png";
 import { useLanguage } from "../context/LanguageContext";
 import { useEffect } from "react";
 import supabase from "../helper/supabaseClient";
-<<<<<<< HEAD
-=======
 
->>>>>>> restore-old
+
+
 function AdminPanel() {
   const [activeComponent, setActiveComponent] = useState("Ana Panel");
   const { t } = useLanguage();
   const { changeLanguage } = useLanguage();
-<<<<<<< HEAD
+
   useEffect(() => {
     const fetchUserLanguage = async () => {
       const { data, error } = await supabase.auth.getUser();
@@ -35,8 +34,7 @@ function AdminPanel() {
       }
       const user = data.user;
       if (!user) return; // login değilse işlem yapma
-=======
->>>>>>> restore-old
+
 
       const { data: settings } = await supabase
         .from("settings")

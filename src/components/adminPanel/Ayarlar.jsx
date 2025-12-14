@@ -174,11 +174,7 @@ function Ayarlar() {
         <label>
           <input
             type="checkbox"
-<<<<<<< HEAD
-            checked={settings.allow_email}
-=======
             checked={!!settings.allow_email}
->>>>>>> restore-old
             onChange={(e) =>
               setSettings({ ...settings, allow_email: e.target.checked })
             }
@@ -191,11 +187,7 @@ function Ayarlar() {
         <label>
           <input
             type="checkbox"
-<<<<<<< HEAD
-            checked={settings.allow_sms}
-=======
             checked={!!settings.allow_sms}
->>>>>>> restore-old
             onChange={(e) =>
               setSettings({ ...settings, allow_sms: e.target.checked })
             }
@@ -208,11 +200,7 @@ function Ayarlar() {
         <label>
           <input
             type="checkbox"
-<<<<<<< HEAD
-            checked={settings.allow_push}
-=======
             checked={!!settings.allow_push}
->>>>>>> restore-old
             onChange={(e) =>
               setSettings({ ...settings, allow_push: e.target.checked })
             }
@@ -234,12 +222,8 @@ function Ayarlar() {
         <label>{t("theme")}:</label>
         <select
           style={styles.select}
-<<<<<<< HEAD
-          value={settings.theme}
-=======
           value={settings.theme || "light"}
 
->>>>>>> restore-old
           onChange={(e) =>
             setSettings({ ...settings, theme: e.target.value })
           }
@@ -251,12 +235,8 @@ function Ayarlar() {
         <label>{t("language")}:</label>
         <select
           style={styles.select}
-<<<<<<< HEAD
-          value={settings.language}
-=======
           value={settings.language || "tr"}
 
->>>>>>> restore-old
           onChange={(e) =>
             setSettings({ ...settings, language: e.target.value })
           }

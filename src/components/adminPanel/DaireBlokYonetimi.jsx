@@ -5,11 +5,7 @@ import { useLanguage } from "../../context/LanguageContext";
 
 function DaireBlokYonetimi() {
 
-<<<<<<< HEAD
-  const { t } = useLanguage();
-=======
  const { t } = useLanguage();
->>>>>>> restore-old
   const [apartments, setApartments] = useState([]);
   const [blok, setBlok] = useState("");
   const [kat, setKat] = useState("");
@@ -226,85 +222,6 @@ function DaireBlokYonetimi() {
 
 
 
-  async function addApartment() {
-    if (!blok || !kat || !daireNo) {
-      alert(t("apartmentrequiredFields"));
-      return;
-    }
-
-    // --- Kişi Zorunluluk Kontrolü ---
-    if ((durum === "Sahip" || durum === "Kiracı") && !kisi) {
-      alert(t("apartmentpersonRequired"));
-      return;
-    }
-
-    const { data, error } = await supabase.from("apartments").insert([
-      {
-        blok: blok,
-        kat: Number(kat),
-        daire_no: Number(daireNo),
-        durum: durum,
-        kisi: kisi,
-      },
-    ]);
-
-    if (error) {
-      alert(t("apartmentaddError") + error.message);
-    } else {
-      alert(t("apartmentaddSuccess"));
-      fetchApartments(); // Listeyi yenile
-    }
-
-    setBlok("");
-    setKat("");
-    setDaireNo("");
-    setDurum("Boş");
-    setKisi("");
-  }
-
-
-  function formatPhone(value) {
-    // Sadece rakamları al
-    let cleaned = value.replace(/\D/g, "");
-
-    // Format  (XXXX XXX XX XX)
-    if (cleaned.length > 10) cleaned = cleaned.slice(0, 11);
-
-    const formatted = cleaned
-      .replace(/(\d{4})(\d{3})(\d{2})(\d{2})/, "$1 $2 $3 $4")
-      .replace(/(\d{4})(\d{3})(\d{2})$/, "$1 $2 $3")
-      .replace(/(\d{4})(\d{3})$/, "$1 $2")
-      .replace(/(\d{4})$/, "$1");
-
-    return formatted;
-  }
-
-
-  useEffect(() => {
-    fetchResidents();
-  }, []);
-
-<<<<<<< HEAD
-  async function fetchResidents() {
-    const { data, error } = await supabase
-=======
-
-function toggleDurum(d) {
-  setFilterDurum((prev) => (prev === d ? "" : d));
-}
-
-
-
-
-async function fetchApartments() {
-  const { data, error } = await supabase.from("apartments").select("*");
-  if (!error) setApartments(data);
-}
-
-
-
-
-
 async function addApartment() {
   if (!blok || !kat || !daireNo) {
     alert(t("apartmentRequiredFields"));
@@ -321,15 +238,15 @@ async function addApartment() {
 }
 
 
-  const { data, error } = await supabase.from("apartments").insert([
-    {
-      blok: blok,
-      kat: Number(kat),
-      daire_no: Number(daireNo),
-      durum: durum,
-      kisi: kisi,
-    },
-  ]);
+    const { data, error } = await supabase.from("apartments").insert([
+      {
+        blok: blok,
+        kat: Number(kat),
+        daire_no: Number(daireNo),
+        durum: durum,
+        kisi: kisi,
+      },
+    ]);
 
   if (error) {
   alert(t("apartmentAddError") + error.message);
@@ -339,12 +256,12 @@ async function addApartment() {
 }
 
 
-  setBlok("");
-  setKat("");
-  setDaireNo("");
-  setDurum("Boş");
-  setKisi("");
-}
+    setBlok("");
+    setKat("");
+    setDaireNo("");
+    setDurum("Boş");
+    setKisi("");
+  }
 
 // ----------------------
 // DAİRE SİLME FONKSİYONU (Cascade Delete: resident + vehicle)
@@ -387,55 +304,18 @@ if (!daireData || daireData.length === 0) {
   // -------------------------
   if (kisiAdi && kisiAdi.trim() !== "") {
     const { error: residentDeleteError } = await supabase
->>>>>>> restore-old
       .from("residents")
-      .select("*")
-      .order("created_at", { ascending: false });
+      .delete()
+      .match({ kisi: kisiAdi });
 
-<<<<<<< HEAD
-    if (!error) setResidents(data);
-  }
-
-
-
-  async function addResident() {
-    if (!selectedKisi || !rTelefon) {
-      alert(t("residentrequiredFields"));
-      return;
-    }
-=======
     if (residentDeleteError) {
   alert(t("residentDeleteError"));
   return;
 }
 
   }
->>>>>>> restore-old
 
-    const { data, error } = await supabase.from("residents").insert([
-      {
-        kisi: selectedKisi,
-        telefon: rTelefon,
-        email: rEmail || null,
-      },
-    ]);
 
-<<<<<<< HEAD
-    if (error) {
-      alert(t("residentaddError") + error.message);
-      return;
-    }
-
-    alert(t("residentaddSuccess"));
-
-    // Listeyi yenile
-    fetchResidents();
-
-    setSelectedKisi("");
-    setRTelefon("");
-    setREmail("");
-  }
-=======
   // -------------------------
   // 3) vehicles tablosundan bu kişiye ait araçları sil
   // -------------------------
@@ -486,35 +366,35 @@ alert(t("apartmentCascadeDeleteSuccess"));
 
 
 
-function formatPhone(value) {
-  // Sadece rakamları al
-  let cleaned = value.replace(/\D/g, "");
+  function formatPhone(value) {
+    // Sadece rakamları al
+    let cleaned = value.replace(/\D/g, "");
 
-  // Format  (XXXX XXX XX XX)
-  if (cleaned.length > 10) cleaned = cleaned.slice(0, 11);
+    // Format  (XXXX XXX XX XX)
+    if (cleaned.length > 10) cleaned = cleaned.slice(0, 11);
 
-  const formatted = cleaned
-    .replace(/(\d{4})(\d{3})(\d{2})(\d{2})/, "$1 $2 $3 $4")
-    .replace(/(\d{4})(\d{3})(\d{2})$/, "$1 $2 $3")
-    .replace(/(\d{4})(\d{3})$/, "$1 $2")
-    .replace(/(\d{4})$/, "$1");
+    const formatted = cleaned
+      .replace(/(\d{4})(\d{3})(\d{2})(\d{2})/, "$1 $2 $3 $4")
+      .replace(/(\d{4})(\d{3})(\d{2})$/, "$1 $2 $3")
+      .replace(/(\d{4})(\d{3})$/, "$1 $2")
+      .replace(/(\d{4})$/, "$1");
 
-  return formatted;
-}
+    return formatted;
+  }
 
 
-useEffect(() => {
-  fetchResidents();
-}, []);
+  useEffect(() => {
+    fetchResidents();
+  }, []);
 
-async function fetchResidents() {
-  const { data, error } = await supabase
-    .from("residents")
-    .select("*")
-    .order("created_at", { ascending: false });
+  async function fetchResidents() {
+    const { data, error } = await supabase
+      .from("residents")
+      .select("*")
+      .order("created_at", { ascending: false });
 
-  if (!error) setResidents(data);
-}
+    if (!error) setResidents(data);
+  }
 
 
 
@@ -525,13 +405,13 @@ async function addResident() {
   }
 
 
-  const { data, error } = await supabase.from("residents").insert([
-    {
-      kisi: selectedKisi,
-      telefon: rTelefon,
-      email: rEmail || null,
-    },
-  ]);
+    const { data, error } = await supabase.from("residents").insert([
+      {
+        kisi: selectedKisi,
+        telefon: rTelefon,
+        email: rEmail || null,
+      },
+    ]);
 
   if (error) {
   alert(t("residentAddError") + error.message);
@@ -541,8 +421,8 @@ async function addResident() {
 alert(t("residentAddSuccess"));
 
 
-  // Listeyi yenile
-  fetchResidents();
+    // Listeyi yenile
+    fetchResidents();
 
   setSelectedKisi("");
   setRTelefon("");
@@ -747,7 +627,6 @@ useEffect(() => {
 
 
 
->>>>>>> restore-old
   const styles = {
     container: {
       padding: "20px",
@@ -817,21 +696,6 @@ useEffect(() => {
 
   return (
     <div style={styles.container}>
-<<<<<<< HEAD
-      <h2 style={styles.title}>{t("daireler_blok_yonetimi")}</h2>
-
-      {/* Daire Listesi */}
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>{t("daire_listesi")}</h3>
-        <table style={styles.table}>
-          <thead>
-            <tr>
-              <th style={styles.th}>{t("blok")}</th>
-              <th style={styles.th}>{t("kat")}</th>
-              <th style={styles.th}>{t("daire_no")}</th>
-              <th style={styles.th}>{t("durum")}</th>
-              <th style={styles.th}>{t("kisi")}</th>
-=======
       <h2 style={styles.title}>{t("apartmentBlockTitle")}</h2>
 
       {/* Daire Listesi */}
@@ -845,7 +709,6 @@ useEffect(() => {
               <th style={styles.th}>{t("apartmentNo")}</th>
               <th style={styles.th}>{t("status")}</th>
               <th style={styles.th}>{t("person")}</th>
->>>>>>> restore-old
             </tr>
           </thead>
           <tbody>
@@ -862,19 +725,7 @@ useEffect(() => {
         </table>
       </div>
 
-      {/* Daire Ekleme */}
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>{t("yeni_daire_ekle")}</h3>
 
-<<<<<<< HEAD
-        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-          <input
-            style={styles.select}
-            placeholder={t("blok_placeholder")}
-            value={blok}
-            onChange={(e) => setBlok(e.target.value)}
-          />
-=======
       {/* Daire Ekleme Formu */}
 <div style={styles.section}>
   <h3 style={styles.sectionTitle}>{t("addNewApartment")}</h3>
@@ -983,100 +834,14 @@ useEffect(() => {
 
 
 
->>>>>>> restore-old
 
-          <input
-            style={styles.select}
-            placeholder={t("kat")}
-            value={kat}
-            onChange={(e) => setKat(e.target.value)}
-            type="number"
-          />
 
-          <input
-            style={styles.select}
-            placeholder={t("daire_no")}
-            value={daireNo}
-            onChange={(e) => setDaireNo(e.target.value)}
-            type="number"
-          />
 
-          <select
-            style={styles.select}
-            value={durum}
-            onChange={(e) => setDurum(e.target.value)}
-          >
-            <option value="Sahip">{t("sahip")}</option>
-            <option value="Kiracı">{t("kiraci")}</option>
-            <option value="Boş">{t("bos")}</option>
-          </select>
 
-          <input
-            style={styles.select}
-            placeholder={
-              durum === "Boş" ? t("kisi") : t("kisi_zorunlu")
-            }
-            value={kisi}
-            onChange={(e) => setKisi(e.target.value)}
-            disabled={durum === "Boş"}
-          />
 
-          <button style={styles.btn} onClick={addApartment}>
-            {t("daire_ekle")}
-          </button>
-        </div>
-      </div>
 
 
       {/* Kat / Blok Bazlı Görüntüleme */}
-<<<<<<< HEAD
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>{t("kat_blok_goruntuleme")}</h3>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-          {/* BLOK */}
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <input
-              style={styles.select}
-              list="blokListesi"
-              placeholder={t("blok_sec_yaz")}
-              value={filterBlok}
-              onChange={(e) => setFilterBlok(e.target.value.toUpperCase())}
-            />
-
-            <datalist id="blokListesi">
-              {uniqueBloklar.map((b) => (
-                <option key={b} value={b} />
-              ))}
-            </datalist>
-
-            <span>
-              <strong>{t("blok")}:</strong> {filterBlok || t("yok")}
-            </span>
-          </div>
-
-          {/* KAT */}
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <input
-              style={styles.select}
-              list="katListesi"
-              placeholder={t("kat_sec_yaz")}
-              type="number"
-              value={filterKat}
-              onChange={(e) => setFilterKat(e.target.value)}
-            />
-
-            <datalist id="katListesi">
-              {uniqueKatlar.map((k) => (
-                <option key={k} value={k} />
-              ))}
-            </datalist>
-
-            <span>
-              <strong>{t("kat")}:</strong> {filterKat || t("yok")}
-            </span>
-          </div>
-=======
 <div style={styles.section}>
   <h3 style={styles.sectionTitle}>
     {t("filterByFloorBlock")}
@@ -1128,234 +893,9 @@ useEffect(() => {
   </span>
 </div>
 
->>>>>>> restore-old
         </div>
       </div>
 
-<<<<<<< HEAD
-      {/* Sahip / Kiracı / Boş */}
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>{t("sahip_kiraci_ayrimi")}</h3>
-
-        <div style={styles.filterRow}>
-          <button
-            onClick={() => toggleDurum("Sahip")}
-            style={{
-              ...styles.btn,
-              background: filterDurum === "Sahip" ? "#6fcf97" : "#e0e0e0",
-            }}
-          >
-            {t("sahip")}
-          </button>
-
-          <button
-            onClick={() => toggleDurum("Kiracı")}
-            style={{
-              ...styles.btn,
-              background: filterDurum === "Kiracı" ? "#6fcf97" : "#e0e0e0",
-            }}
-          >
-            {t("kiraci")}
-          </button>
-
-          <button
-            onClick={() => toggleDurum("Boş")}
-            style={{
-              ...styles.btn,
-              background: filterDurum === "Boş" ? "#6fcf97" : "#e0e0e0",
-            }}
-          >
-            {t("bos")}
-          </button>
-        </div>
-      </div>
-
-      {/* Kişi Bilgileri */}
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>{t("kisi_bilgileri")}</h3>
-
-        <table style={styles.table}>
-          <thead>
-            <tr>
-              <th style={styles.th}>{t("kisi")}</th>
-              <th style={styles.th}>{t("telefon")}</th>
-              <th style={styles.th}>{t("email")}</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {residents.map((k) => (
-              <tr key={k.id}>
-                <td style={styles.td}>{k.kisi}</td>
-                <td style={styles.td}>{k.telefon}</td>
-                <td style={styles.td}>{k.email || "-"}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Yeni Kişi Ekle */}
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>{t("yeni_kisi_ekle")}</h3>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-
-          <select
-            style={styles.select}
-            value={selectedKisi}
-            onChange={(e) => setSelectedKisi(e.target.value)}
-          >
-            <option value="">{t("kisi_sec")}</option>
-            {uniqueKisiler.map((name, index) => (
-              <option key={index} value={name}>{name}</option>
-            ))}
-          </select>
-
-          <input
-            placeholder={t("telefon_zorunlu")}
-            style={styles.select}
-            value={rTelefon}
-            onChange={(e) => setRTelefon(formatPhone(e.target.value))}
-            maxLength={13}
-          />
-
-          <input
-            placeholder={t("email_opsiyonel")}
-            style={styles.select}
-            value={rEmail}
-            onChange={(e) => setREmail(e.target.value)}
-          />
-
-          <button style={styles.btn} onClick={addResident}>
-            {t("kisi_ekle")}
-          </button>
-        </div>
-      </div>
-
-      {/* Araç Bilgileri */}
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>{t("arac_bilgileri")}</h3>
-
-        <table style={styles.table}>
-          <thead>
-            <tr>
-              <th style={styles.th}>{t("plaka")}</th>
-              <th style={styles.th}>{t("marka")}</th>
-              <th style={styles.th}>{t("model")}</th>
-              <th style={styles.th}>{t("renk")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style={styles.td}>34 ABC 123</td>
-              <td style={styles.td}>BMW</td>
-              <td style={styles.td}>320i</td>
-              <td style={styles.td}>{t("siyah")}</td>
-            </tr>
-          </tbody>
-
-        </table>
-      </div>
-      {/* Yeni Araç Ekle Paneli */}
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>{t("addNewCar")}</h3>
-
-        {/* Form alanları yan yana değil, dikey şekilde sıralansın */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-
-          {/* Kişi dropdown - residents tablosundan gelen unique isimlerle doldurulur */}
-          <select
-            style={styles.select}
-            value={vKisi}
-            onChange={(e) => setVKisi(e.target.value)}
-          >
-            <option value="">{t("selectPersonMandatory")}</option>
-
-
-            {/* ------------------------------------------------------------------
-    availablePeopleForNewVehicle → sadece araç sahibi olarak
-    daha önce eklenmemiş kişileri gösterir.
-    Böylece aynı kişi ikinci kez araç ekleme formunda görünmez.
-   ------------------------------------------------------------------ */}
-            {availablePeopleForNewVehicle.map((name, index) => (
-              <option key={index} value={name}>
-                {name}
-              </option>
-            ))}
-
-
-          </select>
-
-          {/* Plaka alanı */}
-          <input
-            style={styles.select}
-            placeholder={t("vehicle_plate_placeholder")}
-            value={vPlaka}
-            onChange={(e) => setVPlaka(e.target.value.toUpperCase())} // otomatik büyük harf
-          />
-
-          {/* Marka alanı */}
-          <input
-            style={styles.select}
-            placeholder={t("vehicle_brand_placeholder")}
-            value={vMarka}
-            onChange={(e) => setVMarka(e.target.value)}
-          />
-
-          {/* Model alanı */}
-          <input
-            style={styles.select}
-            placeholder={t("vehicle_model_placeholder")}
-            value={vModel}
-            onChange={(e) => setVModel(e.target.value)}
-          />
-
-          {/* Renk alanı */}
-          <input
-            style={styles.select}
-            placeholder={t("vehicle_color_placeholder")}
-            value={vRenk}
-            onChange={(e) => setVRenk(e.target.value)}
-          />
-
-        {/* Araç ekle butonu */}
-          <button style={styles.btn} onClick={addVehicle}>
-            {t("add_vehicle_button")}
-          </button>
-        </div>
-      </div>
-
-      {/* Araç Silme Paneli */}
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>{t("delete_vehicle_title")}</h3>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-
-          <input
-            style={styles.select}
-            placeholder={t("delete_vehicle_person_placeholder")}
-            value={delVKisi}
-            onChange={(e) => setDelVKisi(e.target.value)}
-          />
-
-          <input
-            style={styles.select}
-            placeholder={t("delete_vehicle_plate_placeholder")}
-            value={delVPlaka}
-            onChange={(e) => setDelVPlaka(e.target.value.toUpperCase())}
-          />
-
-          <button
-            style={{ ...styles.btn, background: "#ffb3b3" }}
-            onClick={deleteVehicle}
-          >
-            {t("delete_vehicle_button")}
-          </button>
-
-        </div>
-      </div>
-=======
       {/* Owner / Tenant / Empty */}
 <div style={styles.section}>
   <h3 style={styles.sectionTitle}>
@@ -1599,7 +1139,6 @@ useEffect(() => {
     </button>
   </div>
 </div>
->>>>>>> restore-old
 
 
 
