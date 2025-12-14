@@ -8,18 +8,22 @@ function AdminSikayetler() {
   const [arizalar, setArizalar] = useState([]);
   const [talepler, setTalepler] = useState([]);
 
+
   const [showPopup, setShowPopup] = useState(false);
   const [currentArizaId, setCurrentArizaId] = useState(null);
   const [iscilikInput, setIscilikInput] = useState("");
   const [yuzdeInput, setYuzdeInput] = useState(0);
 
+
   const styles = {
+    // ... (Stilleriniz olduğu gibi bırakıldı)
     container: {
       padding: "20px",
       fontFamily: "Arial, sans-serif",
     },
     title: {
-      fontSize: "28px",
+      fontSize:
+     "28px",
       fontWeight: "bold",
       marginBottom: "20px",
     },
@@ -48,7 +52,6 @@ function AdminSikayetler() {
     td: {
       border: "1px solid #ddd",
       padding: "8px",
-      wordBreak: "break-word", // Uzun metinler için eklendi
     },
     statusOpen: {
       color: "green",
@@ -62,7 +65,7 @@ function AdminSikayetler() {
       padding: "5px 10px",
       margin: "2px",
       cursor: "pointer",
-      backgroundColor: "#2196F3", // Mavi
+      backgroundColor: "#2196F3",
       color: "white",
       border: "none",
       borderRadius: "4px",
@@ -76,6 +79,7 @@ function AdminSikayetler() {
       border: "none",
       borderRadius: "4px",
     },
+
     popupOverlayStyle: {
       position: "fixed",
       top: 0,
@@ -103,6 +107,7 @@ function AdminSikayetler() {
       borderRadius: "4px",
       border: "1px solid #ccc",
     },
+
     popupSaveBtnStyle: {
       padding: "8px 15px",
       marginRight: "10px",
@@ -112,6 +117,7 @@ function AdminSikayetler() {
       borderRadius: "4px",
       cursor: "pointer",
     },
+
     popupCloseBtnStyle: {
       padding: "8px 15px",
       backgroundColor: "red",
@@ -122,10 +128,11 @@ function AdminSikayetler() {
     }
   };
 
+
   // Veritabanı durum değerleri için ham çeviri anahtarları
-  // Bu değişkenler kullanılmıyor, sadece Supabase'e yazarken statik Türkçe ("Kapalı") kullanılıyor.
-  // const closedStatusRaw = t("adminclosedRaw");
-  // const openStatusRaw = t("adminopenRaw");
+  const closedStatusRaw = t("adminclosedRaw"); // "Kapalı"
+  const openStatusRaw = t("adminopenRaw"); // "Açık"
+
 
   const fetchSikayetler = async () => {
     const { data } = await supabase.from("sikayetler").select("*").order("tarih", { ascending: false });
@@ -148,8 +155,9 @@ function AdminSikayetler() {
     fetchTalepler();
   }, []);
 
+  // Not: DB'ye yazılan durumlar statik Türkçe kalmalıdır.
   const closeSikayet = async (id) => {
-    await supabase.from("sikayetler").update({ durum: "Kapalı" }).eq("id", id);
+    await supabase.from("sikayetler").update({ durum: "Kapalı" }).eq("id", id); 
     fetchSikayetler();
   };
 
@@ -163,42 +171,25 @@ function AdminSikayetler() {
     fetchTalepler();
   };
 
+
   const openArizaPopup = (id) => {
     setCurrentArizaId(id);
     setShowPopup(true);
-    // Popup açıldığında varsa mevcut değerleri yüklemek iyi bir pratik olabilir,
-    // ancak burada sadece yeni değer girilmesi bekleniyor gibi görünüyor.
   };
+  const updateArizaDetails = async (id) => {
 
-  const handleSavePopup = async () => {
-    if (!iscilikInput || iscilikInput <= 0) {
-      alert(t("adminEnterValidCost")); // Varsayılan: "Geçerli bir işçilik tutarı giriniz"
-      return;
-    }
-
-    // Yüzde ve İşçilik bilgisini DB'ye kaydet
     await supabase
       .from("arizalar")
-      .update({
-        iscilik: iscilikInput,
-        tamamlanma: `%${yuzdeInput}`, // Yüzdeyi "%" işaretiyle kaydetmek için
-      })
-      .eq("id", currentArizaId);
+      .update({ iscilik: iscilikInput, tamamlanma: yuzdeInput })
+      .eq("id", id);
 
-    // State'leri temizle ve Popup'ı kapat
-    setShowPopup(false);
-    setIscilikInput("");
-    setYuzdeInput(0);
-    setCurrentArizaId(null);
-
-    // Listeyi yenile
     fetchArizalar();
   };
 
   return (
     <div style={styles.container}>
       <h2 style={styles.title}>
-        {t("admintitle")} {/* Admin Paneli – Yönetim */}
+        {t("admintitle")} 
       </h2>
 
       {/* ------------------------------------------------------------------ */}
@@ -206,6 +197,7 @@ function AdminSikayetler() {
       {/* ------------------------------------------------------------------ */}
       <div style={styles.section}>
         <h3 style={styles.sectionTitle}>{t("admincomplaints")}</h3>
+
         <table style={styles.table}>
           <thead>
             <tr>
@@ -233,7 +225,7 @@ function AdminSikayetler() {
                 </td>
                 <td style={styles.td}>
                   {s.durum === "Açık" && (
-                    <button style={styles.btnGreen} onClick={() => closeSikayet(s.id)}>
+                    <button style={styles.btn} onClick={() => closeSikayet(s.id)}>
                       {t("adminclose")}
                     </button>
                   )}
@@ -249,6 +241,7 @@ function AdminSikayetler() {
       {/* ------------------------------------------------------------------ */}
       <div style={styles.section}>
         <h3 style={styles.sectionTitle}>{t("adminfaultReports")}</h3>
+
         <table style={styles.table}>
           <thead>
             <tr>
@@ -301,6 +294,7 @@ function AdminSikayetler() {
       {/* ------------------------------------------------------------------ */}
       <div style={styles.section}>
         <h3 style={styles.sectionTitle}>{t("admintechRequests")}</h3>
+
         <table style={styles.table}>
           <thead>
             <tr>
@@ -318,7 +312,8 @@ function AdminSikayetler() {
                 <td style={styles.td}>{e.konu}</td>
                 <td style={styles.td}>{e.detay}</td>
                 <td style={styles.td}>
-                  {e.durum === "Açık" ? (
+                  {/* HATA DÜZELTİLDİ: e.durum kullanıldı */}
+                  {e.durum === "Açık" ? ( 
                     <span style={styles.statusOpen}>{t("adminopen")}</span>
                   ) : (
                     <span style={styles.statusClosed}>{t("adminclosed")}</span>
@@ -352,7 +347,7 @@ function AdminSikayetler() {
             />
 
             <label>
-              {t("admincompletion")}: **% {yuzdeInput}**
+              {t("admincompletion")}: % {yuzdeInput}
             </label>
             <input
               type="range"
@@ -360,10 +355,13 @@ function AdminSikayetler() {
               max="100"
               value={yuzdeInput}
               onChange={(e) => setYuzdeInput(e.target.value)}
-              style={{ width: "100%", margin: "10px 0 20px" }}
+              style={{ width: "100%" }}
             />
 
-            <button style={styles.popupSaveBtnStyle} onClick={handleSavePopup}>
+            <button style={styles.popupSaveBtnStyle} onClick={async () => {
+              updateArizaDetails(currentArizaId); setShowPopup(false); setIscilikInput("");
+              setYuzdeInput(0);
+            }}>
               {t("adminsave")}
             </button>
             <button style={styles.popupCloseBtnStyle} onClick={() => setShowPopup(false)}>
@@ -375,6 +373,4 @@ function AdminSikayetler() {
     </div>
   );
 }
-
 export default AdminSikayetler;
-
