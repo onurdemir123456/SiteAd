@@ -18,10 +18,28 @@ function TaleplerAriza() {
   const [supportMsg, setSupportMsg] = useState("");
 
   // -------------------------------
+<<<<<<< HEAD
   // SUBMIT FUNCTIONS
   // -------------------------------
   const submitComplaint = async () => {
     if (!complaintTitle || !complaintMsg) return alert(t("requests.emptyFields"));
+=======
+  // COMMON VALIDATION
+  // -------------------------------
+  const validateFields = (title, message) => {
+    if (!title || !message) {
+      alert(t("requestsemptyFields"));
+      return false;
+    }
+    return true;
+  };
+
+  // -------------------------------
+  // COMPLAINT
+  // -------------------------------
+  const submitComplaint = async () => {
+    if (!validateFields(complaintTitle, complaintMsg)) return;
+>>>>>>> restore-old
 
     const { error } = await supabase.from("sikayetler").insert([
       {
@@ -33,17 +51,31 @@ function TaleplerAriza() {
     ]);
 
     if (error) {
+<<<<<<< HEAD
       console.error(error);
       alert(t("requests.complaintFail"));
     } else {
       alert(t("requests.complaintSuccess"));
+=======
+      alert(t("requestscomplaintFail"));
+    } else {
+      alert(t("requestscomplaintSuccess"));
+>>>>>>> restore-old
       setComplaintTitle("");
       setComplaintMsg("");
     }
   };
 
+<<<<<<< HEAD
   const submitFault = async () => {
     if (!faultTitle || !faultMsg) return alert(t("requests.emptyFields"));
+=======
+  // -------------------------------
+  // FAULT
+  // -------------------------------
+  const submitFault = async () => {
+    if (!validateFields(faultTitle, faultMsg)) return;
+>>>>>>> restore-old
 
     const { error } = await supabase.from("arizalar").insert([
       {
@@ -57,17 +89,31 @@ function TaleplerAriza() {
     ]);
 
     if (error) {
+<<<<<<< HEAD
       console.error(error);
       alert(t("requests.faultFail"));
     } else {
       alert(t("requests.faultSuccess"));
+=======
+      alert(t("requestsfaultFail"));
+    } else {
+      alert(t("requestsfaultSuccess"));
+>>>>>>> restore-old
       setFaultTitle("");
       setFaultMsg("");
     }
   };
 
+<<<<<<< HEAD
   const submitSupport = async () => {
     if (!supportTitle || !supportMsg) return alert(t("requests.emptyFields"));
+=======
+  // -------------------------------
+  // SUPPORT
+  // -------------------------------
+  const submitSupport = async () => {
+    if (!validateFields(supportTitle, supportMsg)) return;
+>>>>>>> restore-old
 
     const { error } = await supabase.from("talepler").insert([
       {
@@ -79,10 +125,16 @@ function TaleplerAriza() {
     ]);
 
     if (error) {
+<<<<<<< HEAD
       console.error(error);
       alert(t("requests.supportFail"));
     } else {
       alert(t("requests.supportSuccess"));
+=======
+      alert(t("requestssupportFail"));
+    } else {
+      alert(t("requestssupportSuccess"));
+>>>>>>> restore-old
       setSupportTitle("");
       setSupportMsg("");
     }
@@ -92,15 +144,8 @@ function TaleplerAriza() {
   // STYLES
   // -------------------------------
   const styles = {
-    container: {
-      padding: "20px",
-      fontFamily: "Arial, sans-serif",
-    },
-    title: {
-      fontSize: "24px",
-      fontWeight: "bold",
-      marginBottom: "20px",
-    },
+    container: { padding: "20px", fontFamily: "Arial, sans-serif" },
+    title: { fontSize: "24px", fontWeight: "bold", marginBottom: "20px" },
     section: {
       marginBottom: "30px",
       padding: "15px",
@@ -108,28 +153,7 @@ function TaleplerAriza() {
       borderRadius: "8px",
       boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
     },
-    sectionTitle: {
-      fontSize: "18px",
-      fontWeight: "600",
-      marginBottom: "10px",
-    },
-    table: {
-      width: "100%",
-      borderCollapse: "collapse",
-      marginTop: "10px",
-      textAlign: "left",
-    },
-    th: {
-      padding: "10px 12px",
-      borderBottom: "1px solid #ddd",
-      backgroundColor: "#f5f5f5",
-      fontWeight: "600",
-    },
-    td: {
-      padding: "10px 12px",
-      borderBottom: "1px solid #ddd",
-      fontSize: "15px",
-    },
+    sectionTitle: { fontSize: "18px", fontWeight: "600", marginBottom: "10px" },
     btn: {
       padding: "8px 12px",
       background: "#4caf50",
@@ -138,7 +162,6 @@ function TaleplerAriza() {
       cursor: "pointer",
       color: "#fff",
       fontSize: "14px",
-      marginRight: "10px",
       marginTop: "5px",
     },
     input: {
@@ -156,64 +179,118 @@ function TaleplerAriza() {
     <div style={styles.container}>
       <h2 style={styles.title}>{t("requeststitle")}</h2>
 
+<<<<<<< HEAD
       {/* ARIZA */}
       <div style={styles.section}>
         <h3 style={styles.sectionTitle}>{t("requestsfault")}</h3>
         <input
           style={styles.input}
           type="text"
+=======
+      {/* -------- FAULT -------- */}
+      <div style={styles.section}>
+        <h3 style={styles.sectionTitle}>{t("requestsfault")}</h3>
+
+        <input
+          style={styles.input}
+>>>>>>> restore-old
           placeholder={t("requestsfaultTitle")}
           value={faultTitle}
           onChange={(e) => setFaultTitle(e.target.value)}
         />
         <textarea
+<<<<<<< HEAD
           style={{ ...styles.input, height: "80px" }}
           placeholder={t("requestsfaultDesc")}
           value={faultMsg}
           onChange={(e) => setFaultMsg(e.target.value)}
         ></textarea>
+=======
+          style={{ ...styles.input, height: 80 }}
+          placeholder={t("requestsfaultDesc")}
+          value={faultMsg}
+          onChange={(e) => setFaultMsg(e.target.value)}
+        />
+
+>>>>>>> restore-old
         <button style={styles.btn} onClick={submitFault}>
           {t("requestsfaultSubmit")}
         </button>
       </div>
 
+<<<<<<< HEAD
       {/* TEKNİK DESTEK */}
       <div style={styles.section}>
         <h3 style={styles.sectionTitle}>{t("requestssupport")}</h3>
         <input
           style={styles.input}
           type="text"
+=======
+      {/* -------- SUPPORT -------- */}
+      <div style={styles.section}>
+        <h3 style={styles.sectionTitle}>{t("requestssupport")}</h3>
+
+        <input
+          style={styles.input}
+>>>>>>> restore-old
           placeholder={t("requestssupportTitle")}
           value={supportTitle}
           onChange={(e) => setSupportTitle(e.target.value)}
         />
         <textarea
+<<<<<<< HEAD
           style={{ ...styles.input, height: "80px" }}
           placeholder={t("requestssupportDesc")}
           value={supportMsg}
           onChange={(e) => setSupportMsg(e.target.value)}
         ></textarea>
+=======
+          style={{ ...styles.input, height: 80 }}
+          placeholder={t("requestssupportDesc")}
+          value={supportMsg}
+          onChange={(e) => setSupportMsg(e.target.value)}
+        />
+
+>>>>>>> restore-old
         <button style={styles.btn} onClick={submitSupport}>
           {t("requestssupportSubmit")}
         </button>
       </div>
 
+<<<<<<< HEAD
       {/* ŞİKAYET */}
       <div style={styles.section}>
         <h3 style={styles.sectionTitle}>{t("requestscomplaint")}</h3>
         <input
           style={styles.input}
           type="text"
+=======
+      {/* -------- COMPLAINT -------- */}
+      <div style={styles.section}>
+        <h3 style={styles.sectionTitle}>{t("requestscomplaint")}</h3>
+
+        <input
+          style={styles.input}
+>>>>>>> restore-old
           placeholder={t("requestscomplaintTitle")}
           value={complaintTitle}
           onChange={(e) => setComplaintTitle(e.target.value)}
         />
         <textarea
+<<<<<<< HEAD
           style={{ ...styles.input, height: "80px" }}
           placeholder={t("requestscomplaintDesc")}
           value={complaintMsg}
           onChange={(e) => setComplaintMsg(e.target.value)}
         ></textarea>
+=======
+          style={{ ...styles.input, height: 80 }}
+          placeholder={t("requestscomplaintDesc")}
+          value={complaintMsg}
+          onChange={(e) => setComplaintMsg(e.target.value)}
+        />
+
+>>>>>>> restore-old
         <button style={styles.btn} onClick={submitComplaint}>
           {t("requestscomplaintSubmit")}
         </button>

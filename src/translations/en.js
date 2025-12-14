@@ -9,6 +9,15 @@ const en = {
     save: "Save",
     siteUpdated: "Site settings updated!",
 
+<<<<<<< HEAD
+=======
+
+    // Dashboard panel
+    dashboardPanel : "Dashboard Panel",
+    apartments : "Apartments",
+    demands : "Demands",
+
+>>>>>>> restore-old
     // Notifications
     notificationSettings: "Notification Settings",
     emailNotifications: "Email Notifications",
@@ -68,6 +77,86 @@ const en = {
     pdfArchiveDescription: "You can archive and download all PDF files.",
     downloadAll: "Download All",
     daireler_blok_yonetimi: "Apartments / Block Management",
+<<<<<<< HEAD
+=======
+// ------------------------------
+// Apartments / Block Management
+// ------------------------------
+apartmentBlockTitle: "Apartments / Block Management",
+
+// Apartment list
+apartmentList: "Apartment List",
+block: "Block",
+floor: "Floor",
+apartmentNo: "Apartment No",
+status: "Status",
+person: "Person",
+
+// Add apartment
+addNewApartment: "Add New Apartment",
+blockPlaceholder: "Block (A, B, C...)",
+floorPlaceholder: "Floor",
+apartmentNoPlaceholder: "Apartment No",
+
+owner: "Owner",
+tenant: "Tenant",
+empty: "Empty",
+
+personRequired: "Person (Required)",
+addApartmentButton: "Add Apartment",
+
+// Delete apartment
+deleteApartmentTitle: "Delete Apartment",
+deleteApartmentButton: "Delete Apartment",
+
+// Filters
+filterByFloorBlock: "Floor / Block Filtering",
+selectOrTypeBlock: "Select or type block (A-Z)",
+selectOrTypeFloor: "Select or type floor",
+none: "None",
+
+// Owner / Tenant filter
+ownerTenantFilter: "Owner / Tenant / Empty Filter",
+ownerFilter: "Owner",
+tenantFilter: "Tenant",
+emptyFilter: "Empty",
+
+// Resident info
+residentInfoTitle: "Resident Information",
+phone: "Phone",
+email: "Email",
+
+// Add resident
+addNewResidentTitle: "Add New Resident",
+selectPersonRequired: "Select person (required)",
+phoneRequired: "Phone (required)",
+emailOptional: "Email (optional)",
+addResidentButton: "Add Resident",
+
+// Delete resident
+deleteResidentTitle: "Delete Resident",
+personNamePlaceholder: "Person Name",
+deleteResidentButton: "Delete Person",
+
+// Vehicle information
+vehicleInfoTitle: "Vehicle Information",
+plate: "Plate",
+brand: "Brand",
+model: "Model",
+color: "Color",
+
+// Add vehicle
+addNewVehicleTitle: "Add New Vehicle",
+plateRequired: "Plate (required)",
+brandRequired: "Brand (required)",
+modelRequired: "Model (required)",
+colorRequired: "Color (required)",
+addVehicleButton: "Add Vehicle",
+
+// Delete vehicle
+deleteVehicleTitle: "Delete Vehicle",
+deleteVehicleButton: "Delete Vehicle",
+>>>>>>> restore-old
 
     // List
     daire_listesi: "Apartment List",
@@ -261,6 +350,10 @@ const en = {
     adminworkCompletion: "Work / Completion",
     admindetails: "Details",
     adminsave: "Save",
+<<<<<<< HEAD
+=======
+    admincancel : "Cancel",
+>>>>>>> restore-old
     adminclose: "Close",
     deliverytitle: "Deliveries & Cargo",
     deliverycargoRegistry: "Cargo Registry",
@@ -368,7 +461,10 @@ const en = {
     menudocumentsArchive: "Documents & Archive",
     menumessagingChat: "Messaging / Chat",
     menusettings: "Settings",
+<<<<<<< HEAD
     menudashboard: "Dashboard",
+=======
+>>>>>>> restore-old
     menuapartments: "Apartments",
     menuannouncements: "Announcements",
     menudues: "Dues",
@@ -387,6 +483,7 @@ const en = {
     addError: "Failed to add vehicle: ",
     addSuccess: "Vehicle added successfully!",
 
+<<<<<<< HEAD
     apartmentrequiredFields: "Block, Floor, and Apartment No are required.",
     apartmentpersonRequired: "Person name is required when Owner or Tenant is selected!",
     apartmentaddError: "Failed to add record: ",
@@ -397,6 +494,38 @@ const en = {
     email: "Email",
     addNewCar: "Add New Car",
     selectPersonMandatory: "Select Person (required)",
+=======
+    apartmentRequiredFields: "Block, Floor, and Apartment No are required.",
+    apartmentPersonRequired: "Person name is required when Owner or Tenant is selected!",
+    apartmentaddError: "Failed to add record: ",
+    apartmentaddSuccess: "Apartment added successfully!",
+    residentrequiredFields: "Person and Phone are required!",
+    residentRequiredFields: "Person and phone number are required!",
+    residentaddError: "Failed to add person: ",
+    residentDeleteError: "An error occurred while deleting the resident information!",
+    residentDeleteRequired: "Person name and phone number are required!",
+    residentaddSuccess: "Person added successfully!",
+    residentAddError: "Failed to add person: ",
+    residentAddSuccess: "Person added successfully!",
+    email: "Email",
+    addNewCar: "Add New Car",
+    selectPersonMandatory: "Select Person (required)",
+    apartmentDeleteCheckError: "An error occurred during the check!",
+    apartmentNotFound: "❗ The apartment you want to delete was not found!",
+    apartmentDeleteRequiredFields: "Block, Floor, and Apartment No are required!",
+    residentDeleteCheckError: "An error occurred during the check!",
+    residentNotFound: "❗ The person you are looking for was not found!",
+    residentDeleteSuccess: "✔ Resident and vehicle information deleted successfully!",
+
+    apartmentAddError: "Failed to add apartment: ",
+    apartmentAddSuccess: "Apartment added successfully!",
+    apartmentDeleteError: "Apartment could not be deleted: ",
+    apartmentCascadeDeleteSuccess:
+  "✔ Apartment, resident, and vehicle information were deleted successfully!",
+    
+
+
+>>>>>>> restore-old
 
     vehicle_plate_placeholder: "License Plate (required)",
     vehicle_brand_placeholder: "Brand (required)",
@@ -407,5 +536,24 @@ const en = {
     delete_vehicle_person_placeholder: "Person Name",
     delete_vehicle_plate_placeholder: "License Plate",
     delete_vehicle_button: "Delete Vehicle",
+<<<<<<< HEAD
 };
 export default en;
+=======
+    vehicleDeleteError: "An error occurred while deleting the vehicle information!",
+    vehicleAddError: "Vehicle could not be added:",
+    vehicleAddSuccess: "Vehicle added successfully!",
+    vehicleDeleteRequiredFields: "Person and license plate fields are required!",
+    checkError: "An error occurred during the verification process!",
+    vehicleNotFoundForPerson: "❗ No vehicle found for the specified person!",
+    vehicleDeleteError: "An error occurred while deleting the vehicle!",
+    vehicleDeleteSuccess: "✔ Vehicle deleted successfully!",
+
+
+
+
+    
+
+};
+export default en;
+>>>>>>> restore-old

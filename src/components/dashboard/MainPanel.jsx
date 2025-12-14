@@ -9,12 +9,22 @@ import {
 } from "chart.js";
 import supabase from "../../helper/supabaseClient";
 import { useLanguage } from "../../context/LanguageContext";
+<<<<<<< HEAD
+=======
+
+>>>>>>> restore-old
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 function UserDashboard({ setActiveTab }) {
+  const { t } = useLanguage();
   const [activeCount, setActiveCount] = useState(0);
+<<<<<<< HEAD
   const { t } = useLanguage();
   // ---------------- DUYURULAR STATE ----------------
+=======
+
+  // ---------------- ANNOUNCEMENTS STATE ----------------
+>>>>>>> restore-old
   const [announcements, setAnnouncements] = useState([]);
   const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -31,12 +41,12 @@ function UserDashboard({ setActiveTab }) {
   const fetchCounts = async () => {
     const { data: s } = await supabase.from("sikayetler").select("*");
     const { data: a } = await supabase.from("arizalar").select("*");
-    const { data: t } = await supabase.from("talepler").select("*");
+    const { data: tReq } = await supabase.from("talepler").select("*");
 
     const total =
       s.filter((x) => x.durum === "Açık").length +
       a.filter((x) => x.durum === "Açık").length +
-      t.filter((x) => x.durum === "Açık").length;
+      tReq.filter((x) => x.durum === "Açık").length;
 
     setActiveCount(total);
   };
@@ -48,7 +58,7 @@ function UserDashboard({ setActiveTab }) {
 
   // ---------------- CHART DATA ----------------
   const aidatData = {
-    labels: ["Ödenen", "Ödenmeyen"],
+    labels: [t("mainpaid"), t("mainunpaid")],
     datasets: [
       {
         data: [90, 30],
@@ -59,7 +69,7 @@ function UserDashboard({ setActiveTab }) {
   };
 
   const enerjiData = {
-    labels: ["Elektrik", "Su", "Doğalgaz"],
+    labels: [t("mainelectricity"), t("mainwater"), t("maingas")],
     datasets: [
       {
         data: [400, 150, 200],
@@ -89,10 +99,7 @@ function UserDashboard({ setActiveTab }) {
 
   // ---------------- STYLES ----------------
   const styles = {
-    container: {
-      padding: "20px",
-      fontFamily: "Arial, sans-serif",
-    },
+    container: { padding: "20px", fontFamily: "Arial, sans-serif" },
     cardsContainer: {
       display: "flex",
       gap: "20px",
@@ -106,11 +113,7 @@ function UserDashboard({ setActiveTab }) {
       flex: "1 1 200px",
       boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
     },
-    chartsContainer: {
-      display: "flex",
-      gap: "20px",
-      flexWrap: "wrap",
-    },
+    chartsContainer: { display: "flex", gap: "20px", flexWrap: "wrap" },
     chartCard: {
       background: "#fff",
       padding: "20px",
@@ -141,11 +144,21 @@ function UserDashboard({ setActiveTab }) {
           <p>{t("dashboardtotal")}: {activeCount}</p>
         </div>
 
+<<<<<<< HEAD
         {/* SCROLLABLE DUYURULAR */}
         <div style={styles.card}>
           <h2>{t("dashboardlatestAnnouncements")}</h2>
           <div style={{ maxHeight: "150px", overflowY: "auto", paddingRight: "5px" }}>
             {announcements.length === 0 && <p>{t("dashboardnoAnnouncements")}</p>}
+=======
+        {/* -------- SCROLLABLE ANNOUNCEMENTS -------- */}
+        <div style={styles.card}>
+          <h2>{t("dashboardlatestAnnouncements")}</h2>
+          <div style={{ maxHeight: "150px", overflowY: "auto" }}>
+            {announcements.length === 0 && (
+              <p>{t("dashboardnoAnnouncements")}</p>
+            )}
+>>>>>>> restore-old
 
             {announcements.map((item) => (
               <div
@@ -155,15 +168,17 @@ function UserDashboard({ setActiveTab }) {
                   setShowModal(true);
                 }}
                 style={{
-                  marginBottom: "8px",
                   padding: "6px 8px",
+                  marginBottom: "6px",
                   borderRadius: "6px",
                   cursor: "pointer",
                   background: "#f7f7f7",
-                  transition: "0.2s",
                 }}
+<<<<<<< HEAD
                 onMouseEnter={(e) => (e.currentTarget.style.background = "#e4e4e4")}
                 onMouseLeave={(e) => (e.currentTarget.style.background = "#f7f7f7")}
+=======
+>>>>>>> restore-old
               >
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <span>• {item.title}</span>
@@ -177,44 +192,61 @@ function UserDashboard({ setActiveTab }) {
         </div>
       </div>
 
+      {/* -------- CHARTS -------- */}
       <div style={styles.chartsContainer}>
         <div style={styles.chartCard}>
+<<<<<<< HEAD
           <h2>{t("dashboardfeeUsage")}</h2>
+=======
+          <h2>{t("mainaidatUsage")}</h2>
+>>>>>>> restore-old
           <Pie
             data={aidatData}
             options={{
               ...pieOptions,
+<<<<<<< HEAD
               plugins: { title: { display: true, text: t("dashboardfeeUsage") } },
+=======
+              plugins: { title: { display: true, text: t("mainaidatUsage") } },
+>>>>>>> restore-old
             }}
           />
         </div>
 
         <div style={styles.chartCard}>
+<<<<<<< HEAD
           <h2>{t("dashboardenergyUsage")}</h2>
+=======
+          <h2>{t("mainenergyUsage")}</h2>
+>>>>>>> restore-old
           <Pie
             data={enerjiData}
             options={{
               ...pieOptions,
+<<<<<<< HEAD
               plugins: { title: { display: true, text: t("dashboardenergyUsage") } },
+=======
+              plugins: { title: { display: true, text: t("mainenergyUsage") } },
+>>>>>>> restore-old
             }}
           />
         </div>
       </div>
 
+<<<<<<< HEAD
       {/* MODAL */}
+=======
+      {/* -------- MODAL -------- */}
+>>>>>>> restore-old
       {showModal && selectedAnnouncement && (
         <div
           style={{
             position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
+            inset: 0,
             background: "rgba(0,0,0,0.4)",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            zIndex: 9999,
           }}
           onClick={() => setShowModal(false)}
         >
@@ -224,16 +256,19 @@ function UserDashboard({ setActiveTab }) {
               padding: "20px",
               borderRadius: "12px",
               width: "400px",
-              maxHeight: "70vh",
-              overflowY: "auto",
             }}
             onClick={(e) => e.stopPropagation()}
           >
+<<<<<<< HEAD
             <h2 style={{ marginBottom: "5px" }}>{selectedAnnouncement.title}</h2>
             <p style={{ fontSize: "12px", color: "#666", marginBottom: "10px" }}>
+=======
+            <h2>{selectedAnnouncement.title}</h2>
+            <p style={{ fontSize: "12px", color: "#666" }}>
+>>>>>>> restore-old
               {formatDate(selectedAnnouncement.created_at)}
             </p>
-            <p style={{ whiteSpace: "pre-wrap", lineHeight: "1.4" }}>
+            <p>
               {selectedAnnouncement.description ||
                 selectedAnnouncement.content ||
                 t("dashboardnoContent")}
@@ -243,11 +278,10 @@ function UserDashboard({ setActiveTab }) {
               style={{
                 marginTop: "15px",
                 padding: "10px 20px",
-                border: "none",
                 background: "#2196f3",
-                color: "white",
+                border: "none",
+                color: "#fff",
                 borderRadius: "8px",
-                cursor: "pointer",
               }}
             >
               {t("dashboardclose")}

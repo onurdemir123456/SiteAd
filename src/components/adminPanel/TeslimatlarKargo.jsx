@@ -72,5 +72,9 @@ function TeslimatlarKargo() {
   );
 }
 
+<<<<<<< HEAD
 export default TeslimatlarKargo;
 
+=======
+export default TeslimatlarKargo;
+>>>>>>> restore-old

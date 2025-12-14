@@ -5,15 +5,18 @@ function MesajlasmaChat() {
   const { t } = useLanguage();
 
   const styles = {
-    container: {
-      padding: "20px",
-      fontFamily: "Arial, sans-serif",
+    container: { padding: "20px", fontFamily: "Arial, sans-serif" },
+    title: { fontSize: "24px", fontWeight: "bold", marginBottom: "20px" },
+
+    section: {
+      marginBottom: "30px",
+      padding: "15px",
+      background: "#ffffff",
+      borderRadius: "8px",
+      boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
     },
-    title: {
-      fontSize: "24px",
-      fontWeight: "bold",
-      marginBottom: "20px",
-    },
+    sectionTitle: { fontSize: "18px", fontWeight: "600", marginBottom: "10px" },
+
     chatBox: {
       border: "1px solid #ccc",
       borderRadius: "8px",
@@ -42,10 +45,7 @@ function MesajlasmaChat() {
       color: "#000",
       alignSelf: "flex-end",
     },
-    inputContainer: {
-      display: "flex",
-      marginTop: "10px",
-    },
+    inputContainer: { display: "flex", marginTop: "10px" },
     input: {
       flex: 1,
       padding: "8px",
@@ -62,18 +62,6 @@ function MesajlasmaChat() {
       cursor: "pointer",
       color: "#fff",
       fontSize: "14px",
-    },
-    section: {
-      marginBottom: "30px",
-      padding: "15px",
-      background: "#ffffff",
-      borderRadius: "8px",
-      boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-    },
-    sectionTitle: {
-      fontSize: "18px",
-      fontWeight: "600",
-      marginBottom: "10px",
     },
     table: {
       width: "100%",
@@ -94,14 +82,14 @@ function MesajlasmaChat() {
     },
   };
 
+  // -------- CHAT STATE --------
   const [messages, setMessages] = useState([
     { text: t("chatbotGreeting"), sender: "bot" },
   ]);
-
   const [newMessage, setNewMessage] = useState("");
 
   const handleSend = () => {
-    if (newMessage.trim() === "") return;
+    if (!newMessage.trim()) return;
     setMessages([...messages, { text: newMessage, sender: "user" }]);
     setNewMessage("");
   };
@@ -110,13 +98,16 @@ function MesajlasmaChat() {
     <div style={styles.container}>
       <h2 style={styles.title}>{t("chattitle")}</h2>
 
-      {/* Sohbet Kutusu */}
+      {/* CHAT */}
       <div style={styles.section}>
         <h3 style={styles.sectionTitle}>{t("chatchatBox")}</h3>
+
+
+
         <div style={styles.chatBox}>
-          {messages.map((msg, index) => (
+          {messages.map((msg, i) => (
             <div
-              key={index}
+              key={i}
               style={{
                 ...styles.message,
                 ...(msg.sender === "user"
@@ -128,6 +119,7 @@ function MesajlasmaChat() {
             </div>
           ))}
         </div>
+
         <div style={styles.inputContainer}>
           <input
             style={styles.input}
@@ -141,9 +133,10 @@ function MesajlasmaChat() {
         </div>
       </div>
 
-      {/* Duyurular */}
+      {/* ANNOUNCEMENT READ STATUS */}
       <div style={styles.section}>
         <h3 style={styles.sectionTitle}>{t("chatannouncements")}</h3>
+
         <table style={styles.table}>
           <thead>
             <tr>

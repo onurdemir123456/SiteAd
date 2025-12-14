@@ -1,7 +1,15 @@
 import React from "react";
 import { useLanguage } from "../../context/LanguageContext";
+<<<<<<< HEAD
 function GuvenlikZiyaretci() {
   const { t } = useLanguage();
+=======
+
+function GuvenlikZiyaretci() {
+  const { t } = useLanguage();
+  
+  // Stil tanımları, çeviri gerektirmediği için olduğu gibi bırakıldı.
+>>>>>>> restore-old
   const styles = {
     container: {
       padding: "20px",
@@ -65,22 +73,57 @@ function GuvenlikZiyaretci() {
 
   return (
     <div style={styles.container}>
+<<<<<<< HEAD
+=======
+      {/* Başlık */}
+>>>>>>> restore-old
       <h2 style={styles.title}>{t("securitytitle")}</h2>
 
       {/* Ziyaretçi Ekleme */}
       <div style={styles.section}>
         <h3 style={styles.sectionTitle}>{t("securityvisitortitle")}</h3>
+<<<<<<< HEAD
         <input style={styles.input} type="text" placeholder={t("securityvisitorname")} />
         <input style={styles.input} type="text" placeholder={t("securityvisitorblock")} />
         <input style={styles.input} type="text" placeholder={t("securityvisitorphone")} />
+=======
+        <input 
+          style={styles.input} 
+          type="text" 
+          placeholder={t("securityvisitorname")} 
+        />
+        <input 
+          style={styles.input} 
+          type="text" 
+          placeholder={t("securityvisitorblock")} 
+        />
+        <input 
+          style={styles.input} 
+          type="text" 
+          placeholder={t("securityvisitorphone")} 
+        />
+>>>>>>> restore-old
         <button style={styles.btn}>{t("securityvisitorsave")}</button>
       </div>
 
       {/* Plaka Kaydı */}
       <div style={styles.section}>
         <h3 style={styles.sectionTitle}>{t("securityplatetitle")}</h3>
+<<<<<<< HEAD
         <input style={styles.input} type="text" placeholder={t("securityplatenumber")} />
         <input style={styles.input} type="text" placeholder={t("securityplateowner")} />
+=======
+        <input 
+          style={styles.input} 
+          type="text" 
+          placeholder={t("securityplatenumber")} 
+        />
+        <input 
+          style={styles.input} 
+          type="text" 
+          placeholder={t("securityplateowner")} 
+        />
+>>>>>>> restore-old
         <button style={styles.btn}>{t("securityplatesave")}</button>
       </div>
 
@@ -98,12 +141,20 @@ function GuvenlikZiyaretci() {
           <tbody>
             <tr>
               <td style={styles.td}>23/11/2025</td>
+<<<<<<< HEAD
               <td style={styles.td}>Güvenlik Görevlisi A</td>
+=======
+              <td style={styles.td}>{t("securitylogsuser_A")}</td> {/* Örnek kullanıcı A çevrildi */}
+>>>>>>> restore-old
               <td style={styles.td}>{t("securitylogsdoorEntry")}</td>
             </tr>
             <tr>
               <td style={styles.td}>22/11/2025</td>
+<<<<<<< HEAD
               <td style={styles.td}>Güvenlik Görevlisi B</td>
+=======
+              <td style={styles.td}>{t("securitylogsuser_B")}</td> {/* Örnek kullanıcı B çevrildi */}
+>>>>>>> restore-old
               <td style={styles.td}>{t("securitylogsvisitorEntry")}</td>
             </tr>
           </tbody>

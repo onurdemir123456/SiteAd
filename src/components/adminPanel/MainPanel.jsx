@@ -13,8 +13,13 @@ import { useLanguage } from "../../context/LanguageContext";
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 function MainPanel() {
+<<<<<<< HEAD
     const { t } = useLanguage();
 
+=======
+    // 'language' değişkeni, formatDate fonksiyonu için LanguageContext'ten alındı.
+    const { t, language } = useLanguage(); 
+>>>>>>> restore-old
     const [activeCount, setActiveCount] = useState(0);
     const [announcements, setAnnouncements] = useState([]);
 
@@ -33,12 +38,25 @@ function MainPanel() {
     const fetchCounts = async () => {
         const { data: s } = await supabase.from("sikayetler").select("*");
         const { data: a } = await supabase.from("arizalar").select("*");
+<<<<<<< HEAD
         const { data: t2 } = await supabase.from("talepler").select("*");
 
         const total =
             s.filter((x) => x.durum === "Açık").length +
             a.filter((x) => x.durum === "Açık").length +
             t2.filter((x) => x.durum === "Açık").length;
+=======
+        const { data: req } = await supabase.from("talepler").select("*");
+
+        // Not: Durum kontrolü için DB'deki Türkçe değeri kullanın.
+        // Bu "Açık" durumu, veritabanı yapınıza göre çevrilmemelidir.
+        const openStatus = "Açık"; 
+
+        const total =
+            s.filter((x) => x.durum === openStatus).length +
+            a.filter((x) => x.durum === openStatus).length +
+            req.filter((x) => x.durum === openStatus).length;
+>>>>>>> restore-old
 
         setActiveCount(total);
     };
@@ -51,13 +69,28 @@ function MainPanel() {
     const formatDate = (dateString) => {
         if (!dateString) return "";
         const date = new Date(dateString);
+        // Dil bağlamına göre yerel kodu belirleme
+        const localeCode = language === "tr" ? "tr-TR" : "en-US"; 
+        
         const day = date.getDate();
+<<<<<<< HEAD
         const month = date.toLocaleString("tr-TR", { month: "long" });
+=======
+        // Ay adını dil bağlamına uygun almak için toLocaleString kullanıldı
+        const month = date.toLocaleString(localeCode, { month: "long" }); 
+>>>>>>> restore-old
         const year = date.getFullYear();
+        
         return `${day} ${month} ${year}`;
     };
 
+<<<<<<< HEAD
     const gelirGiderData = {
+=======
+    // Grafikler - Labels çevrildi
+    const gelirGiderData = {
+        // Anahtar: mainincomeExpense (Başlık), mainincome, mainexpense (Veri Etiketleri)
+>>>>>>> restore-old
         labels: [t("mainincome"), t("mainexpense")],
         datasets: [
             {
@@ -72,11 +105,16 @@ function MainPanel() {
         responsive: true,
         plugins: {
             legend: { position: "bottom" },
+            // Title metni aşağıda her grafikte ayrı ayrı ayarlanmıştır.
             title: { display: true, text: "", font: { size: 8 } },
         },
     };
 
     const aidatData = {
+<<<<<<< HEAD
+=======
+        // Anahtar: mainpaid, mainunpaid
+>>>>>>> restore-old
         labels: [t("mainpaid"), t("mainunpaid")],
         datasets: [
             {
@@ -88,6 +126,10 @@ function MainPanel() {
     };
 
     const enerjiData = {
+<<<<<<< HEAD
+=======
+        // Anahtar: mainelectricity, mainwater, maingas
+>>>>>>> restore-old
         labels: [t("mainelectricity"), t("mainwater"), t("maingas")],
         datasets: [
             {
@@ -128,21 +170,49 @@ function MainPanel() {
             flex: "1 1 300px",
             boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
         },
+<<<<<<< HEAD
+=======
+
+        // Modal stilleri değişmedi...
+        modalOverlay: {
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "rgba(0,0,0,0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 999,
+        },
+>>>>>>> restore-old
     };
 
     return (
         <div style={styles.dashboardContainer}>
+<<<<<<< HEAD
             <h1>{t("maintitle")}</h1>
 
             <div style={styles.cardsContainer}>
 
+=======
+            {/* Genel Başlık */}
+            <h1>{t("SiteYönetimPaneli")}</h1> 
+
+            <div style={styles.cardsContainer}>
+>>>>>>> restore-old
                 {/* Daire Sayısı */}
                 <div style={styles.card}>
                     <h2>{t("mainapartmentCount")}</h2>
                     <p>120</p>
                 </div>
 
+<<<<<<< HEAD
                 {/* Borç / Tahsilat */}
+=======
+                {/* Borç / Tahsilat Özeti */}
+>>>>>>> restore-old
                 <div style={styles.card}>
                     <h2>{t("maindebtSummary")}</h2>
                     <p>{t("maindebt")}: 50.000₺</p>
@@ -152,7 +222,17 @@ function MainPanel() {
                 {/* Son Duyurular */}
                 <div style={styles.card}>
                     <h2>{t("mainlatestAnnouncements")}</h2>
+<<<<<<< HEAD
                     <div style={{ maxHeight: "150px", overflowY: "auto", paddingRight: "5px" }}>
+=======
+                    <div
+                        style={{
+                            maxHeight: "150px",
+                            overflowY: "auto",
+                            paddingRight: "5px",
+                        }}
+                    >
+>>>>>>> restore-old
                         {announcements.length === 0 && <p>{t("mainnoAnnouncements")}</p>}
 
                         {announcements.map((item) => (
@@ -194,18 +274,7 @@ function MainPanel() {
             {/* -------- MODAL -------- */}
             {showModal && selectedAnnouncement && (
                 <div
-                    style={{
-                        position: "fixed",
-                        top: 0,
-                        left: 0,
-                        width: "100%",
-                        height: "100%",
-                        background: "rgba(0,0,0,0.4)",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        zIndex: 9999,
-                    }}
+                    style={styles.modalOverlay}
                     onClick={() => setShowModal(false)}
                 >
                     <div
@@ -228,7 +297,11 @@ function MainPanel() {
                         <p style={{ whiteSpace: "pre-wrap", lineHeight: "1.4" }}>
                             {selectedAnnouncement.description ||
                                 selectedAnnouncement.content ||
+<<<<<<< HEAD
                                 t("mainnoContent")}
+=======
+                                t("mainnoContent")} 
+>>>>>>> restore-old
                         </p>
 
                         <button
@@ -243,7 +316,11 @@ function MainPanel() {
                                 cursor: "pointer",
                             }}
                         >
+<<<<<<< HEAD
                             {t("mainclose")}
+=======
+                            {t("mainclose")} 
+>>>>>>> restore-old
                         </button>
                     </div>
                 </div>
@@ -251,35 +328,65 @@ function MainPanel() {
 
             {/* ---------- GRAFİKLER ---------- */}
             <div style={styles.chartsContainer}>
+                {/* Gelir-Gider Grafiği */}
                 <div style={styles.chartCard}>
                     <h2>{t("mainincomeExpense")}</h2>
                     <Pie
                         data={gelirGiderData}
                         options={{
                             ...pieOptions,
+<<<<<<< HEAD
                             plugins: { title: { display: true, text: t("mainincomeExpense") } },
+=======
+                            plugins: {
+                                legend: { position: "bottom" },
+                                title: { display: true, text: t("mainincomeExpense") },
+                            },
+>>>>>>> restore-old
                         }}
                     />
                 </div>
 
+                {/* Aidat Kullanımı Grafiği */}
                 <div style={styles.chartCard}>
                     <h2>{t("mainaidatUsage")}</h2>
                     <Pie
                         data={aidatData}
                         options={{
                             ...pieOptions,
+<<<<<<< HEAD
                             plugins: { title: { display: true, text: t("mainaidatUsage") } },
+=======
+                            plugins: {
+                                legend: { position: "bottom" },
+                                title: {
+                                    display: true,
+                                    text: t("mainaidatUsage"),
+                                },
+                            },
+>>>>>>> restore-old
                         }}
                     />
                 </div>
 
+                {/* Enerji Tüketimi Grafiği */}
                 <div style={styles.chartCard}>
                     <h2>{t("mainenergyUsage")}</h2>
                     <Pie
                         data={enerjiData}
                         options={{
                             ...pieOptions,
+<<<<<<< HEAD
                             plugins: { title: { display: true, text: t("mainenergyUsage") } },
+=======
+                            plugins: {
+                                legend: { position: "bottom" },
+                                title: {
+                                    display: true,
+                                    text: t("mainenergyUsage"),
+                                },
+                            },
+>>>>>>> restore-old
                         }}
                     />
                 </div>
@@ -288,4 +395,8 @@ function MainPanel() {
     );
 }
 
+<<<<<<< HEAD
 export default MainPanel;
+=======
+export default MainPanel;
+>>>>>>> restore-old

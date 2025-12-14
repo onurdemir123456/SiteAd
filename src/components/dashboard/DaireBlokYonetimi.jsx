@@ -1,17 +1,17 @@
 import React from "react";
 import { useLanguage } from "../../context/LanguageContext";
+<<<<<<< HEAD
 function DaireBlokYonetimi() {
   const { t } = useLanguage();
+=======
+
+function DaireBlokYonetimi() {
+  const { t } = useLanguage();
+
+>>>>>>> restore-old
   const styles = {
-    container: {
-      padding: "20px",
-      fontFamily: "Arial, sans-serif",
-    },
-    title: {
-      fontSize: "24px",
-      fontWeight: "bold",
-      marginBottom: "20px",
-    },
+    container: { padding: "20px", fontFamily: "Arial, sans-serif" },
+    title: { fontSize: "24px", fontWeight: "bold", marginBottom: "20px" },
     section: {
       marginBottom: "30px",
       padding: "15px",
@@ -19,11 +19,7 @@ function DaireBlokYonetimi() {
       borderRadius: "8px",
       boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
     },
-    sectionTitle: {
-      fontSize: "18px",
-      fontWeight: "600",
-      marginBottom: "10px",
-    },
+    sectionTitle: { fontSize: "18px", fontWeight: "600", marginBottom: "10px" },
     infoBox: {
       background: "#f2f2f2",
       padding: "12px",
@@ -54,18 +50,22 @@ return (
     <div style={styles.container}>
       <h2 style={styles.title}>{t("apartmenttitle")}</h2>
 
-      {/* Kişisel Daire Bilgileri */}
+      {/* Apartment Information */}
       <div style={styles.section}>
         <h3 style={styles.sectionTitle}>{t("apartmentdetails")}</h3>
         <div style={styles.infoBox}>
           <p><strong>{t("apartmentblock")}:</strong> A</p>
           <p><strong>{t("apartmentfloor")}:</strong> 3</p>
           <p><strong>{t("apartmentnumber")}:</strong> 12</p>
+<<<<<<< HEAD
           <p><strong>{t("apartmentstatus")}:</strong> Sahip</p>
+=======
+          <p><strong>{t("apartmentstatus")}:</strong> {t("owner")}</p>
+>>>>>>> restore-old
         </div>
       </div>
 
-      {/* Kişi Bilgileri */}
+      {/* Resident Information */}
       <div style={styles.section}>
         <h3 style={styles.sectionTitle}>{t("apartmentowner")}</h3>
         <div style={styles.infoBox}>
@@ -75,7 +75,7 @@ return (
         </div>
       </div>
 
-      {/* Araç Bilgileri */}
+      {/* Vehicle Information */}
       <div style={styles.section}>
         <h3 style={styles.sectionTitle}>{t("apartmentvehicle")}</h3>
         <table style={styles.table}>
@@ -92,7 +92,7 @@ return (
               <td style={styles.td}>34 ABC 123</td>
               <td style={styles.td}>BMW</td>
               <td style={styles.td}>320i</td>
-              <td style={styles.td}>Siyah</td>
+              <td style={styles.td}>{t("siyah")}</td>
             </tr>
           </tbody>
         </table>

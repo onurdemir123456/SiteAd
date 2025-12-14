@@ -1,7 +1,11 @@
 // UserAidat.jsx
 import React from "react";
 import { useLanguage } from "../../context/LanguageContext";
+
+
 function AidatOdemeler() {
+  const { t } = useLanguage();
+
   const styles = {
     container: {
       padding: "20px",
@@ -52,18 +56,21 @@ function AidatOdemeler() {
       marginRight: "10px",
     },
   };
-  const { t } = useLanguage();
+  
    return (
     <div style={styles.container}>
       <h2 style={styles.title}>{t("paymenttitle")}</h2>
 
-      {/* Kullanıcının Borç Durumu */}
+      {/* User Debt Status */}
       <div style={styles.section}>
         <h3 style={styles.sectionTitle}>{t("paymentdebts")}</h3>
         <table style={styles.table}>
           <thead>
             <tr>
               <th style={styles.th}>{t("paymentapartment")}</th>
+
+              <th style={styles.th}>{t("apartment")}</th>
+
               <th style={styles.th}>{t("paymentamount")}</th>
               <th style={styles.th}>{t("paymentdueDate")}</th>
             </tr>
@@ -78,7 +85,7 @@ function AidatOdemeler() {
         </table>
       </div>
 
-      {/* Kullanıcının Ödeme Geçmişi */}
+      {/* Payment History */}
       <div style={styles.section}>
         <h3 style={styles.sectionTitle}>{t("paymenthistory")}</h3>
         <table style={styles.table}>
@@ -99,7 +106,7 @@ function AidatOdemeler() {
         </table>
       </div>
 
-      {/* Online Ödeme */}
+      {/* Online Payment */}
       <div style={styles.section}>
         <h3 style={styles.sectionTitle}>{t("paymentonlinePayment")}</h3>
         <button style={styles.btn}>{t("paymentpayIyzico")}</button>
