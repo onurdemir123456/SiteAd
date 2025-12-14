@@ -1,14 +1,9 @@
 import React from "react";
 import { useLanguage } from "../../context/LanguageContext";
-<<<<<<< HEAD
-function DaireBlokYonetimi() {
-  const { t } = useLanguage();
-=======
 
 function DaireBlokYonetimi() {
   const { t } = useLanguage();
 
->>>>>>> restore-old
   const styles = {
     container: { padding: "20px", fontFamily: "Arial, sans-serif" },
     title: { fontSize: "24px", fontWeight: "bold", marginBottom: "20px" },
@@ -46,7 +41,7 @@ function DaireBlokYonetimi() {
     },
   };
 
-return (
+  return (
     <div style={styles.container}>
       <h2 style={styles.title}>{t("apartmenttitle")}</h2>
 
@@ -57,11 +52,7 @@ return (
           <p><strong>{t("apartmentblock")}:</strong> A</p>
           <p><strong>{t("apartmentfloor")}:</strong> 3</p>
           <p><strong>{t("apartmentnumber")}:</strong> 12</p>
-<<<<<<< HEAD
-          <p><strong>{t("apartmentstatus")}:</strong> Sahip</p>
-=======
           <p><strong>{t("apartmentstatus")}:</strong> {t("owner")}</p>
->>>>>>> restore-old
         </div>
       </div>
 

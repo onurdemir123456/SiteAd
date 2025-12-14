@@ -2,7 +2,6 @@
 import React from "react";
 import { useLanguage } from "../../context/LanguageContext";
 
-
 function AidatOdemeler() {
   const { t } = useLanguage();
 
@@ -56,8 +55,8 @@ function AidatOdemeler() {
       marginRight: "10px",
     },
   };
-  
-   return (
+
+  return (
     <div style={styles.container}>
       <h2 style={styles.title}>{t("paymenttitle")}</h2>
 
@@ -67,10 +66,7 @@ function AidatOdemeler() {
         <table style={styles.table}>
           <thead>
             <tr>
-              <th style={styles.th}>{t("paymentapartment")}</th>
-
               <th style={styles.th}>{t("apartment")}</th>
-
               <th style={styles.th}>{t("paymentamount")}</th>
               <th style={styles.th}>{t("paymentdueDate")}</th>
             </tr>

@@ -151,6 +151,7 @@ function TaleplerAriza() {
           value={faultTitle}
           onChange={(e) => setFaultTitle(e.target.value)}
         />
+
         <textarea
           style={{ ...styles.input, height: 80 }}
           placeholder={t("requestsfaultDesc")}
@@ -173,6 +174,7 @@ function TaleplerAriza() {
           value={supportTitle}
           onChange={(e) => setSupportTitle(e.target.value)}
         />
+
         <textarea
           style={{ ...styles.input, height: 80 }}
           placeholder={t("requestssupportDesc")}
@@ -195,6 +197,7 @@ function TaleplerAriza() {
           value={complaintTitle}
           onChange={(e) => setComplaintTitle(e.target.value)}
         />
+
         <textarea
           style={{ ...styles.input, height: 80 }}
           placeholder={t("requestscomplaintDesc")}

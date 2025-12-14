@@ -102,8 +102,6 @@ function MesajlasmaChat() {
       <div style={styles.section}>
         <h3 style={styles.sectionTitle}>{t("chatchatBox")}</h3>
 
-
-
         <div style={styles.chatBox}>
           {messages.map((msg, i) => (
             <div

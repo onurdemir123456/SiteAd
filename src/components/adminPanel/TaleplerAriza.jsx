@@ -1,36 +1,25 @@
 import React, { useEffect, useState } from "react";
 import supabase from "../../helper/supabaseClient";
 import { useLanguage } from "../../context/LanguageContext";
-<<<<<<< HEAD
-=======
 
->>>>>>> restore-old
 function AdminSikayetler() {
   const { t } = useLanguage();
   const [sikayetler, setSikayetler] = useState([]);
   const [arizalar, setArizalar] = useState([]);
   const [talepler, setTalepler] = useState([]);
 
-
   const [showPopup, setShowPopup] = useState(false);
   const [currentArizaId, setCurrentArizaId] = useState(null);
   const [iscilikInput, setIscilikInput] = useState("");
   const [yuzdeInput, setYuzdeInput] = useState(0);
 
-
   const styles = {
-    // ... (Stilleriniz olduğu gibi bırakıldı)
     container: {
       padding: "20px",
       fontFamily: "Arial, sans-serif",
     },
     title: {
-<<<<<<< HEAD
       fontSize: "28px",
-=======
-      fontSize:
-     "28px",
->>>>>>> restore-old
       fontWeight: "bold",
       marginBottom: "20px",
     },
@@ -59,6 +48,7 @@ function AdminSikayetler() {
     td: {
       border: "1px solid #ddd",
       padding: "8px",
+      wordBreak: "break-word", // Uzun metinler için eklendi
     },
     statusOpen: {
       color: "green",
@@ -72,7 +62,7 @@ function AdminSikayetler() {
       padding: "5px 10px",
       margin: "2px",
       cursor: "pointer",
-      backgroundColor: "#2196F3",
+      backgroundColor: "#2196F3", // Mavi
       color: "white",
       border: "none",
       borderRadius: "4px",
@@ -86,11 +76,6 @@ function AdminSikayetler() {
       border: "none",
       borderRadius: "4px",
     },
-
-<<<<<<< HEAD
-    // Popup
-=======
->>>>>>> restore-old
     popupOverlayStyle: {
       position: "fixed",
       top: 0,
@@ -111,10 +96,6 @@ function AdminSikayetler() {
       maxWidth: "500px",
       boxShadow: "0 0 10px rgba(0,0,0,0.3)",
     },
-<<<<<<< HEAD
-    // Popup input/button stilleri
-=======
->>>>>>> restore-old
     popupInputStyle: {
       width: "100%",
       padding: "8px",
@@ -122,7 +103,6 @@ function AdminSikayetler() {
       borderRadius: "4px",
       border: "1px solid #ccc",
     },
-
     popupSaveBtnStyle: {
       padding: "8px 15px",
       marginRight: "10px",
@@ -132,7 +112,6 @@ function AdminSikayetler() {
       borderRadius: "4px",
       cursor: "pointer",
     },
-
     popupCloseBtnStyle: {
       padding: "8px 15px",
       backgroundColor: "red",
@@ -143,19 +122,10 @@ function AdminSikayetler() {
     }
   };
 
-
-<<<<<<< HEAD
-
-
-  // ----------------------------
-  // Supabase Data Fetch
-  // ----------------------------
-=======
   // Veritabanı durum değerleri için ham çeviri anahtarları
-  const closedStatusRaw = t("adminclosedRaw"); // "Kapalı"
-  const openStatusRaw = t("adminopenRaw"); // "Açık"
-
->>>>>>> restore-old
+  // Bu değişkenler kullanılmıyor, sadece Supabase'e yazarken statik Türkçe ("Kapalı") kullanılıyor.
+  // const closedStatusRaw = t("adminclosedRaw");
+  // const openStatusRaw = t("adminopenRaw");
 
   const fetchSikayetler = async () => {
     const { data } = await supabase.from("sikayetler").select("*").order("tarih", { ascending: false });
@@ -178,9 +148,8 @@ function AdminSikayetler() {
     fetchTalepler();
   }, []);
 
-  // Not: DB'ye yazılan durumlar statik Türkçe kalmalıdır.
   const closeSikayet = async (id) => {
-    await supabase.from("sikayetler").update({ durum: "Kapalı" }).eq("id", id); 
+    await supabase.from("sikayetler").update({ durum: "Kapalı" }).eq("id", id);
     fetchSikayetler();
   };
 
@@ -194,193 +163,42 @@ function AdminSikayetler() {
     fetchTalepler();
   };
 
-<<<<<<< HEAD
-
   const openArizaPopup = (id) => {
     setCurrentArizaId(id);
     setShowPopup(true);
+    // Popup açıldığında varsa mevcut değerleri yüklemek iyi bir pratik olabilir,
+    // ancak burada sadece yeni değer girilmesi bekleniyor gibi görünüyor.
   };
-  const updateArizaDetails = async (id) => {
-=======
->>>>>>> restore-old
 
-  const openArizaPopup = (id) => {
-    setCurrentArizaId(id);
-    setShowPopup(true);
-  };
-  const updateArizaDetails = async (id) => {
+  const handleSavePopup = async () => {
+    if (!iscilikInput || iscilikInput <= 0) {
+      alert(t("adminEnterValidCost")); // Varsayılan: "Geçerli bir işçilik tutarı giriniz"
+      return;
+    }
 
+    // Yüzde ve İşçilik bilgisini DB'ye kaydet
     await supabase
       .from("arizalar")
-      .update({ iscilik: iscilikInput, tamamlanma: yuzdeInput })
-      .eq("id", id);
+      .update({
+        iscilik: iscilikInput,
+        tamamlanma: `%${yuzdeInput}`, // Yüzdeyi "%" işaretiyle kaydetmek için
+      })
+      .eq("id", currentArizaId);
 
+    // State'leri temizle ve Popup'ı kapat
+    setShowPopup(false);
+    setIscilikInput("");
+    setYuzdeInput(0);
+    setCurrentArizaId(null);
+
+    // Listeyi yenile
     fetchArizalar();
   };
 
-<<<<<<< HEAD
-    const handleSavePopup = async () => {
-      if (!iscilikInput) {
-        alert("İşçilik tutarı giriniz");
-        return;
-      }
-
-      await supabase
-        .from("arizalar")
-        .update({
-          iscilik: iscilikInput,
-          tamamlanma: `%${yuzdeInput}`,
-        })
-        .eq("id", currentArizaId);
-
-      setShowPopup(false);
-      setIscilikInput("");
-      setYuzdeInput(0);
-      setCurrentArizaId(null);
-
-      fetchArizalar();
-    };
-
-    return (
-      <div style={styles.container}>
-        <h2 style={styles.title}>
-          {t("admintitle")} {/* Admin Paneli – Talepler & Arıza & Şikayet Yönetimi */}
-        </h2>
-
-        {/* ------------------------------------------------------------------ */}
-        {/* ŞİKAYETLER */}
-        {/* ------------------------------------------------------------------ */}
-        <div style={styles.section}>
-          <h3 style={styles.sectionTitle}>{t("admincomplaints")}</h3>
-
-          <table style={styles.table}>
-            <thead>
-              <tr>
-                <th style={styles.th}>{t("admindate")}</th>
-                <th style={styles.th}>{t("adminapartment")}</th>
-                <th style={styles.th}>{t("adminsubject")}</th>
-                <th style={styles.th}>{t("admindescription")}</th>
-                <th style={styles.th}>{t("adminstatus")}</th>
-                <th style={styles.th}>{t("adminaction")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sikayetler.map((s) => (
-                <tr key={s.id}>
-                  <td style={styles.td}>{new Date(s.tarih).toLocaleDateString()}</td>
-                  <td style={styles.td}>{s.daire}</td>
-                  <td style={styles.td}>{s.konu}</td>
-                  <td style={styles.td}>{s.aciklama}</td>
-                  <td style={styles.td}>
-                    {s.durum === "Açık" ? (
-                      <span style={styles.statusOpen}>{t("adminopen")}</span>
-                    ) : (
-                      <span style={styles.statusClosed}>{t("adminclosed")}</span>
-                    )}
-                  </td>
-                  <td style={styles.td}>
-                    {s.durum === "Açık" && (
-                      <button style={styles.btn} onClick={() => closeSikayet(s.id)}>
-                        {t("adminclose")}
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* ------------------------------------------------------------------ */}
-        {/* ARIZA BİLDİRİMLERİ */}
-        {/* ------------------------------------------------------------------ */}
-        <div style={styles.section}>
-          <h3 style={styles.sectionTitle}>{t("adminfaultReports")}</h3>
-
-          <table style={styles.table}>
-            <thead>
-              <tr>
-                <th style={styles.th}>{t("admindate")}</th>
-                <th style={styles.th}>{t("adminapartment")}</th>
-                <th style={styles.th}>{t("adminsubject")}</th>
-                <th style={styles.th}>{t("admindescription")}</th>
-                <th style={styles.th}>{t("adminworkCost")}</th>
-                <th style={styles.th}>{t("admincompletion")}</th>
-                <th style={styles.th}>{t("adminstatus")}</th>
-                <th style={styles.th}>{t("adminaction")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {arizalar.map((a) => (
-                <tr key={a.id}>
-                  <td style={styles.td}>{new Date(a.tarih).toLocaleDateString()}</td>
-                  <td style={styles.td}>{a.daire}</td>
-                  <td style={styles.td}>{a.konu}</td>
-                  <td style={styles.td}>{a.aciklama}</td>
-                  <td style={styles.td}>{a.iscilik ? `${a.iscilik} ₺` : "-"}</td>
-                  <td style={styles.td}>{a.tamamlanma || "-"}</td>
-                  <td style={styles.td}>
-                    {a.durum === "Açık" ? (
-                      <span style={styles.statusOpen}>{t("adminopen")}</span>
-                    ) : (
-                      <span style={styles.statusClosed}>{t("adminclosed")}</span>
-                    )}
-                  </td>
-                  <td style={styles.td}>
-                    {a.durum === "Açık" && (
-                      <>
-                        <button style={styles.btn} onClick={() => openArizaPopup(a.id)}>
-                          {t("adminworkCompletion")}
-                        </button>
-                        <button style={styles.btnGreen} onClick={() => closeAriza(a.id)}>
-                          {t("adminclose")}
-                        </button>
-                      </>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* ------------------------------------------------------------------ */}
-        {/* TEKNİK DESTEK TALEPLERİ */}
-        {/* ------------------------------------------------------------------ */}
-        <div style={styles.section}>
-          <h3 style={styles.sectionTitle}>{t("admintechRequests")}</h3>
-
-          <table style={styles.table}>
-            <thead>
-              <tr>
-                <th style={styles.th}>{t("admindate")}</th>
-                <th style={styles.th}>{t("adminsubject")}</th>
-                <th style={styles.th}>{t("admindetails")}</th>
-                <th style={styles.th}>{t("adminstatus")}</th>
-                <th style={styles.th}>{t("adminaction")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {talepler.map((e) => (
-                <tr key={e.id}>
-                  <td style={styles.td}>{new Date(e.tarih).toLocaleDateString()}</td>
-                  <td style={styles.td}>{e.konu}</td>
-                  <td style={styles.td}>{e.detay}</td>
-                  <td style={styles.td}>
-                    {e.durum === "Açık" ? (
-                      <span style={styles.statusOpen}>{t("adminopen")}</span>
-                    ) : (
-                      <span style={styles.statusClosed}>{t("adminclosed")}</span>
-                    )}
-                  </td>
-                  <td style={styles.td}>
-                    {e.durum === "Açık" && (
-                      <button style={styles.btnGreen} onClick={() => closeTalep(e.id)}>
-=======
   return (
     <div style={styles.container}>
       <h2 style={styles.title}>
-        {t("admintitle")} 
+        {t("admintitle")} {/* Admin Paneli – Yönetim */}
       </h2>
 
       {/* ------------------------------------------------------------------ */}
@@ -388,7 +206,6 @@ function AdminSikayetler() {
       {/* ------------------------------------------------------------------ */}
       <div style={styles.section}>
         <h3 style={styles.sectionTitle}>{t("admincomplaints")}</h3>
-
         <table style={styles.table}>
           <thead>
             <tr>
@@ -416,7 +233,7 @@ function AdminSikayetler() {
                 </td>
                 <td style={styles.td}>
                   {s.durum === "Açık" && (
-                    <button style={styles.btn} onClick={() => closeSikayet(s.id)}>
+                    <button style={styles.btnGreen} onClick={() => closeSikayet(s.id)}>
                       {t("adminclose")}
                     </button>
                   )}
@@ -432,7 +249,6 @@ function AdminSikayetler() {
       {/* ------------------------------------------------------------------ */}
       <div style={styles.section}>
         <h3 style={styles.sectionTitle}>{t("adminfaultReports")}</h3>
-
         <table style={styles.table}>
           <thead>
             <tr>
@@ -469,69 +285,22 @@ function AdminSikayetler() {
                         {t("adminworkCompletion")}
                       </button>
                       <button style={styles.btnGreen} onClick={() => closeAriza(a.id)}>
->>>>>>> restore-old
                         {t("adminclose")}
                       </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* İşçilik / Tamamlanma Popup */}
-        {showPopup && (
-          <div style={styles.popupOverlayStyle}>
-            <div style={styles.popupBoxStyle}>
-              <h3>{t("adminworkCompletion")}</h3>
-
-              <label>{t("adminworkCost")} (₺)</label>
-              <input
-                type="number"
-                value={iscilikInput}
-                onChange={(e) => setIscilikInput(e.target.value)}
-                style={styles.popupInputStyle}
-              />
-
-              <label>
-                {t("admincompletion")}: % {yuzdeInput}
-              </label>
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={yuzdeInput}
-                onChange={(e) => setYuzdeInput(e.target.value)}
-                style={{ width: "100%" }}
-              />
-
-              <button style={styles.popupSaveBtnStyle} onClick={async () => {
-                updateArizaDetails(currentArizaId); setShowPopup(false); setIscilikInput("");
-                setYuzdeInput(0);
-              }}>
-                {t("adminsave")}
-              </button>
-              <button style={styles.popupCloseBtnStyle} onClick={() => setShowPopup(false)}>
-                {t("adminclose")}
-              </button>
-            </div>
-          </div>
-        )}
+                    </>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-<<<<<<< HEAD
-    );
-  }
-}
-export default AdminSikayetler;
-=======
 
       {/* ------------------------------------------------------------------ */}
       {/* TEKNİK DESTEK TALEPLERİ */}
       {/* ------------------------------------------------------------------ */}
       <div style={styles.section}>
         <h3 style={styles.sectionTitle}>{t("admintechRequests")}</h3>
-
         <table style={styles.table}>
           <thead>
             <tr>
@@ -549,8 +318,7 @@ export default AdminSikayetler;
                 <td style={styles.td}>{e.konu}</td>
                 <td style={styles.td}>{e.detay}</td>
                 <td style={styles.td}>
-                  {/* HATA DÜZELTİLDİ: e.durum kullanıldı */}
-                  {e.durum === "Açık" ? ( 
+                  {e.durum === "Açık" ? (
                     <span style={styles.statusOpen}>{t("adminopen")}</span>
                   ) : (
                     <span style={styles.statusClosed}>{t("adminclosed")}</span>
@@ -584,7 +352,7 @@ export default AdminSikayetler;
             />
 
             <label>
-              {t("admincompletion")}: % {yuzdeInput}
+              {t("admincompletion")}: **% {yuzdeInput}**
             </label>
             <input
               type="range"
@@ -592,13 +360,10 @@ export default AdminSikayetler;
               max="100"
               value={yuzdeInput}
               onChange={(e) => setYuzdeInput(e.target.value)}
-              style={{ width: "100%" }}
+              style={{ width: "100%", margin: "10px 0 20px" }}
             />
 
-            <button style={styles.popupSaveBtnStyle} onClick={async () => {
-              updateArizaDetails(currentArizaId); setShowPopup(false); setIscilikInput("");
-              setYuzdeInput(0);
-            }}>
+            <button style={styles.popupSaveBtnStyle} onClick={handleSavePopup}>
               {t("adminsave")}
             </button>
             <button style={styles.popupCloseBtnStyle} onClick={() => setShowPopup(false)}>
@@ -610,5 +375,6 @@ export default AdminSikayetler;
     </div>
   );
 }
+
 export default AdminSikayetler;
->>>>>>> restore-old
+

@@ -22,26 +22,26 @@ function DaireBlokYonetimi() {
   const [rTelefon, setRTelefon] = useState("");
   const [rEmail, setREmail] = useState("");
   // Araç formunda seçilen kişi (dropdown)
-  const [vKisi, setVKisi] = useState("");
+  const [vKisi, setVKisi] = useState("");      
 
-  // Plaka input alanı için state
-  const [vPlaka, setVPlaka] = useState("");
+// Plaka input alanı için state
+  const [vPlaka, setVPlaka] = useState("");    
 
-  // Marka input alanı için state
-  const [vMarka, setVMarka] = useState("");
+// Marka input alanı için state
+  const [vMarka, setVMarka] = useState("");    
 
-  // Model input alanı için state
-  const [vModel, setVModel] = useState("");
+// Model input alanı için state
+  const [vModel, setVModel] = useState("");    
 
-  // Renk input alanı için state
-  const [vRenk, setVRenk] = useState("");
+// Renk input alanı için state
+  const [vRenk, setVRenk] = useState("");      
 
-  // Supabase'ten çekilecek araçlar listesi
-  const [vehicles, setVehicles] = useState([]);
+// Supabase'ten çekilecek araçlar listesi
+  const [vehicles, setVehicles] = useState([]); 
 
   // ---------------------------
-  // Daire silme alanı için state'ler
-  // ---------------------------
+// Daire silme alanı için state'ler
+// ---------------------------
   const [delBlok, setDelBlok] = useState("");
   const [delKat, setDelKat] = useState("");
   const [delDaireNo, setDelDaireNo] = useState("");
@@ -52,171 +52,98 @@ function DaireBlokYonetimi() {
   // Araç silme alanı için stateler
   const [delVKisi, setDelVKisi] = useState("");
   const [delVPlaka, setDelVPlaka] = useState("");
-  async function deleteVehicle() {
-
-    if (!delVKisi || !delVPlaka) {
-      alert(t("deleteRequired"));
-      return;
-    }
-
-    // 1) Bu kişi + plaka var mı kontrol et
-    const { data: checkData, error: checkError } = await supabase
-      .from("vehicles")
-      .select("*")
-      .match({
-        kisi: delVKisi,
-        plaka: delVPlaka,
-      });
-
-    if (checkError) {
-      alert(t("deleteCheckError"));
-      return;
-    }
-
-    if (!checkData || checkData.length === 0) {
-      alert(t("deleteNotFound"));
-      return;
-    }
-
-    // 2) Araç kaydını sil
-    const { error: deleteError } = await supabase
-      .from("vehicles")
-      .delete()
-      .match({
-        kisi: delVKisi,
-        plaka: delVPlaka,
-      });
-
-    if (deleteError) {
-      alert(t("deleteError"));
-      return;
-    }
-
-    alert(t("deleteSuccess"));
-
-    // tabloyu yenile
-    fetchVehicles();
-
-    // inputları temizle
-    setDelVKisi("");
-    setDelVPlaka("");
-  }
-  async function addVehicle() {
-
-    // Tüm alanların doldurulması zorunlu
-    if (!vKisi || !vPlaka || !vMarka || !vModel || !vRenk) {
-      alert(t("addRequired"));
-      return;
-    }
-
-    const { data, error } = await supabase.from("vehicles").insert([
-      {
-        kisi: vKisi,
-        plaka: vPlaka,
-        marka: vMarka,
-        model: vModel,
-        renk: vRenk,
-      },
-    ]);
-
-    if (error) {
-      alert(t("addError") + error.message);
-      return;
-    }
-
-    alert(t("addSuccess"));
-
-    // tabloyu yenile
-    fetchVehicles();
-
-    // formu sıfırla
-    setVKisi("");
-    setVPlaka("");
-    setVMarka("");
-    setVModel("");
-    setVRenk("");
-  }
 
 
-  const uniqueApartmentKisiler = [...new Set(
-    apartments
-      .map(a => a.kisi)
-      .filter(k => k && k.trim() !== "")
-  )];
+
+
+
+  
+
+
   const filteredApartments = apartments.filter((a) => {
-    return (
-      (filterBlok === "" || a.blok === filterBlok) &&
-      (filterKat === "" || a.kat === Number(filterKat)) &&
-      (filterDurum === "" || a.durum === filterDurum)
-    );
-  });
+  return (
+    (filterBlok === "" || a.blok === filterBlok) &&
+    (filterKat === "" || a.kat === Number(filterKat)) &&
+    (filterDurum === "" || a.durum === filterDurum)
+  );
+});
 
-  const isActive = (d) => filterDurum === d;
-  // dairelerdeki kişileri unique olarak al
-  const uniqueKisiler = [...new Set(
-    apartments
-      .map(a => a.kisi)
-      .filter(k => k && k.trim() !== "")
-  )];
+const isActive = (d) => filterDurum === d;
+
+// dairelerdeki kişileri unique olarak al (Daire işlemleri için)
+const uniqueApartmentKisiler = [...new Set(
+  apartments
+    .map(a => a.kisi)
+    .filter(k => k && k.trim() !== "")
+)];
+
+// residents tablosundaki kişileri unique olarak al (Araç ve diğer kişi bazlı işlemler için)
+const uniqueResidentKisiler = [...new Set(
+  residents
+    .map(r => r.kisi)
+    .filter(k => k && k.trim() !== "")
+)];
+
+
+// -------------------------------------------------------------------
+// Yeni kişi ekleme dropdown'u için kullanılacak liste
+// Mantık:
+//  - Apartmanlarda görünen kişileri al
+//  - Ama eğer bu kişi zaten residents tablosunda kayıtlıysa
+//    dropdown’dan çıkar → tekrar eklenmesini engelle
+// -------------------------------------------------------------------
+const availablePeopleForNewResident = uniqueApartmentKisiler.filter(
+  (name) => !uniqueResidentKisiler.includes(name) 
+);
+
+
+// ---------------------------------------------------------
+// vehicles tablosundaki kişileri (araç sahipleri) benzersiz al
+// Amaç: Aynı kişi birden fazla kez araç sahibi olarak eklenmesin
+// ---------------------------------------------------------
+const uniqueVehicleKisiler = [...new Set(
+  vehicles
+    .map(v => v.kisi)                 // her aracın sahibini al
+    .filter(k => k && k.trim() !== "") // boş olmayanları filtrele
+)];
+
+
+// -------------------------------------------------------------------
+// Araç ekleme dropdown'u için kullanılacak liste
+// Mantık:
+//   - residents tablosundaki kişileri al (gerçek kişi listesi)
+//   - Eğer kişi vehicles tablosunda varsa → dropdown’dan çıkar
+// Böylece bir kişi ikinci kez araç sahibi olarak eklenemez
+// -------------------------------------------------------------------
+const availablePeopleForNewVehicle = uniqueResidentKisiler.filter(
+  (name) => !uniqueVehicleKisiler.includes(name)
+);
+
+
+
+
+
+
+
+
+
+
   useEffect(() => {
-    fetchApartments();
-  }, []);
+  fetchApartments();
+}, []);
 
 
-  function toggleDurum(d) {
-    setFilterDurum((prev) => (prev === d ? "" : d));
-  }
+function toggleDurum(d) {
+  setFilterDurum((prev) => (prev === d ? "" : d));
+}
 
 
 
 
-  async function fetchApartments() {
-    const { data, error } = await supabase.from("apartments").select("*");
-    if (!error) setApartments(data);
-  }
-
-  // residents tablosundaki kişileri unique olarak al (Araç ve diğer kişi bazlı işlemler için)
-  const uniqueResidentKisiler = [...new Set(
-    residents
-      .map(r => r.kisi)
-      .filter(k => k && k.trim() !== "")
-  )];
-
-
-  // -------------------------------------------------------------------
-  // Yeni kişi ekleme dropdown'u için kullanılacak liste
-  // Mantık:
-  //  - Apartmanlarda görünen kişileri al
-  //  - Ama eğer bu kişi zaten residents tablosunda kayıtlıysa
-  //    dropdown’dan çıkar → tekrar eklenmesini engelle
-  // -------------------------------------------------------------------
-  const availablePeopleForNewResident = uniqueApartmentKisiler.filter(
-    (name) => !uniqueResidentKisiler.includes(name)
-  );
-
-
-  // ---------------------------------------------------------
-  // vehicles tablosundaki kişileri (araç sahipleri) benzersiz al
-  // Amaç: Aynı kişi birden fazla kez araç sahibi olarak eklenmesin
-  // ---------------------------------------------------------
-  const uniqueVehicleKisiler = [...new Set(
-    vehicles
-      .map(v => v.kisi)                 // her aracın sahibini al
-      .filter(k => k && k.trim() !== "") // boş olmayanları filtrele
-  )];
-
-
-  // -------------------------------------------------------------------
-  // Araç ekleme dropdown'u için kullanılacak liste
-  // Mantık:
-  //   - residents tablosundaki kişileri al (gerçek kişi listesi)
-  //   - Eğer kişi vehicles tablosunda varsa → dropdown’dan çıkar
-  // Böylece bir kişi ikinci kez araç sahibi olarak eklenemez
-  // -------------------------------------------------------------------
-  const availablePeopleForNewVehicle = uniqueResidentKisiler.filter(
-    (name) => !uniqueVehicleKisiler.includes(name)
-  );
-
+async function fetchApartments() {
+  const { data, error } = await supabase.from("apartments").select("*");
+  if (!error) setApartments(data);
+}
 
 
 
@@ -238,15 +165,15 @@ async function addApartment() {
 }
 
 
-    const { data, error } = await supabase.from("apartments").insert([
-      {
-        blok: blok,
-        kat: Number(kat),
-        daire_no: Number(daireNo),
-        durum: durum,
-        kisi: kisi,
-      },
-    ]);
+  const { data, error } = await supabase.from("apartments").insert([
+    {
+      blok: blok,
+      kat: Number(kat),
+      daire_no: Number(daireNo),
+      durum: durum,
+      kisi: kisi,
+    },
+  ]);
 
   if (error) {
   alert(t("apartmentAddError") + error.message);
@@ -256,12 +183,12 @@ async function addApartment() {
 }
 
 
-    setBlok("");
-    setKat("");
-    setDaireNo("");
-    setDurum("Boş");
-    setKisi("");
-  }
+  setBlok("");
+  setKat("");
+  setDaireNo("");
+  setDurum("Boş");
+  setKisi("");
+}
 
 // ----------------------
 // DAİRE SİLME FONKSİYONU (Cascade Delete: resident + vehicle)
@@ -366,35 +293,35 @@ alert(t("apartmentCascadeDeleteSuccess"));
 
 
 
-  function formatPhone(value) {
-    // Sadece rakamları al
-    let cleaned = value.replace(/\D/g, "");
+function formatPhone(value) {
+  // Sadece rakamları al
+  let cleaned = value.replace(/\D/g, "");
 
-    // Format  (XXXX XXX XX XX)
-    if (cleaned.length > 10) cleaned = cleaned.slice(0, 11);
+  // Format  (XXXX XXX XX XX)
+  if (cleaned.length > 10) cleaned = cleaned.slice(0, 11);
 
-    const formatted = cleaned
-      .replace(/(\d{4})(\d{3})(\d{2})(\d{2})/, "$1 $2 $3 $4")
-      .replace(/(\d{4})(\d{3})(\d{2})$/, "$1 $2 $3")
-      .replace(/(\d{4})(\d{3})$/, "$1 $2")
-      .replace(/(\d{4})$/, "$1");
+  const formatted = cleaned
+    .replace(/(\d{4})(\d{3})(\d{2})(\d{2})/, "$1 $2 $3 $4")
+    .replace(/(\d{4})(\d{3})(\d{2})$/, "$1 $2 $3")
+    .replace(/(\d{4})(\d{3})$/, "$1 $2")
+    .replace(/(\d{4})$/, "$1");
 
-    return formatted;
-  }
+  return formatted;
+}
 
 
-  useEffect(() => {
-    fetchResidents();
-  }, []);
+useEffect(() => {
+  fetchResidents();
+}, []);
 
-  async function fetchResidents() {
-    const { data, error } = await supabase
-      .from("residents")
-      .select("*")
-      .order("created_at", { ascending: false });
+async function fetchResidents() {
+  const { data, error } = await supabase
+    .from("residents")
+    .select("*")
+    .order("created_at", { ascending: false });
 
-    if (!error) setResidents(data);
-  }
+  if (!error) setResidents(data);
+}
 
 
 
@@ -405,13 +332,13 @@ async function addResident() {
   }
 
 
-    const { data, error } = await supabase.from("residents").insert([
-      {
-        kisi: selectedKisi,
-        telefon: rTelefon,
-        email: rEmail || null,
-      },
-    ]);
+  const { data, error } = await supabase.from("residents").insert([
+    {
+      kisi: selectedKisi,
+      telefon: rTelefon,
+      email: rEmail || null,
+    },
+  ]);
 
   if (error) {
   alert(t("residentAddError") + error.message);
@@ -421,8 +348,8 @@ async function addResident() {
 alert(t("residentAddSuccess"));
 
 
-    // Listeyi yenile
-    fetchResidents();
+  // Listeyi yenile
+  fetchResidents();
 
   setSelectedKisi("");
   setRTelefon("");
@@ -717,10 +644,10 @@ useEffect(() => {
                 <td style={styles.td}>{d.blok}</td>
                 <td style={styles.td}>{d.kat}</td>
                 <td style={styles.td}>{d.daire_no}</td>
-                <td style={styles.td}>{t(d.durum)}</td>
+                <td style={styles.td}>{d.durum}</td>
                 <td style={styles.td}>{d.kisi || "-"}</td>
               </tr>
-            ))}
+  ))}
           </tbody>
         </table>
       </div>
@@ -895,6 +822,7 @@ useEffect(() => {
 
         </div>
       </div>
+        
 
       {/* Owner / Tenant / Empty */}
 <div style={styles.section}>
@@ -1144,8 +1072,8 @@ useEffect(() => {
 
 
     </div>
-
   );
 }
 
 export default DaireBlokYonetimi;
+

@@ -9,22 +9,14 @@ import {
 } from "chart.js";
 import supabase from "../../helper/supabaseClient";
 import { useLanguage } from "../../context/LanguageContext";
-<<<<<<< HEAD
-=======
 
->>>>>>> restore-old
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 function UserDashboard({ setActiveTab }) {
   const { t } = useLanguage();
   const [activeCount, setActiveCount] = useState(0);
-<<<<<<< HEAD
-  const { t } = useLanguage();
-  // ---------------- DUYURULAR STATE ----------------
-=======
 
   // ---------------- ANNOUNCEMENTS STATE ----------------
->>>>>>> restore-old
   const [announcements, setAnnouncements] = useState([]);
   const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -144,13 +136,6 @@ function UserDashboard({ setActiveTab }) {
           <p>{t("dashboardtotal")}: {activeCount}</p>
         </div>
 
-<<<<<<< HEAD
-        {/* SCROLLABLE DUYURULAR */}
-        <div style={styles.card}>
-          <h2>{t("dashboardlatestAnnouncements")}</h2>
-          <div style={{ maxHeight: "150px", overflowY: "auto", paddingRight: "5px" }}>
-            {announcements.length === 0 && <p>{t("dashboardnoAnnouncements")}</p>}
-=======
         {/* -------- SCROLLABLE ANNOUNCEMENTS -------- */}
         <div style={styles.card}>
           <h2>{t("dashboardlatestAnnouncements")}</h2>
@@ -158,7 +143,6 @@ function UserDashboard({ setActiveTab }) {
             {announcements.length === 0 && (
               <p>{t("dashboardnoAnnouncements")}</p>
             )}
->>>>>>> restore-old
 
             {announcements.map((item) => (
               <div
@@ -174,11 +158,6 @@ function UserDashboard({ setActiveTab }) {
                   cursor: "pointer",
                   background: "#f7f7f7",
                 }}
-<<<<<<< HEAD
-                onMouseEnter={(e) => (e.currentTarget.style.background = "#e4e4e4")}
-                onMouseLeave={(e) => (e.currentTarget.style.background = "#f7f7f7")}
-=======
->>>>>>> restore-old
               >
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <span>• {item.title}</span>
@@ -195,49 +174,29 @@ function UserDashboard({ setActiveTab }) {
       {/* -------- CHARTS -------- */}
       <div style={styles.chartsContainer}>
         <div style={styles.chartCard}>
-<<<<<<< HEAD
-          <h2>{t("dashboardfeeUsage")}</h2>
-=======
           <h2>{t("mainaidatUsage")}</h2>
->>>>>>> restore-old
           <Pie
             data={aidatData}
             options={{
               ...pieOptions,
-<<<<<<< HEAD
-              plugins: { title: { display: true, text: t("dashboardfeeUsage") } },
-=======
               plugins: { title: { display: true, text: t("mainaidatUsage") } },
->>>>>>> restore-old
             }}
           />
         </div>
 
         <div style={styles.chartCard}>
-<<<<<<< HEAD
-          <h2>{t("dashboardenergyUsage")}</h2>
-=======
           <h2>{t("mainenergyUsage")}</h2>
->>>>>>> restore-old
           <Pie
             data={enerjiData}
             options={{
               ...pieOptions,
-<<<<<<< HEAD
-              plugins: { title: { display: true, text: t("dashboardenergyUsage") } },
-=======
               plugins: { title: { display: true, text: t("mainenergyUsage") } },
->>>>>>> restore-old
             }}
           />
         </div>
       </div>
 
-<<<<<<< HEAD
-      {/* MODAL */}
-=======
       {/* -------- MODAL -------- */}
->>>>>>> restore-old
       {showModal && selectedAnnouncement && (
         <div
           style={{
@@ -259,13 +218,8 @@ function UserDashboard({ setActiveTab }) {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-<<<<<<< HEAD
-            <h2 style={{ marginBottom: "5px" }}>{selectedAnnouncement.title}</h2>
-            <p style={{ fontSize: "12px", color: "#666", marginBottom: "10px" }}>
-=======
             <h2>{selectedAnnouncement.title}</h2>
             <p style={{ fontSize: "12px", color: "#666" }}>
->>>>>>> restore-old
               {formatDate(selectedAnnouncement.created_at)}
             </p>
             <p>
