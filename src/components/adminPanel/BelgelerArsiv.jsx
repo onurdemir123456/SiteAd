@@ -146,9 +146,4 @@ function BelgelerArsiv() {
   );
 }
 
-<<<<<<< HEAD
 export default BelgelerArsiv;
-
-=======
-export default BelgelerArsiv;
->>>>>>> restore-old

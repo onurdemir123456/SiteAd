@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useLanguage } from "../../context/LanguageContext";
+import { q } from "framer-motion/client";
 
 function MesajlasmaChat() {
   const { t } = useLanguage();
@@ -172,9 +173,4 @@ function MesajlasmaChat() {
   );
 }
 
-<<<<<<< HEAD
 export default MesajlasmaChat;
-
-=======
-export default MesajlasmaChat;
->>>>>>> restore-old
